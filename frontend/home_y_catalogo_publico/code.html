@@ -1,0 +1,718 @@
+<!DOCTYPE html><html class="scroll-smooth" lang="es" style=""><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Apex Motors | Concesionaria Oficial Multimarca y Selección Premium</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#0f172a",
+            "primary-container": "#1e293b",
+            "secondary": "#0051d5",
+            "secondary-container": "#2563eb",
+            "background": "#f8f9ff",
+            "surface": "#f8f9ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f1f5f9",
+            "surface-container": "#e2e8f0",
+            "surface-container-high": "#cbd5e1",
+            "on-surface": "#0f172a",
+            "on-surface-variant": "#475569",
+            "outline": "#94a3b8",
+            "outline-variant": "#cbd5e1",
+            "tertiary-container": "#052e16",
+            "on-tertiary-container": "#16a34a",
+            "tertiary-fixed-dim": "#15803d"
+          },
+          fontFamily: {
+            sans: ["Plus Jakarta Sans", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-sans text-on-surface antialiased selection:bg-secondary selection:text-white">
+<!-- ==========================================
+       HEADER & TOPBAR
+       ========================================== -->
+<header class="fixed top-0 left-0 right-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-surface-container shadow-sm">
+<!-- Top Bar -->
+<div class="w-full bg-slate-900 text-slate-300 px-4 sm:px-8 border-b border-slate-800">
+<div class="max-w-7xl mx-auto h-10 flex items-center justify-between text-xs sm:text-sm">
+<div class="flex items-center gap-4 sm:gap-6">
+<a class="flex items-center gap-1.5 hover:text-white transition-colors" href="tel:+541148902300">
+<span class="material-symbols-outlined text-[16px] text-blue-400">call</span>
+<span class="">+54 11 4890-2300</span>
+</a>
+<a class="hidden sm:flex items-center gap-1.5 hover:text-white transition-colors" href="https://wa.me/5491155608800" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[16px] text-emerald-400">chat</span>
+<span class="">WhatsApp: +54 9 11 5560-8800</span>
+</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:inline text-slate-400">Lun - Sáb: 09:00 - 19:30</span>
+<a class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs transition-colors border border-slate-700" href="#">
+<span class="material-symbols-outlined text-[14px] text-blue-400">lock</span>
+            Portal Vendedores
+          </a>
+</div>
+</div>
+</div>
+<!-- Main Navigation Bar -->
+<div class="w-full px-4 sm:px-8">
+<div class="max-w-7xl mx-auto h-18 py-3 flex items-center justify-between gap-4">
+<!-- Logo & Brand -->
+<a class="flex items-center gap-3 group" href="#hero">
+<img alt="Apex Motors Logo" class="h-9 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WTPHOjZKXTUgXkzyPlo_Ka-a9Lnzy-35t7VZ9Oer3nKcBPl0C06BDpkZjneWWBjx12aoU_gFSIZIZ-ZknZZezGeEWSSOPJTAM0P82s4BncoCGLFd5PVZnfMevQSBFBFMMDXp4CoPqJsQWQbP_QRPY_WYdq3GJkiHtHvHIjj8RRLzaMQl7FPUdDWMd--erD4yhcFJEjgBWyxszNenNzHlc5SYgWteHtpIvoLT5ZyylSOrUOtFMwexQpFeI">
+<div class="flex flex-col">
+<span class="text-xl font-extrabold tracking-tight text-slate-900 group-hover:text-secondary transition-colors">Apex Motors</span>
+<span class="text-[10px] uppercase font-bold tracking-widest text-slate-500 -mt-1">Selección Certificada</span>
+</div>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden lg:flex items-center gap-1">
+<a class="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-900 hover:bg-slate-100 transition-colors" href="#hero">Inicio</a>
+<a class="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer flex items-center gap-1.5" href="#catalogo" onclick="event.preventDefault(); showCatalogToast('Redirigiendo a: Catálogo de Vehículos con Filtros Laterales y Buscador...');">Catálogo de Vehículos</a>
+<a class="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#servicios">Financiamiento &amp; Servicios</a>
+<a class="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#nosotros">Nosotros</a>
+<a class="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors" href="#showroom">Contacto &amp; Ubicación</a>
+</nav>
+<!-- Right Action Items -->
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-secondary hover:bg-secondary-container text-white text-sm font-bold transition-all shadow-sm shadow-blue-500/20" href="#showroom">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span class="hidden sm:inline">Agendar Visita</span>
+<span class="sm:hidden">Test Drive</span>
+</a>
+<div class="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700" title="Perfil de Usuario">
+<span class="material-symbols-outlined text-[20px]">person</span>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ==========================================
+       HERO SECTION WITH APEX SEARCH CONSOLE
+       ========================================== -->
+<main class="w-full pt-28">
+<section class="relative w-full bg-gradient-to-b from-white via-slate-50 to-surface py-12 lg:py-20 border-b border-slate-200/80" id="hero">
+<div class="max-w-7xl mx-auto px-4 sm:px-8">
+<!-- Trust Overline Pill -->
+<div class="flex flex-wrap items-center gap-2.5 mb-6">
+<span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 border border-blue-200/80 text-secondary text-xs font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+            Stock Oficial Actualizado Hoy
+          </span>
+<span class="text-xs sm:text-sm font-semibold text-slate-600 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-emerald-600">verified</span>
+            150 puntos de peritaje computarizado
+          </span>
+</div>
+<!-- Headline & Intro -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-12">
+<div class="lg:col-span-8">
+<h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+              Tu próximo vehículo seleccionado y certificado con <span class="text-secondary underline decoration-blue-200 underline-offset-8">entrega inmediata.</span>
+</h1>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-5">
+<p class="text-base text-slate-600 leading-relaxed">
+              Concesionaria oficial multimarca premium y utilitarios. Financiación a medida, toma de permutas al mejor valor y garantía mecánica extendida.
+            </p>
+<div class="flex items-center gap-3">
+<a class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm transition-all shadow-md" href="#catalogo" onclick="event.preventDefault(); showCatalogToast('Redirigiendo a: Catálogo de Vehículos con Filtros Laterales y Buscador...');">
+                Ver Catálogo
+                <span class="material-symbols-outlined text-sm">arrow_downward</span>
+</a>
+<a class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-white border border-slate-300 hover:bg-slate-50 text-slate-800 font-bold text-sm transition-colors" href="#showroom">
+<span class="material-symbols-outlined text-sm text-secondary">location_on</span>
+                Visitar Showroom
+              </a>
+</div>
+</div>
+</div>
+<!-- Interactive Search Console Card -->
+<div class="w-full bg-white rounded-2xl p-5 sm:p-7 shadow-xl shadow-slate-200/60 border border-slate-200">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+<!-- Selector de Marca -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">directions_car</span>
+                Marca
+              </label>
+<div class="relative">
+<select class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-3 text-sm text-slate-800 font-semibold appearance-none focus:ring-2 focus:ring-secondary focus:border-secondary focus:bg-white cursor-pointer" id="quick-marca">
+<option value="all">Todas las marcas</option>
+<option value="Toyota">Toyota</option>
+<option value="Volkswagen">Volkswagen</option>
+<option value="Ford">Ford</option>
+<option value="Audi">Audi</option>
+<option value="Jeep">Jeep</option>
+<option value="Peugeot">Peugeot</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<!-- Selector de Carrocería -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">tune</span>
+                Carrocería
+              </label>
+<div class="relative">
+<select class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-3 text-sm text-slate-800 font-semibold appearance-none focus:ring-2 focus:ring-secondary focus:border-secondary focus:bg-white cursor-pointer" id="quick-segmento">
+<option value="all">Todas las carrocerías</option>
+<option value="pickup">Pick-up / Utilitario</option>
+<option value="suv">SUV / Crossover</option>
+<option value="sedan">Sedán Ejecutivo</option>
+<option value="hatchback">Hatchback</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<!-- Selector de Presupuesto -->
+<div class="flex flex-col gap-1.5">
+<label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">payments</span>
+                Presupuesto Máximo
+              </label>
+<div class="relative">
+<select class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-3 text-sm text-slate-800 font-semibold appearance-none focus:ring-2 focus:ring-secondary focus:border-secondary focus:bg-white cursor-pointer" id="quick-precio">
+<option value="all">Sin límite de precio</option>
+<option value="25000">Hasta USD 25,000</option>
+<option value="35000">Hasta USD 35,000</option>
+<option value="50000">Hasta USD 50,000</option>
+<option value="60000">Hasta USD 60,000</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<!-- Botón Buscar -->
+<div>
+<button class="w-full h-[48px] rounded-lg bg-secondary hover:bg-secondary-container text-white font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-500/20" onclick="executeInteractiveCatalogSearch(event)">
+<span class="material-symbols-outlined text-[20px]">search</span>
+                Buscar Vehículos
+              </button>
+</div>
+</div>
+<!-- Trust Badges Under Search -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 mt-6 border-t border-slate-100">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-blue-50 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">verified</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">150 puntos de peritaje</p>
+<p class="text-xs text-slate-500">Diagnóstico computarizado OBD-II</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-blue-50 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">Garantía mecánica 12 meses</p>
+<p class="text-xs text-slate-500">Motor, caja y transmisión cubierta</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-blue-50 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-slate-900">Documentación al día</p>
+<p class="text-xs text-slate-500">Libre de deuda lista para transferir</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+         CATÁLOGO DE VEHÍCULOS SECTION
+         ========================================== -->
+
+<!-- ==========================================
+         FINANCIAMIENTO & SERVICIOS (#servicios)
+         ========================================== -->
+<section class="w-full bg-white py-16 lg:py-24 border-y border-slate-200 scroll-mt-20" id="servicios">
+<div class="max-w-7xl mx-auto px-4 sm:px-8">
+<div class="max-w-3xl mb-12">
+<span class="text-xs uppercase tracking-widest text-secondary font-bold">Servicios Integrales Apex</span>
+<h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1">
+            Financiamiento a Medida &amp; Servicios Certificados
+          </h2>
+<p class="text-base text-slate-600 mt-2">
+            Brindamos soluciones financieras y periciales ágiles para que accedas a tu próximo vehículo con absoluta tranquilidad y transparencia.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Pilar 1: Peritaje -->
+<div class="p-8 rounded-2xl bg-surface border border-slate-200/80 hover:border-secondary hover:shadow-lg transition-all flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-blue-100 text-secondary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[28px]">checklist_rtl</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-3">Peritaje Certificado de 150 Puntos</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Diagnóstico computarizado OBD-II, medición micrométrica de pintura original, revisión estructural, suspensión, frenos y prueba dinámica de ruta antes de cada entrega.
+              </p>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-200 flex items-center text-xs font-bold text-secondary">
+<span class="">Informe técnico incluido en cada compra</span>
+<span class="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
+</div>
+</div>
+<!-- Pilar 2: Financiación -->
+<div class="p-8 rounded-2xl bg-surface border border-slate-200/80 hover:border-secondary hover:shadow-lg transition-all flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-blue-100 text-secondary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[28px]">account_balance</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-3">Financiamiento Prendario Flexible</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Financiamos hasta el 60% del valor de la unidad en cuotas fijas en pesos, créditos UVA o dólares billete con aprobación express en 24 horas y tasas preferenciales bancarias.
+              </p>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-200 flex items-center text-xs font-bold text-secondary">
+<span class="">Simulación de cuota en el acto</span>
+<span class="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
+</div>
+</div>
+<!-- Pilar 3: Permuta -->
+<div class="p-8 rounded-2xl bg-surface border border-slate-200/80 hover:border-secondary hover:shadow-lg transition-all flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-blue-100 text-secondary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-[28px]">sync_alt</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 mb-3">Tasación y Toma de Usados en Permuta</h3>
+<p class="text-sm text-slate-600 leading-relaxed">
+                Cotización profesional en el día de tu vehículo usado al mejor valor del mercado. Realizá la operación llave contra llave sin quedarte sin movilidad ni un solo día.
+              </p>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-200 flex items-center text-xs font-bold text-secondary">
+<span class="">Operación llave por llave garantizada</span>
+<span class="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+         SECCIÓN NOSOTROS (#nosotros)
+         ========================================== -->
+<section class="w-full bg-slate-900 text-white py-16 lg:py-20 scroll-mt-20" id="nosotros">
+<div class="max-w-7xl mx-auto px-4 sm:px-8">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-6">
+<span class="text-xs uppercase tracking-widest text-blue-400 font-bold">Trayectoria &amp; Excelencia</span>
+<h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mt-2 text-white">
+              Más de una década liderando el mercado de vehículos premium y seleccionados.
+            </h2>
+<p class="text-slate-300 mt-4 leading-relaxed text-sm sm:text-base">
+              En Apex Motors combinamos peritaje riguroso, atención personalizada y asesoría integral de posventa. Nuestro showroom de Vicente López cuenta con los más altos estándares para que tu experiencia de compra sea transparente y satisfactoria.
+            </p>
+<div class="mt-6 flex flex-wrap gap-4">
+<div class="flex items-center gap-2 text-sm text-slate-200">
+<span class="material-symbols-outlined text-emerald-400">verified</span>
+                Gestoría propia y trámites inmediatos
+              </div>
+<div class="flex items-center gap-2 text-sm text-slate-200">
+<span class="material-symbols-outlined text-emerald-400">verified</span>
+                Entrega a todo el país
+              </div>
+</div>
+</div>
+<div class="lg:col-span-6 grid grid-cols-2 gap-4 sm:gap-6">
+<div class="p-6 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+<div class="text-3xl sm:text-4xl font-extrabold text-blue-400">+12</div>
+<div class="text-xs sm:text-sm font-semibold text-slate-300 mt-1">Años de Trayectoria</div>
+</div>
+<div class="p-6 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+<div class="text-3xl sm:text-4xl font-extrabold text-emerald-400">+4.500</div>
+<div class="text-xs sm:text-sm font-semibold text-slate-300 mt-1">Operaciones Cerradas</div>
+</div>
+<div class="p-6 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+<div class="text-3xl sm:text-4xl font-extrabold text-white">98%</div>
+<div class="text-xs sm:text-sm font-semibold text-slate-300 mt-1">Satisfacción de Clientes</div>
+</div>
+<div class="p-6 rounded-xl bg-slate-800/80 border border-slate-700 text-center">
+<div class="text-3xl sm:text-4xl font-extrabold text-blue-400">2.000 m²</div>
+<div class="text-xs sm:text-sm font-semibold text-slate-300 mt-1">Showroom Cubierto</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ==========================================
+         SHOWROOM, HORARIOS & CONTACTO (#showroom)
+         ========================================== -->
+<section class="w-full bg-surface py-16 lg:py-24 scroll-mt-20" id="showroom">
+<div class="max-w-7xl mx-auto px-4 sm:px-8">
+<div class="max-w-2xl mb-12">
+<span class="text-xs uppercase tracking-widest text-secondary font-bold">Atención Personalizada</span>
+<h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mt-1">
+            Visitanos en nuestro Showroom
+          </h2>
+<p class="text-base text-slate-600 mt-2">
+            Acercate a conocer el stock en persona, realizar pruebas de manejo guiadas y recibir asesoramiento en nuestro espacio de Vicente López.
+          </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Columna Izquierda: Mapa Simulado & Datos Directos -->
+<div class="lg:col-span-7 flex flex-col gap-6">
+<!-- Mapa Visual -->
+<div class="w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-slate-200 relative bg-slate-200">
+<div class="w-full h-full bg-cover bg-center" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuBZ83nVrdgr0KEvBq0hzXuu2hq2xuiN2wPuEwIfqXzVp0EeeXSrIVxSzOBSEru9dEcuQmru0U0r-XCeMYgGKFrIJwjR0Lm5VBkJ8Bjm76IiPUZ29PrCi00WkgbLiL8rkzXlvImEPePdurn7KmL1kHlvwX_NtJdEvtZSmv4eFz3hXaNZ_AQQ3E4ckzYyeHDX4Wm8xfDHXGLJ1kfP2BZT5fPavTW8mO6DW0PZjy-UTTrHDnIAumh4PUrq&quot;);"></div>
+<div class="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-sm p-4 rounded-xl bg-white/95 backdrop-blur-md shadow-xl border border-slate-200">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-lg bg-secondary text-white flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">location_on</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-slate-900">Showroom Vicente López</h4>
+<p class="text-xs text-slate-600 mt-0.5">Av. del Libertador 4580, Vicente López, Buenos Aires</p>
+<p class="text-[11px] font-bold text-emerald-600 mt-1 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+                      Estacionamiento privado para clientes
+                    </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Horarios y Líneas de Atención -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<!-- Horarios -->
+<div class="p-5 rounded-xl bg-white border border-slate-200">
+<h4 class="text-xs font-bold uppercase tracking-wider text-secondary flex items-center gap-1.5 mb-3">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+                  Horarios de Atención
+                </h4>
+<div class="space-y-2 text-xs text-slate-600">
+<div class="flex justify-between">
+<span class="font-bold text-slate-800">Lunes a Viernes:</span>
+<span class="">09:00 - 19:30 hs</span>
+</div>
+<div class="flex justify-between">
+<span class="font-bold text-slate-800">Sábados:</span>
+<span class="">09:30 - 18:00 hs</span>
+</div>
+<div class="flex justify-between text-slate-500">
+<span class="font-bold">Domingos y Feriados:</span>
+<span class="">Guardia WhatsApp</span>
+</div>
+</div>
+</div>
+<!-- Teléfonos -->
+<div class="p-5 rounded-xl bg-white border border-slate-200">
+<h4 class="text-xs font-bold uppercase tracking-wider text-secondary flex items-center gap-1.5 mb-3">
+<span class="material-symbols-outlined text-[16px]">call</span>
+                  Líneas Directas
+                </h4>
+<div class="space-y-2 text-xs">
+<a class="flex items-center gap-2 text-slate-700 hover:text-secondary font-semibold" href="tel:+541148902300">
+<span class="material-symbols-outlined text-[16px] text-blue-600">call</span>
+                    +54 11 4890-2300 (Central)
+                  </a>
+<a class="flex items-center gap-2 text-slate-700 hover:text-emerald-600 font-semibold" href="https://wa.me/5491155608800" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">chat</span>
+                    +54 9 11 5560-8800 (WhatsApp)
+                  </a>
+<p class="text-slate-500 text-[11px]">ventas@apexmotors.com.ar</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Columna Derecha: Formulario Agendar Test Drive -->
+<div class="lg:col-span-5 bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-lg">
+<h3 class="text-xl font-bold text-slate-900 mb-1">Agendar Visita</h3>
+<p class="text-xs text-slate-500 mb-6">Completá tus datos y un asesor confirmará el turno en menos de 15 minutos.</p>
+<form class="space-y-4" onsubmit="event.preventDefault(); alert('¡Solicitud enviada con éxito! Un asesor se contactará para coordinar tu Test Drive.'); this.reset();">
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Nombre Completo</label>
+<input class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-secondary focus:border-secondary" placeholder="Ej: Mariano Rodríguez" required="" type="text">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Teléfono / WhatsApp</label>
+<input class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-secondary focus:border-secondary" placeholder="Ej: +54 9 11 1234-5678" required="" type="tel">
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Vehículo de Interés</label>
+<select class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-800 focus:bg-white focus:ring-2 focus:ring-secondary focus:border-secondary cursor-pointer">
+<option>Toyota Hilux SRX 4x4 2023</option>
+<option>Ford Ranger Limited V6 2024</option>
+<option>Volkswagen Taos Highline 2022</option>
+<option>Audi A4 40 TFSI S-Line 2021</option>
+<option>Peugeot 208 Feline 2023</option>
+<option>Otro modelo del catálogo</option>
+</select>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Comentario o Consulta (Opcional)</label>
+<textarea class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-secondary focus:border-secondary" placeholder="¿Querés entregar un vehículo en parte de pago o consultar financiación?" rows="3"></textarea>
+</div>
+<button class="w-full py-3 px-4 rounded-lg bg-secondary hover:bg-secondary-container text-white text-sm font-bold transition-all shadow-md shadow-blue-500/20" type="submit">
+                Confirmar Solicitud Visita</button>
+</form>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- ==========================================
+       MODAL DE FICHA TÉCNICA
+       ========================================== -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm" id="vehicle-modal">
+<div class="bg-white text-slate-900 w-full max-w-xl rounded-2xl p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in-95 duration-150">
+<button class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-colors" onclick="closeVehicleModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+<div class="mb-4">
+<span class="text-xs font-bold text-secondary uppercase font-mono" id="modal-code">COD: VEH-2024</span>
+<h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1" id="modal-title">Título del Vehículo</h3>
+<p class="text-xs text-slate-500 mt-0.5" id="modal-details">Detalles de la versión</p>
+</div>
+<div class="grid grid-cols-2 gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200 mb-6">
+<div>
+<span class="text-[11px] text-slate-500 uppercase font-bold">Precio Publicado</span>
+<div class="text-xl font-extrabold text-slate-900" id="modal-price">USD 0.000</div>
+</div>
+<div>
+<span class="text-[11px] text-slate-500 uppercase font-bold">Kilometraje</span>
+<div class="text-base font-bold text-slate-800" id="modal-km">0 km</div>
+</div>
+</div>
+<div class="space-y-2 text-xs text-slate-600 mb-6 leading-relaxed">
+<p class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span> 150 puntos de peritaje aprobados con diagnóstico OBD-II.</p>
+<p class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span> Título, 08 firmado, verificación policial e informe de dominio al día.</p>
+<p class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-emerald-600">check_circle</span> Garantía mecánica certificada por 12 meses Apex Motors.</p>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
+<button class="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors" onclick="closeVehicleModal()">
+          Cerrar
+        </button>
+<a class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold flex items-center justify-center gap-2 transition-colors shadow-sm" href="#" id="modal-whatsapp-cta" rel="noopener noreferrer" target="_blank">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+          Consultar a un Asesor por WhatsApp
+        </a>
+</div>
+</div>
+</div>
+<!-- ==========================================
+       FOOTER INSTITUCIONAL
+       ========================================== -->
+<footer class="w-full bg-slate-950 text-slate-400 pt-16 pb-12 border-t border-slate-800">
+<div class="max-w-7xl mx-auto px-4 sm:px-8">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-800">
+<!-- Col 1: Brand & Bio -->
+<div class="flex flex-col gap-4">
+<div class="flex items-center gap-3">
+<img alt="Apex Motors Logo" class="h-8 w-auto object-contain filter brightness-110" src="https://lh3.googleusercontent.com/aida/AEtjO1WTPHOjZKXTUgXkzyPlo_Ka-a9Lnzy-35t7VZ9Oer3nKcBPl0C06BDpkZjneWWBjx12aoU_gFSIZIZ-ZknZZezGeEWSSOPJTAM0P82s4BncoCGLFd5PVZnfMevQSBFBFMMDXp4CoPqJsQWQbP_QRPY_WYdq3GJkiHtHvHIjj8RRLzaMQl7FPUdDWMd--erD4yhcFJEjgBWyxszNenNzHlc5SYgWteHtpIvoLT5ZyylSOrUOtFMwexQpFeI">
+<span class="text-xl font-extrabold text-white tracking-tight">Apex Motors</span>
+</div>
+<p class="text-xs text-slate-400 leading-relaxed">
+            Concesionaria oficial y selección multimarca premium. Líderes en comercialización de vehículos 0km y seleccionados certificados con entrega inmediata y peritaje computarizado en 150 puntos.
+          </p>
+<div class="flex items-center gap-3 pt-1">
+<a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-secondary hover:text-white flex items-center justify-center text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+</a>
+<a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-secondary hover:text-white flex items-center justify-center text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">public</span>
+</a>
+<a class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-secondary hover:text-white flex items-center justify-center text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">smart_display</span>
+</a>
+</div>
+</div>
+<!-- Col 2: Horarios -->
+<div class="flex flex-col gap-3">
+<h4 class="text-sm font-bold text-white uppercase tracking-wider">Horarios Comerciales</h4>
+<div class="space-y-2 text-xs">
+<div>
+<span class="text-slate-300 font-semibold block">Lunes a Viernes:</span>
+<span class="text-slate-400">09:00 a 19:30 hs</span>
+</div>
+<div>
+<span class="text-slate-300 font-semibold block">Sábados:</span>
+<span class="text-slate-400">09:30 a 18:00 hs</span>
+</div>
+<div>
+<span class="text-slate-300 font-semibold block">Domingos &amp; Feriados:</span>
+<span class="text-slate-400">Guardia Pasiva WhatsApp</span>
+</div>
+</div>
+<div class="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded bg-slate-800/80 border border-slate-700 text-[11px] text-emerald-400 font-bold">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Showroom Abierto Hoy
+          </div>
+</div>
+<!-- Col 3: Contacto Showroom -->
+<div class="flex flex-col gap-3">
+<h4 class="text-sm font-bold text-white uppercase tracking-wider">Showroom Central</h4>
+<div class="space-y-2.5 text-xs">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-blue-400 text-[16px]">location_on</span>
+<span class="">Av. del Libertador 4580, Vicente López, Buenos Aires</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-400 text-[16px]">call</span>
+<span class="">Central: +54 11 4890-2300</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-[16px]">chat</span>
+<span class="">WhatsApp: +54 9 11 5560-8800</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-400 text-[16px]">mail</span>
+<span class="">ventas@apexmotors.com.ar</span>
+</div>
+</div>
+</div>
+<!-- Col 4: Navegación Rápida -->
+<div class="flex flex-col gap-3">
+<h4 class="text-sm font-bold text-white uppercase tracking-wider">Navegación</h4>
+<ul class="space-y-2 text-xs">
+<li class=""><a class="hover:text-white transition-colors" href="#hero">Inicio</a></li>
+<li class=""><a class="hover:text-white transition-colors cursor-pointer" href="#catalogo" onclick="event.preventDefault(); showCatalogToast('Redirigiendo a: Catálogo de Vehículos con Filtros Laterales y Buscador...');">Catálogo de Vehículos</a></li>
+<li class=""><a class="hover:text-white transition-colors" href="#servicios">Financiamiento &amp; Permutas</a></li>
+<li class=""><a class="hover:text-white transition-colors" href="#nosotros">Nosotros &amp; Trayectoria</a></li>
+<li class=""><a class="hover:text-white transition-colors" href="#showroom">Agendar Test Drive</a></li>
+</ul>
+</div>
+</div>
+<!-- Legal & Copyright -->
+<div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+<p class="">© 2025 Apex Motors S.A. CUIT: 30-71489023-9. Todos los derechos reservados.</p>
+<div class="flex items-center gap-4">
+<a class="hover:text-slate-300 transition-colors" href="#">Términos y Condiciones</a>
+<a class="hover:text-slate-300 transition-colors" href="#">Privacidad de Datos</a>
+<a class="hover:text-slate-300 transition-colors" href="#">Defensa del Consumidor</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- ==========================================
+       SCRIPTS INTERACTIVOS (Filtros, Sort & Modales)
+       ========================================== -->
+<script>
+    let currentSegment = 'all';
+    let currentBrand = 'all';
+
+    function setSegmentFilter(segment, btn) {
+      currentSegment = segment;
+      document.querySelectorAll('.segment-tab').forEach(el => {
+        el.classList.remove('bg-slate-900', 'text-white');
+        el.classList.add('bg-slate-100', 'text-slate-700');
+      });
+      btn.classList.remove('bg-slate-100', 'text-slate-700');
+      btn.classList.add('bg-slate-900', 'text-white');
+      applyFilters();
+    }
+
+    function executeQuickSearch() {
+      const selectedBrand = document.getElementById('quick-marca').value;
+      const selectedSegment = document.getElementById('quick-segmento').value;
+      const selectedPrice = document.getElementById('quick-precio').value;
+
+      currentBrand = selectedBrand;
+      if (selectedSegment !== 'all') {
+        currentSegment = selectedSegment;
+      } else {
+        currentSegment = 'all';
+      }
+
+      document.getElementById('catalogo').scrollIntoView({ behavior: 'smooth' });
+      applyFilters(selectedPrice);
+    }
+
+    function applyFilters(maxPriceOverride = null) {
+      const query = (document.getElementById('filter-model-input').value || '').toLowerCase().trim();
+      const maxPrice = maxPriceOverride && maxPriceOverride !== 'all' 
+        ? parseFloat(maxPriceOverride) 
+        : 999999;
+
+      const cards = document.querySelectorAll('.car-card');
+      let count = 0;
+
+      cards.forEach(card => {
+        const brand = card.getAttribute('data-brand');
+        const segment = card.getAttribute('data-segment');
+        const model = (card.getAttribute('data-model') || '').toLowerCase();
+        const price = parseFloat(card.getAttribute('data-price')) || 0;
+
+        const matchBrand = (currentBrand === 'all' || brand === currentBrand);
+        const matchSegment = (currentSegment === 'all' || segment === currentSegment);
+        const matchQuery = query === '' || model.includes(query);
+        const matchPrice = price <= maxPrice;
+
+        if (matchBrand && matchSegment && matchQuery && matchPrice) {
+          card.style.display = 'flex';
+          count++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const counter = document.getElementById('counter-display');
+      if (counter) counter.textContent = count;
+    }
+
+    function sortVehicles(criteria) {
+      const container = document.getElementById('cars-container');
+      const cards = Array.from(container.querySelectorAll('.car-card'));
+
+      cards.sort((a, b) => {
+        const priceA = parseFloat(a.getAttribute('data-price')) || 0;
+        const priceB = parseFloat(b.getAttribute('data-price')) || 0;
+        const yearA = parseInt(a.getAttribute('data-year'), 10) || 0;
+        const yearB = parseInt(b.getAttribute('data-year'), 10) || 0;
+        const kmA = parseInt(a.getAttribute('data-km'), 10) || 0;
+        const kmB = parseInt(b.getAttribute('data-km'), 10) || 0;
+
+        if (criteria === 'menor-precio') return priceA - priceB;
+        if (criteria === 'mayor-precio') return priceB - priceA;
+        if (criteria === 'reciente') return yearB - yearA;
+        if (criteria === 'km') return kmA - kmB;
+        return 0;
+      });
+
+      cards.forEach(card => container.appendChild(card));
+    }
+
+    function previewVehicleModal(title, price, km, code, details) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-price').textContent = price;
+      document.getElementById('modal-km').textContent = km;
+      document.getElementById('modal-code').textContent = 'COD: ' + code;
+      document.getElementById('modal-details').textContent = details;
+
+      const message = encodeURIComponent(`Hola Apex Motors, consulto por ${title} [${code}]`);
+      document.getElementById('modal-whatsapp-cta').setAttribute('href', `https://wa.me/5491155608800?text=${message}`);
+
+      document.getElementById('vehicle-modal').classList.remove('hidden');
+    }
+
+    function closeVehicleModal() {
+      document.getElementById('vehicle-modal').classList.add('hidden');
+    }
+
+    document.getElementById('vehicle-modal')?.addEventListener('click', function(e) {
+      if (e.target === this) closeVehicleModal();
+    });
+  </script>
+
+
+
+
+
+
+<div id="catalog-redirect-toast" class="fixed bottom-6 right-6 z-50 hidden max-w-md bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 animate-in fade-in duration-200"><div class="flex items-start gap-3"><div class="w-9 h-9 rounded-xl bg-secondary text-white flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[20px]">tune</span></div><div class="flex-1"><div class="text-xs font-bold uppercase tracking-wider text-blue-400">Apex Motors | Navegación</div><h4 class="text-sm font-bold text-white mt-0.5" id="catalog-toast-title">Catálogo de Vehículos con Filtros Laterales</h4><p class="text-xs text-slate-300 mt-1 leading-relaxed" id="catalog-toast-desc">Cargando inventario completo con panel de filtros...</p></div><button onclick="document.getElementById('catalog-redirect-toast').classList.add('hidden')" class="text-slate-400 hover:text-white transition-colors"><span class="material-symbols-outlined text-[18px]">close</span></button></div></div><script>function showCatalogToast(title, desc) { const t = document.getElementById('catalog-redirect-toast'); if (!t) return; if (title) document.getElementById('catalog-toast-title').textContent = title; if (desc) document.getElementById('catalog-toast-desc').textContent = desc; else document.getElementById('catalog-toast-desc').textContent = 'Conectando con la vista de catálogo completa con buscador y filtros avanzados.'; t.classList.remove('hidden'); setTimeout(() => { t.classList.add('hidden'); }, 4000); } function executeInteractiveCatalogSearch(e) { if (e) e.preventDefault(); const brand = document.getElementById('quick-marca')?.value || 'all'; const segment = document.getElementById('quick-segmento')?.value || 'all'; const price = document.getElementById('quick-precio')?.value || 'all'; const filterSummary = [brand !== 'all' ? 'Marca: ' + brand : '', segment !== 'all' ? 'Carrocería: ' + segment : '', price !== 'all' ? 'Hasta USD ' + Number(price).toLocaleString() : ''].filter(Boolean).join(' • ') || 'Filtros: Todos'; showCatalogToast('Redirigiendo a Catálogo con Filtros', 'Aplicando parámetros (' + filterSummary + ') en el Catálogo de Vehículos con Filtros Laterales y Buscador...'); }</script></body></html>

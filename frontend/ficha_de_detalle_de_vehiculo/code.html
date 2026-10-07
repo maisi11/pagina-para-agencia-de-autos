@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="es" style="overflow-y: auto !important; height: auto !important; min-height: 100vh; scroll-behavior: smooth;"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Toyota Hilux SRX 4x4 2.8 TDI 2023 | Apex Motors</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><style>html,body{margin:0;padding:0;min-height:100vh;height:auto!important;overflow-y:auto!important;scroll-behavior:smooth;}main{margin-top:0;height:auto!important;min-height:100%;overflow-y:visible!important;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}::-webkit-scrollbar{width:8px;height:8px;}::-webkit-scrollbar-track{background:#f1f5f9;}::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px;}::-webkit-scrollbar-thumb:hover{background:#94a3b8;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"primary":"#000000","secondary":"#0051d5","surface":"#f8f9ff","surface-low":"#eff4ff","surface-high":"#dce9ff","surface-highest":"#d3e4fe","card-bg":"#ffffff","on-surface":"#0b1c30","on-variant":"#45464d","success":"#10B981"},fontFamily:{sans:["Plus Jakarta Sans","sans-serif"]}}}};</script></head>
+<body class="bg-surface font-sans text-on-surface antialiased relative selection:bg-secondary selection:text-white min-h-screen" style="overflow-y: auto !important; height: auto !important;">
+<!-- Toast Notification Container -->
+<div class="fixed bottom-6 right-6 z-[100] flex flex-col gap-2 pointer-events-none" id="toast-container"></div>
+<!-- Floating Scroll Navigation Controls (Subir y Bajar) -->
+<div class="fixed right-5 bottom-20 z-50 flex flex-col gap-2 pointer-events-auto">
+<button class="w-11 h-11 rounded-full bg-white text-on-surface shadow-2xl border border-surface-high flex items-center justify-center hover:bg-secondary hover:text-white transition-all hover:scale-110 active:scale-95 group cursor-pointer" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Subir al inicio">
+<span class="material-symbols-outlined text-xl">arrow_upward</span>
+</button>
+<button class="w-11 h-11 rounded-full bg-white text-on-surface shadow-2xl border border-surface-high flex items-center justify-center hover:bg-secondary hover:text-white transition-all hover:scale-110 active:scale-95 group cursor-pointer" onclick="window.scrollTo({top: document.documentElement.scrollHeight || document.body.scrollHeight, behavior: 'smooth'})" title="Bajar al pie de página">
+<span class="material-symbols-outlined text-xl">arrow_downward</span>
+</button>
+</div>
+<!-- Header -->
+<header class="fixed top-0 left-0 right-0 w-full z-40 bg-surface/95 backdrop-blur-md shadow-sm border-b border-surface-high/50">
+<div class="w-full bg-surface-low px-4 sm:px-8">
+<div class="max-w-7xl mx-auto h-9 flex items-center justify-between text-xs text-on-variant">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-1.5 cursor-pointer hover:text-secondary transition-colors" onclick="showToast('Conectando a central (+54 11 4890-2300)...', 'call')">
+<span class="material-symbols-outlined text-sm text-secondary">call</span><span>+54 11 4890-2300</span>
+</div>
+<div class="hidden sm:flex items-center gap-1.5 cursor-pointer hover:text-success transition-colors" onclick="openWhatsAppModal()">
+<span class="material-symbols-outlined text-sm text-success">chat</span><span>WhatsApp: +54 9 11 5560-8800</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:inline">Lun - Sáb: 09:00 - 19:30</span>
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-black text-white hover:bg-slate-800 text-xs font-semibold transition-all cursor-pointer" onclick="simulateNav('Iniciar Sesión - Portal Vendedores', 'lock')">
+<span class="material-symbols-outlined text-xs">lock</span>Portal Vendedores
+        </button>
+</div>
+</div>
+</div>
+<div class="w-full px-4 sm:px-8">
+<div class="max-w-7xl mx-auto h-16 flex items-center justify-between gap-4">
+<div class="flex items-center gap-3 cursor-pointer" onclick="simulateNav('Inicio / Home', 'home')">
+<img alt="Apex Motors" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH25JjnQljpt4N1dkvObAbiGG7iRrBdtQxzFhWqtGdq8ve1jNetqTPrO5oA049kdLvWejl-knAOzseoAQjQItwOaY3HiirHxJ92xGiOgZ-Y3kr1mrOnU693FG2PdZCeQLv0cGQLuZhng7HuAzmfCpQNBTCFkJs2OHCBeIfzjeLT1kbo5p8t7C7z4sQD1zvipepBciFb0JYLIEDckA-tyjNEdg2QJQJo6RWPPjYrv7bIL9Pljtdt6T2"/>
+<span class="text-xl text-on-surface font-extrabold tracking-tight">Apex Motors</span>
+</div>
+<nav class="hidden lg:flex items-center gap-1">
+<button class="px-3.5 py-1.5 rounded-lg text-sm text-on-variant hover:bg-surface-low hover:text-on-surface transition-colors cursor-pointer" onclick="simulateNav('Inicio / Home', 'home')">Inicio</button>
+<button class="px-3.5 py-1.5 rounded-lg text-sm text-on-surface bg-surface-high font-bold transition-colors cursor-pointer" onclick="simulateNav('Catálogo de Vehículos con Filtros Laterales y Buscador', 'directions_car')">Catálogo de Vehículos</button>
+<button class="px-3.5 py-1.5 rounded-lg text-sm text-on-variant hover:bg-surface-low hover:text-on-surface transition-colors cursor-pointer" onclick="document.getElementById('modulo-financiacion').scrollIntoView({behavior: 'smooth'})">Financiamiento &amp; Servicios</button>
+<button class="px-3.5 py-1.5 rounded-lg text-sm text-on-variant hover:bg-surface-low hover:text-on-surface transition-colors cursor-pointer" onclick="showToast('Concesionario multimarca líder con peritaje computarizado de 150 puntos.', 'info')">Nosotros</button>
+<button class="px-3.5 py-1.5 rounded-lg text-sm text-on-variant hover:bg-surface-low hover:text-on-surface transition-colors cursor-pointer" onclick="document.getElementById('contacto-box').scrollIntoView({behavior: 'smooth'})">Contacto &amp; Showroom</button>
+</nav>
+<div class="flex items-center gap-3">
+<button class="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-white hover:bg-blue-700 text-sm font-semibold transition-all cursor-pointer shadow-sm active:scale-95" onclick="document.getElementById('modal-testdrive').classList.remove('hidden')">
+<span class="material-symbols-outlined text-sm">calendar_month</span>Agendar Visita
+        </button>
+</div>
+</div>
+</div>
+</header>
+<main class="w-full pt-28 bg-surface" style="overflow-y: visible !important; height: auto !important; min-height: 100%;">
+<div class="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col gap-6">
+<!-- Breadcrumbs -->
+<div class="flex flex-wrap items-center justify-between gap-3 text-xs text-on-variant border-b border-surface-high/40 pb-3">
+<div class="flex items-center gap-1.5 flex-wrap">
+<button class="hover:text-secondary cursor-pointer" onclick="simulateNav('Inicio / Home', 'home')">Inicio</button>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<button class="hover:text-secondary cursor-pointer" onclick="simulateNav('Catálogo de Vehículos con Filtros Laterales y Buscador', 'directions_car')">Catálogo</button>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="hover:text-secondary cursor-pointer" onclick="simulateNav('Catálogo - Categoría Pick-ups', 'filter_alt')">Pick-ups &amp; Utilitarios</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface font-bold truncate max-w-xs">Toyota Hilux SRX 4x4 2.8 TDI AT 2023</span>
+</div>
+<button class="inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-surface-high/60 text-secondary hover:bg-surface-high text-xs font-semibold cursor-pointer" onclick="simulateNav('Catálogo de Vehículos con Filtros Laterales y Buscador', 'arrow_back')">
+<span class="material-symbols-outlined text-sm">arrow_back</span>Volver al Catálogo
+      </button>
+</div>
+<!-- Title & Badges Header -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+<div class="space-y-1.5">
+<div class="flex flex-wrap items-center gap-2">
+<span class="px-2.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-xs font-bold tracking-wider uppercase flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span>DISPONIBLE
+          </span>
+<span class="px-2.5 py-0.5 rounded bg-blue-100 text-blue-800 text-xs font-bold tracking-wider uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified</span>CERTIFICADO 150 PUNTOS
+          </span>
+<span class="px-2.5 py-0.5 rounded bg-surface-highest text-on-variant text-xs font-bold tracking-wider uppercase">
+            ÚNICO DUEÑO
+          </span>
+<span class="text-xs text-on-variant">COD: <strong class="font-mono text-on-surface">TOY-2023-014</strong></span>
+</div>
+<h1 class="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">Toyota Hilux SRX 4x4 2.8 TDI 204cv Automática</h1>
+<p class="text-sm text-on-variant max-w-4xl">Máximo equipamiento, asientos de cuero ventilados, asistencias Toyota Safety Sense, tracción 4x4 con reductora y garantía oficial activa transferible.</p>
+</div>
+<div class="flex items-center gap-2 self-start lg:self-end">
+<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white border border-surface-high hover:bg-surface-low text-xs font-bold shadow-sm transition-all cursor-pointer active:scale-95" onclick="handleShareClick()">
+<span class="material-symbols-outlined text-base text-secondary">share</span>Compartir Ficha
+        </button>
+</div>
+</div>
+<!-- Main Content 2 Columns (8 cols left, 4 cols right sticky) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pb-12">
+<!-- Left Column: Gallery, Specs, Details -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Media Gallery Container -->
+<div class="bg-white rounded-2xl p-4 shadow-md border border-surface-high/50 flex flex-col gap-4">
+<div class="flex items-center justify-between flex-wrap gap-2 border-b border-surface-high/40 pb-3">
+<div class="inline-flex p-1 rounded-xl bg-surface-low gap-1" id="media-tabs">
+<button class="px-3.5 py-1.5 rounded-lg bg-black text-white text-xs font-bold shadow-sm flex items-center gap-1.5 cursor-pointer" id="tab-photos" onclick="switchMediaTab('photos')">
+<span class="material-symbols-outlined text-sm">photo_camera</span>Fotos (8)
+              </button>
+<button class="px-3.5 py-1.5 rounded-lg text-on-variant hover:text-on-surface text-xs font-semibold flex items-center gap-1.5 cursor-pointer" id="tab-video" onclick="switchMediaTab('video')">
+<span class="material-symbols-outlined text-sm">smart_display</span>Video Walk-Around HD
+              </button>
+<button class="px-3.5 py-1.5 rounded-lg text-on-variant hover:text-on-surface text-xs font-semibold flex items-center gap-1.5 cursor-pointer" id="tab-360" onclick="switchMediaTab('360')">
+<span class="material-symbols-outlined text-sm">360</span>Tour 360° Interior
+              </button>
+</div>
+<span class="px-2.5 py-1 rounded bg-surface-low text-xs font-semibold text-on-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary">verified_user</span>Fotografía Real de Salón
+            </span>
+</div>
+<!-- Viewport 1: Photos -->
+<div class="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-900 shadow-inner group" id="viewport-photos">
+<img alt="Toyota Hilux SRX 2023" class="w-full h-full object-cover select-none transition-all duration-300" id="main-gallery-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKz12I29YaRWGDvGnU3Uke8TAZDGkgnhldSL5hDV0E6A73OauzZq3xD__ylm0MK2gIo4FsF_axdEQb_NcaU14Edx2ESOjCVwi3-UFeSU2GfHq3xjOgs5nVYI023-2XQQLA1t83f3BKZLQ0camnJr26Q9O-agkVh3-mkDj6JemItUIgDKYk7IG7Epd3EDDeq-cO41HjCQDgfmkpSG-As0LtPw1Xb-DB94CIlWuPSVXQDZKiLXsCMD4n"/>
+<div class="absolute bottom-3 left-3 z-10">
+<span class="px-3 py-1 rounded-full bg-black/75 backdrop-blur text-white text-xs font-semibold shadow" id="photo-counter">Foto 1 de 8</span>
+</div>
+<button class="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur text-xs font-bold text-on-surface hover:bg-secondary hover:text-white shadow transition-all cursor-pointer" onclick="switchMediaTab('video')">
+<span class="material-symbols-outlined text-sm text-secondary">play_circle</span>Ver Video &amp; Sonido Motor
+            </button>
+<button class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-on-surface flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer" onclick="prevSlide()">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-on-surface flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer" onclick="nextSlide()">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+<!-- Viewport 2: Video Walk-Around Simulated -->
+<div class="hidden relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black shadow-inner flex flex-col justify-between p-4" id="viewport-video">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 filter brightness-75 scale-105" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCKz12I29YaRWGDvGnU3Uke8TAZDGkgnhldSL5hDV0E6A73OauzZq3xD__ylm0MK2gIo4FsF_axdEQb_NcaU14Edx2ESOjCVwi3-UFeSU2GfHq3xjOgs5nVYI023-2XQQLA1t83f3BKZLQ0camnJr26Q9O-agkVh3-mkDj6JemItUIgDKYk7IG7Epd3EDDeq-cO41HjCQDgfmkpSG-As0LtPw1Xb-DB94CIlWuPSVXQDZKiLXsCMD4n');"></div>
+<div class="relative z-10 flex items-center justify-between text-white text-xs">
+<span class="px-3 py-1 rounded bg-red-600/90 font-bold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-white animate-ping"></span>WALK-AROUND OFICIAL APEX • 4K</span>
+<span class="font-mono bg-black/60 px-2 py-1 rounded">01:45 / 03:20</span>
+</div>
+<div class="relative z-10 self-center flex flex-col items-center gap-2">
+<button class="w-16 h-16 rounded-full bg-secondary text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all cursor-pointer" onclick="toggleVideoPlayback()">
+<span class="material-symbols-outlined text-3xl ml-0.5" id="video-play-icon">pause</span>
+</button>
+<span class="bg-black/70 px-3 py-1 rounded-full text-white text-xs" id="video-status-text">Reproduciendo: Encendido de motor 2.8 D-4D</span>
+</div>
+<div class="relative z-10 flex flex-col gap-2 pt-4 bg-gradient-to-t from-black/90 to-transparent">
+<div class="w-full bg-white/20 h-1.5 rounded-full overflow-hidden cursor-pointer" onclick="showToast('Avance en video simulado', 'smart_display')">
+<div class="bg-secondary h-full rounded-full" style="width: 55%;"></div>
+</div>
+<div class="flex items-center justify-between text-white text-xs">
+<span>Capítulo: Exterior &amp; Caja de Carga</span>
+<button class="text-white/80 hover:text-white flex items-center gap-1" onclick="switchMediaTab('photos')"><span class="material-symbols-outlined text-xs">close</span>Volver a Fotos</button>
+</div>
+</div>
+</div>
+<!-- Viewport 3: Tour 360 Simulated -->
+<div class="hidden relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-950 shadow-inner flex flex-col justify-between p-4 select-none" id="viewport-360">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-300" id="pano-bg" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD9-7-67RiuiXjuQq-z55R1MguVnmn6U0ZP1vsYuAKNDXY5Kuc0gp9QUDmSUkrqyzg-QOi3lTZ_RjK7WBhS8bDBbKMK2CGRlQJYe-vJdYHana2_nWsY4NvnrSIPp2IVC6VEeMn0xaqLkKUP0l9HwC6LUUbUAWgjL7CYEDA9aC9EMtg3v1wONvX5XrsUDYrLXeo_Y8iu4GcmBBAx-cDglzoB2clH5pRodit0O9sAlIOGBiNK6i1EZzRi'); transform: scale(1.15);"></div>
+<div class="relative z-10 flex items-center justify-between text-white text-xs">
+<span class="px-3 py-1 rounded bg-black/60 font-bold flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-secondary animate-spin">360</span>PANORAMA 360° HABITÁCULO</span>
+<div class="flex gap-1">
+<button class="p-1 rounded bg-black/70 hover:bg-black text-white cursor-pointer" onclick="rotatePano(-30)"><span class="material-symbols-outlined text-sm">rotate_left</span></button>
+<button class="p-1 rounded bg-black/70 hover:bg-black text-white cursor-pointer" onclick="rotatePano(30)"><span class="material-symbols-outlined text-sm">rotate_right</span></button>
+</div>
+</div>
+<div class="relative z-10 self-center flex flex-wrap gap-2 justify-center">
+<button class="px-3 py-1 rounded-full bg-secondary/90 hover:bg-secondary text-white text-xs font-bold shadow-lg" onclick="showToast('Pantalla táctil de 9 pulgadas con Apple CarPlay y Android Auto', 'touch_app')">Pantalla Táctil 9"</button>
+<button class="px-3 py-1 rounded-full bg-secondary/90 hover:bg-secondary text-white text-xs font-bold shadow-lg" onclick="showToast('Butacas de cuero microperforado ventiladas y calefaccionadas', 'airline_seat_recline_extra')">Asientos Ventilados</button>
+<button class="px-3 py-1 rounded-full bg-secondary/90 hover:bg-secondary text-white text-xs font-bold shadow-lg" onclick="showToast('Sistema de audio JBL Premium con 9 parlantes de alta fidelidad', 'speaker')">Audio JBL Premium</button>
+</div>
+<div class="relative z-10 text-center text-white/80 text-xs bg-black/60 py-1 px-3 rounded-full self-center">
+              Usá los botones o arrastrá para girar 360° dentro de la cabina
+            </div>
+</div>
+<!-- Thumbnails Strip -->
+<div class="grid grid-cols-4 sm:grid-cols-8 gap-2 pt-1" id="thumbnail-strip">
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border-2 border-secondary cursor-pointer shadow-sm" onclick="setMainImage(0, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKz12I29YaRWGDvGnU3Uke8TAZDGkgnhldSL5hDV0E6A73OauzZq3xD__ylm0MK2gIo4FsF_axdEQb_NcaU14Edx2ESOjCVwi3-UFeSU2GfHq3xjOgs5nVYI023-2XQQLA1t83f3BKZLQ0camnJr26Q9O-agkVh3-mkDj6JemItUIgDKYk7IG7Epd3EDDeq-cO41HjCQDgfmkpSG-As0LtPw1Xb-DB94CIlWuPSVXQDZKiLXsCMD4n"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(1, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1oiZLyuiFbolX8JVYWlE4oDtgJmynvzVJHR9rNFL3dcPmO0lBsDPK3I8IVptJWn3KZwJVR5bEdmiif3JC6v_jdnFx7WjgsVl0VOXKNnLSu8qHMZDaCZ0_gGFEgjCZsA6Oq-bt3K46BLgtElqT19rqHn2Q4KS2KD_UHX-eR_92Z8lNCb7lDl7C881MdB7pwO3-oee5TSAYj0LNiJBXZb4SrgOcWA7bH_lpk2cRqjnDW6R30UJLMAwI"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(2, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSxUWgUjh9AaIQzazgP1cKmr1Xh1c5LxOaIkmkGnCk1KE6kcWluzD_PLY22cqOlfqA5Cifb9CBW90w7lcQ_WJTiT0VthDqe51OarwENrju7LzlGQvIssSp6mxSwbxOsx-Qyn3e6mY-bxcLkr8K4v1g_OuhHwIqzqaDinZUezgiN2Qzx-eMmjHUoz9oGYpItE7HSrAST_PSpoDaOGlgZ1slaEmHF2ZytdDQqAf23tTrjMW6dLDc5KQ6"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(3, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcaTWpiUEiOfaMJuTZyWSVKQSoqwkLdS8Zw2_CSXdTUClPoNw1tqZv5hy81YAYYFTJlGj2bOLzjG1nsylNycTisj1dNlKMINs6lLiQ_nYfRqUH0xYT6vH0TmMqbZuZdg7Vscl9XXN74inc5Y6ZDevcKruxoYhnUOqI_a7aujzT1Wiv9nna_K6s_Fq4s8Gsh_9hy94rP6DOVPzcnUQ13ng4Tkbr9oAX2URnKwVAPtHFIpIdxyXm1NM_"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(4, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPVJI_ua-xD7tQVEH3BEN7PjUiIueUXGDCO6Vrk-WBVDgO8S-oe49pLgCXFIwtsN_Wzg1cVbTW25dVP20nxPBTuGn2YhsORNRd1mO6uk0mWVnZQuGSfvOQZLaOdSxblCYGQjP5uWme17_f4a_wwDSSeNNV5QCiOdLeb3WL3P5BFHkKoKT0rtmoLtsuPAKeHxACG767Ee4TzWNV1-RCEZOvjEfPb0cztA9HUICRNBV5QfopTbRH2Iqt"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(5, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9-7-67RiuiXjuQq-z55R1MguVnmn6U0ZP1vsYuAKNDXY5Kuc0gp9QUDmSUkrqyzg-QOi3lTZ_RjK7WBhS8bDBbKMK2CGRlQJYe-vJdYHana2_nWsY4NvnrSIPp2IVC6VEeMn0xaqLkKUP0l9HwC6LUUbUAWgjL7CYEDA9aC9EMtg3v1wONvX5XrsUDYrLXeo_Y8iu4GcmBBAx-cDglzoB2clH5pRodit0O9sAlIOGBiNK6i1EZzRi"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(6, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeLwRErpM4o8_lnSo1mVpxC2xNpN9kjhP3iukrLTQ1WLBiXyyUgf27NS8rzzI0vzkzaiytGfadkJyB7-n6JF_36smDHibh22DeIhxBNdSGCCSrqV20Yv9GT5aFYuLLyxoP5W8vQPhHRjyHIzj4yny4eAiMVVMbyKX0IU8P7w51uqTbdje-At7u3F1mrAZ3S8c5_f9gJsAHUsfOCb1B_R-_nBdXmwr1cAh2119smxZ5-F7SylKD85mi"/></button>
+<button class="thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer" onclick="setMainImage(7, this)"><img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYgdGHEDhx10CrdQ7um9BVlwkI-Gisa7RHI9abPIu-gxZXKW-W7qHis7r0FreuUvcAthMo9rrypKcXDJKVUoustHnT4mf8P2kfTNII3mb-0gV2ROI4hFsGzK1oCklDluCN6k083Ws48uRs3n-xzZ0ZLyks_IXD3dt4Ox2O5PgT63nqIE8ccSNRSdouet932VDYnHOFEn2-1WhqmWTNRFQ-v1XzwLpgLw5N3UXstw1Dl6tgZaxb9bpM"/></button>
+</div>
+</div>
+<!-- Spec Quick Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<div class="bg-white p-4 rounded-xl border border-surface-high/50 shadow-sm flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-xs text-on-variant font-semibold"><span class="material-symbols-outlined text-sm text-secondary">calendar_today</span>Año Modelo</div>
+<span class="text-xl font-bold text-on-surface">2023</span>
+<span class="text-xs text-on-variant">Patentado Jul 2023</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-surface-high/50 shadow-sm flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-xs text-on-variant font-semibold"><span class="material-symbols-outlined text-sm text-secondary">speed</span>Kilometraje</div>
+<span class="text-xl font-bold text-on-surface">28.500 km</span>
+<span class="text-xs text-on-variant">Ruta comprobada</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-surface-high/50 shadow-sm flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-xs text-on-variant font-semibold"><span class="material-symbols-outlined text-sm text-secondary">settings</span>Caja &amp; Tracción</div>
+<span class="text-xl font-bold text-on-surface">AT6 4x4</span>
+<span class="text-xs text-on-variant">Con Reductora &amp; Bloqueo</span>
+</div>
+<div class="bg-white p-4 rounded-xl border border-surface-high/50 shadow-sm flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-xs text-on-variant font-semibold"><span class="material-symbols-outlined text-sm text-secondary">local_gas_station</span>Motor &amp; Combustible</div>
+<span class="text-xl font-bold text-on-surface">2.8 TDI 204cv</span>
+<span class="text-xs text-on-variant">Diésel Grado 3 (Euro V)</span>
+</div>
+</div>
+<!-- Description & Seller Story -->
+<div class="bg-white rounded-xl p-6 border border-surface-high/50 shadow-sm flex flex-col gap-3">
+<h2 class="text-lg font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">description</span>Descripción del Vendedor &amp; Historial
+          </h2>
+<div class="text-sm text-on-variant space-y-3 leading-relaxed">
+<p>Presentamos una unidad única por su estado estético y mecánico: <strong class="text-on-surface">Toyota Hilux SRX 4x4 2.8 TDI Automática 2023</strong> en Blanco Perlado con interiores en cuero negro microperforado. Perteneciente a su único titular registral, utilizada exclusivamente para trayectos interurbanos en autopista, sin registros de carga pesada ni off-road severo.</p>
+<p>Cuenta con <strong class="text-on-surface">más de USD 1.800 en accesorios originales Toyota</strong> instalados en concesionario oficial:</p>
+<ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-on-surface font-medium pt-1">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">check</span>Lona marítima retráctil original con traba estanca</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">check</span>Barra antivuelco deportiva cromada aerodinámica</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">check</span>Protector de caja de carga de alta resistencia</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">check</span>Juego de tuercas de seguridad antirrobo codificadas</li>
+</ul>
+<p class="text-xs text-on-variant pt-2 border-t border-surface-high/50">Garantía oficial Toyota de fábrica transferible hasta 2028 o 150.000 kilómetros. Mantenimiento riguroso al día en red oficial.</p>
+</div>
+</div>
+<!-- Detailed Technical Inspection Accordion -->
+<div class="bg-white rounded-xl border border-surface-high/50 shadow-sm overflow-hidden">
+<div class="p-5 bg-surface-low flex items-center justify-between">
+<h2 class="text-base font-bold text-on-surface">Ficha Técnica &amp; Equipamiento Certificado</h2>
+<span class="text-xs text-on-variant">Peritaje 150 Puntos Aprobado</span>
+</div>
+<div class="p-6 space-y-6 text-xs">
+<div>
+<h3 class="font-bold text-secondary uppercase tracking-wider mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">tune</span>Rendimiento &amp; Mecánica</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-on-surface">
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Motorización:</span><span class="font-bold">2.8L D-4D 16v Turbo Intercooler</span></div>
+<div class="flex justify-between p-2 rounded"><span>Potencia:</span><span class="font-bold">204 CV @ 3.400 rpm</span></div>
+<div class="flex justify-between p-2 rounded"><span>Torque:</span><span class="font-bold">500 Nm @ 1.600 - 2.800 rpm</span></div>
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Transmisión:</span><span class="font-bold">Automática secuencial 6 vel.</span></div>
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Tracción:</span><span class="font-bold">4x4 con reductora &amp; bloqueo</span></div>
+<div class="flex justify-between p-2 rounded"><span>Capacidad de remolque:</span><span class="font-bold">3.500 kg con freno</span></div>
+</div>
+</div>
+<div>
+<h3 class="font-bold text-secondary uppercase tracking-wider mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">shield</span>Seguridad (Toyota Safety Sense)</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-on-surface">
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Airbags:</span><span class="font-bold">7 (Frontales, laterales, cortina, rodilla)</span></div>
+<div class="flex justify-between p-2 rounded"><span>Frenado Autónomo (PCS):</span><span class="font-bold">Sí, con detector de peatones</span></div>
+<div class="flex justify-between p-2 rounded"><span>Control Crucero Adaptativo:</span><span class="font-bold">Sí, radar dinámico</span></div>
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Mantenimiento de Carril (LDA):</span><span class="font-bold">Sí, con corrección activa</span></div>
+</div>
+</div>
+<div>
+<h3 class="font-bold text-secondary uppercase tracking-wider mb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">folder_shared</span>Documentación &amp; Titularidad</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-on-surface">
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Titularidad:</span><span class="font-bold">1° Dueño, listo para transferir</span></div>
+<div class="flex justify-between p-2 rounded"><span>VTV Vigente:</span><span class="font-bold">Hasta Julio 2026</span></div>
+<div class="flex justify-between p-2 rounded"><span>Service 20.000 km:</span><span class="font-bold">Oficial sellado en Toyota Kansai</span></div>
+<div class="flex justify-between p-2 rounded bg-surface-low"><span>Gravámenes:</span><span class="font-bold text-emerald-600">100% Libre de deudas</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sticky Purchase Card & Direct CTA -->
+<div class="lg:col-span-4 flex flex-col gap-6 sticky top-28">
+<!-- Main Purchase Card -->
+<div class="bg-white rounded-2xl p-6 shadow-xl border border-surface-high/60 flex flex-col gap-4 relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-1.5 bg-secondary"></div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-on-variant uppercase tracking-wider">Precio Contado Efectivo</span>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-extrabold text-on-surface">USD 46.500</span>
+<span class="text-xs text-on-variant">(Billete)</span>
+</div>
+<div class="text-xs text-on-variant">
+              Equiv. estimado: <strong class="text-on-surface">ARS 55.800.000</strong> <span class="text-[11px] text-on-variant/70">(Ref. MEP)</span>
+</div>
+</div>
+<!-- Financing Module with Interactive Calculator -->
+<div class="p-4 rounded-xl bg-surface-low flex flex-col gap-2 border border-surface-high/50" id="modulo-financiacion">
+<div class="flex items-center justify-between">
+<span class="text-xs font-bold text-secondary flex items-center gap-1"><span class="material-symbols-outlined text-sm">account_balance</span>Financiación Apex</span>
+<button class="text-xs font-bold text-secondary hover:underline cursor-pointer" onclick="toggleCalculator()"><span id="calc-toggle-text">Calcular cuota</span></button>
+</div>
+<p class="text-xs text-on-surface leading-snug">Anticipo mínimo desde <strong class="font-bold">USD 20.000</strong> y saldo en hasta <strong class="font-bold">36 cuotas fijas o UVA</strong> con pre-aprobación en 24 hs.</p>
+<!-- Interactive Embedded Loan Calculator -->
+<div class="hidden mt-2 pt-3 border-t border-surface-high/60 flex flex-col gap-2.5" id="calculator-box">
+<div>
+<div class="flex justify-between text-xs font-semibold text-on-surface mb-1">
+<span>Anticipo:</span>
+<span class="font-bold text-secondary" id="calc-downpayment-val">USD 20.000 (43%)</span>
+</div>
+<input class="w-full h-2 bg-surface-highest rounded-lg appearance-none cursor-pointer accent-secondary" id="calc-range-down" max="40000" min="15000" oninput="updateLoanCalculation()" step="1000" type="range" value="20000"/>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-variant">Plazo cuotas:</span>
+<div class="flex gap-1">
+<button class="loan-btn px-2 py-0.5 rounded bg-white text-xs font-bold border border-surface-high" onclick="setLoanTerm(12, this)">12</button>
+<button class="loan-btn px-2 py-0.5 rounded bg-white text-xs font-bold border border-surface-high" onclick="setLoanTerm(24, this)">24</button>
+<button class="loan-btn px-2 py-0.5 rounded bg-secondary text-white text-xs font-bold" onclick="setLoanTerm(36, this)">36</button>
+<button class="loan-btn px-2 py-0.5 rounded bg-white text-xs font-bold border border-surface-high" onclick="setLoanTerm(48, this)">48</button>
+</div>
+</div>
+<div class="bg-white p-2.5 rounded-lg border border-surface-high/60 flex items-center justify-between">
+<div>
+<div class="text-[11px] text-on-variant">Cuota mensual estimada:</div>
+<div class="text-sm font-extrabold text-on-surface" id="calc-monthly-val">USD 946 / mes</div>
+</div>
+<button class="px-3 py-1 rounded bg-black text-white text-xs font-bold hover:bg-slate-800 cursor-pointer" onclick="applyFinancing()">Solicitar</button>
+</div>
+</div>
+<button class="text-xs font-semibold text-secondary hover:underline text-left inline-flex items-center gap-1 cursor-pointer" onclick="toggleCalculator()">
+              Simular mi plan de cuotas <span class="material-symbols-outlined text-xs">tune</span>
+</button>
+</div>
+<!-- Direct Primary WhatsApp CTA -->
+<div class="flex flex-col gap-2">
+<button class="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-95" onclick="openWhatsAppModal()">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.288.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.178.182-.077.355.101.173.45 0.742.966 1.202.665.592 1.226.776 1.399.863.173.087.275.072.376-.043.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.954-1.399C8.409 21.493 10.148 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"></path></svg>
+<span>Consultar por WhatsApp con Asesor</span>
+</button>
+<div class="p-2 rounded-lg bg-surface-low text-xs text-on-variant flex items-center gap-2 cursor-pointer hover:bg-surface-high/60 transition-colors" onclick="openWhatsAppModal()">
+<span class="material-symbols-outlined text-sm text-emerald-600">chat_bubble_outline</span>
+<span class="italic truncate">"Hola Apex Motors, consulto por la Toyota Hilux SRX 2023 (TOY-2023-014)..."</span>
+</div>
+</div>
+<!-- Secondary Actions -->
+<div class="flex flex-col gap-2">
+<button class="w-full py-2.5 px-4 rounded-xl bg-black hover:bg-slate-800 text-white font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95" onclick="document.getElementById('modal-testdrive').classList.remove('hidden')">
+<span class="material-symbols-outlined text-sm">calendar_month</span>Agendar Test Drive en Showroom
+            </button>
+<button class="w-full py-2.5 px-4 rounded-xl bg-surface-high hover:bg-surface-highest text-on-surface font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95" onclick="document.getElementById('modal-permuta').classList.remove('hidden')">
+<span class="material-symbols-outlined text-sm">swap_horiz</span>Cotizar mi Auto Usado (Permuta)
+            </button>
+</div>
+<!-- Dedicated Advisor -->
+<div class="pt-3 border-t border-surface-high/60 flex items-center gap-3 cursor-pointer hover:bg-surface-low p-2 rounded-xl transition-colors" onclick="openWhatsAppModal()">
+<div class="relative">
+<img class="w-11 h-11 rounded-full object-cover shadow" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-l63PlvC1f46KBl4s6V4VzL0nxgAfXzzUXtIHQ4YO_0jKZooCq0qxbyJnGa-Q-BHep50fHHw_STWLXLZZE8VQT5hFljnxX5TIwuQuZ8bhqf1TwsfvjnyUflbiZnXSoE5XkzJs7Yp-9AwCorFcsEECrr-S_9oUjj44NyP-RrZZdhHYXVW31d10M2kxyMQFLVZHilCGnDwFEKhEULx62DmkGaEEG2vpvo4o94OfojUNG-JXzj41ZqAE"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+</div>
+<div class="flex flex-col text-xs">
+<span class="font-bold text-on-surface">Martín Benítez</span>
+<span class="text-on-variant text-[11px]">Especialista en Pick-ups &amp; 4x4</span>
+<span class="text-emerald-600 font-semibold flex items-center gap-1 text-[11px]"><span class="material-symbols-outlined text-xs">bolt</span>Responde en menos de 5 min</span>
+</div>
+</div>
+<!-- Showroom Box -->
+<div class="p-3 rounded-xl bg-surface-low text-xs text-on-variant flex items-start gap-2 cursor-pointer hover:bg-surface-high/60 transition-colors" id="contacto-box" onclick="showToast('Ubicación: Av. del Libertador 4580, Vicente López. Estacionamiento privado disponible.', 'location_on')">
+<span class="material-symbols-outlined text-base text-secondary shrink-0 mt-0.5">store</span>
+<div>
+<div class="font-bold text-on-surface">Showroom Vicente López</div>
+<div>Av. del Libertador 4580, Bs. As.</div>
+<div class="text-[11px] text-secondary font-semibold pt-0.5">Entrega inmediata • Listo para transferir</div>
+</div>
+</div>
+</div>
+<!-- Trust Badges -->
+<div class="bg-white rounded-2xl p-4 shadow-sm border border-surface-high/50 flex flex-col gap-2.5 text-xs">
+<span class="font-bold text-on-surface uppercase tracking-wider text-[11px]">Compromiso Apex Certified</span>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-emerald-600 shrink-0 mt-0.5">verified</span>
+<div><strong class="text-on-surface">Garantía Mecánica:</strong> Motor y caja cubiertos por 12 meses extendible.</div>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-emerald-600 shrink-0 mt-0.5">gavel</span>
+<div><strong class="text-on-surface">Gestoría Integral:</strong> Trámite de transferencia en el acto sin demoras.</div>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-sm text-emerald-600 shrink-0 mt-0.5">price_check</span>
+<div><strong class="text-on-surface">Aceptamos Dólar / Cripto:</strong> Opciones de liquidación seguras y convenientes.</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Similar Vehicles Horizontal Carousel Section -->
+<section class="w-full bg-surface-low rounded-3xl p-6 sm:p-8 flex flex-col gap-6">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+<div>
+<span class="text-secondary text-xs font-bold uppercase tracking-wider">Opciones Comparables</span>
+<h2 class="text-2xl font-extrabold text-on-surface">Vehículos Similares en Stock</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="inline-flex items-center gap-1 text-xs font-bold text-secondary hover:underline cursor-pointer" onclick="simulateNav('Catálogo de Vehículos con Filtros Laterales y Buscador', 'directions_car')">
+<span>Ver todas las pick-ups y SUVs</span><span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+<div class="flex items-center gap-2">
+<button aria-label="Anterior" class="w-10 h-10 rounded-full bg-white text-on-surface shadow hover:bg-surface-high transition-all flex items-center justify-center cursor-pointer active:scale-95" onclick="scrollCarousel(-360)">
+<span class="material-symbols-outlined text-lg">chevron_left</span>
+</button>
+<button aria-label="Siguiente" class="w-10 h-10 rounded-full bg-white text-secondary shadow hover:bg-secondary hover:text-white transition-all flex items-center justify-center cursor-pointer ring-2 ring-secondary/20 active:scale-95" onclick="scrollCarousel(360)">
+<span class="material-symbols-outlined text-lg font-bold">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Carousel Container -->
+<div class="flex gap-5 overflow-x-auto pb-4 scroll-smooth" id="carousel-similares" style="scrollbar-width: none;">
+<!-- Card 1 -->
+<div class="min-w-[300px] max-w-[320px] shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between border border-surface-high/50 group">
+<div class="cursor-pointer" onclick="selectSimilarCar('Volkswagen Amarok V6 3.0 TDI 2022', 'USD 44.900')">
+<div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdCkqgnY_HQ3BQL2vlgmo1omhPKILeJTdbbFfAhcihpW-IK34OLf8SYNdWUDJLSumfyxORe-ZjwcsaAU9X-YXowsLPRJ49K6jgwApVrSePswK9mYt2o8TqQJN5jZWczcpC9z5Vm-2d-ZBjOq7eZCPQR9HXmKjpip84YBaXiEUlp-Rq6U5B0JFIaacAQfr4o8jfZ6RJhsEiZYUMwR3p5jZYK7s9wYqSPpAqdYYrAFHNpQyJXKH038dL"/>
+<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">DISPONIBLE</span>
+<span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-white/90 text-on-surface text-xs font-bold">2022</span>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<h3 class="font-bold text-on-surface text-base">Volkswagen Amarok V6</h3>
+<p class="text-xs text-on-variant">3.0 TDI 258cv 4Motion AT 8va</p>
+<div class="flex items-center justify-between text-xs text-on-variant border-y border-surface-high/50 py-2 my-2">
+<span>34.000 km</span><span>AT 4x4</span><span>Diésel</span>
+</div>
+</div>
+</div>
+<div class="p-4 pt-0 flex items-center justify-between">
+<span class="font-extrabold text-on-surface text-lg">USD 44.900</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-high hover:bg-secondary hover:text-white text-xs font-bold transition-all cursor-pointer" onclick="selectSimilarCar('Volkswagen Amarok V6 3.0 TDI 2022', 'USD 44.900')">Ver Detalle</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="min-w-[300px] max-w-[320px] shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between border border-surface-high/50 group">
+<div class="cursor-pointer" onclick="selectSimilarCar('Ford Ranger Limited+ 4x4 V6 2023', 'USD 51.500')">
+<div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLwE4FUGwK1zWB8reXqUrmHcfIiDUdSDAE56-Tu_RN46Kihizic2SkxOAVn8OFXwxef8hg0DVGmZGltzL_me3ECBZBCzswtXueiiu1FzmhbHJBsm7Q5G9BH_dBdq-rp0EIdHOy0bMsDre_GcX8OW_HaRzOYQMbTOX4T4V1z2VBo0Y-xKp6l6z0UuNzAzkIcuXVlnjGA59VGUXlhzXJ_W_A-T39iynG62u-Q3qs0k-7L7jb7zxVareD"/>
+<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">DISPONIBLE</span>
+<span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-white/90 text-on-surface text-xs font-bold">2023</span>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<h3 class="font-bold text-on-surface text-base">Ford Ranger Limited+ 4x4</h3>
+<p class="text-xs text-on-variant">3.0 V6 250cv AT 10ma</p>
+<div class="flex items-center justify-between text-xs text-on-variant border-y border-surface-high/50 py-2 my-2">
+<span>18.200 km</span><span>AT10 4WD</span><span>Diésel</span>
+</div>
+</div>
+</div>
+<div class="p-4 pt-0 flex items-center justify-between">
+<span class="font-extrabold text-on-surface text-lg">USD 51.500</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-high hover:bg-secondary hover:text-white text-xs font-bold transition-all cursor-pointer" onclick="selectSimilarCar('Ford Ranger Limited+ 4x4 V6 2023', 'USD 51.500')">Ver Detalle</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="min-w-[300px] max-w-[320px] shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between border border-surface-high/50 group">
+<div class="cursor-pointer" onclick="selectSimilarCar('Toyota SW4 Diamond 4x4 7 Plazas 2022', 'USD 58.000')">
+<div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYrwJgIofk5tm2HvBJMG0g-uw3fPE3yM7QdPUuKVpEg70FSpgrESueHRkSrizkuccVkLJYHl1koT0R2oL3C2JjtbWbxyRz7uxzb75-cRQibgbGMmpoY-7IJEtsbJQJg-_CpZiaqORtT7vnSpCcNvUhJgaGrGd4qZo_DUrQZxjSlTcyJih3c9uMlH7gPGaY1ksddQQ3AbSbuEoyo-CXe6eAnZ9APFvqG3sa6S3P16VGhHnJFbO45JYu"/>
+<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">RESERVADO</span>
+<span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-white/90 text-on-surface text-xs font-bold">2022</span>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<h3 class="font-bold text-on-surface text-base">Toyota SW4 Diamond 4x4</h3>
+<p class="text-xs text-on-variant">2.8 TDI 204cv 7 Plazas</p>
+<div class="flex items-center justify-between text-xs text-on-variant border-y border-surface-high/50 py-2 my-2">
+<span>31.500 km</span><span>AT6 4x4</span><span>Diésel</span>
+</div>
+</div>
+</div>
+<div class="p-4 pt-0 flex items-center justify-between">
+<span class="font-extrabold text-on-surface text-lg">USD 58.000</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-high hover:bg-secondary hover:text-white text-xs font-bold transition-all cursor-pointer" onclick="selectSimilarCar('Toyota SW4 Diamond 4x4 7 Plazas 2022', 'USD 58.000')">Ver Detalle</button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="min-w-[300px] max-w-[320px] shrink-0 bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between border border-surface-high/50 group">
+<div class="cursor-pointer" onclick="selectSimilarCar('Jeep Compass Limited T270 2023', 'USD 36.800')">
+<div class="relative aspect-[16/10] overflow-hidden bg-slate-900">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSxUWgUjh9AaIQzazgP1cKmr1Xh1c5LxOaIkmkGnCk1KE6kcWluzD_PLY22cqOlfqA5Cifb9CBW90w7lcQ_WJTiT0VthDqe51OarwENrju7LzlGQvIssSp6mxSwbxOsx-Qyn3e6mY-bxcLkr8K4v1g_OuhHwIqzqaDinZUezgiN2Qzx-eMmjHUoz9oGYpItE7HSrAST_PSpoDaOGlgZ1slaEmHF2ZytdDQqAf23tTrjMW6dLDc5KQ6"/>
+<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">DISPONIBLE</span>
+<span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded bg-white/90 text-on-surface text-xs font-bold">2023</span>
+</div>
+<div class="p-4 flex flex-col gap-1">
+<h3 class="font-bold text-on-surface text-base">Jeep Compass Limited T270</h3>
+<p class="text-xs text-on-variant">1.3 Turbo 175cv AT6</p>
+<div class="flex items-center justify-between text-xs text-on-variant border-y border-surface-high/50 py-2 my-2">
+<span>21.400 km</span><span>AT6 4x2</span><span>Nafta</span>
+</div>
+</div>
+</div>
+<div class="p-4 pt-0 flex items-center justify-between">
+<span class="font-extrabold text-on-surface text-lg">USD 36.800</span>
+<button class="px-3 py-1.5 rounded-lg bg-surface-high hover:bg-secondary hover:text-white text-xs font-bold transition-all cursor-pointer" onclick="selectSimilarCar('Jeep Compass Limited T270 2023', 'USD 36.800')">Ver Detalle</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full bg-slate-950 text-white pt-12 pb-8 mt-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 pb-8 border-b border-slate-800">
+<div class="flex flex-col gap-3">
+<div class="flex items-center gap-2 cursor-pointer" onclick="simulateNav('Inicio / Home', 'home')">
+<span class="text-xl font-extrabold tracking-tight text-white">Apex Motors</span>
+</div>
+<p class="text-xs text-slate-400">Concesionaria oficial y selección multimarca premium con garantía certificada y peritaje de 150 puntos.</p>
+</div>
+<div>
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Horarios Comerciales</h4>
+<p class="text-xs text-slate-400">Lunes a Viernes: 09:00 a 19:30 hs<br/>Sábados: 09:30 a 18:00 hs<br/>Domingos: Guardia WhatsApp</p>
+</div>
+<div>
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Showroom Central</h4>
+<p class="text-xs text-slate-400">Av. del Libertador 4580, Vicente López<br/>Tel: +54 11 4890-2300<br/>ventas@apexmotors.com.ar</p>
+</div>
+<div>
+<h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Navegación</h4>
+<ul class="text-xs text-slate-400 space-y-1.5">
+<li><button class="hover:text-white cursor-pointer" onclick="simulateNav('Inicio / Home', 'home')">Inicio</button></li>
+<li><button class="hover:text-white cursor-pointer" onclick="simulateNav('Catálogo de Vehículos con Filtros Laterales y Buscador', 'directions_car')">Catálogo de Vehículos</button></li>
+<li><button class="hover:text-white cursor-pointer" onclick="document.getElementById('modulo-financiacion').scrollIntoView({behavior: 'smooth'})">Financiamiento &amp; Tasaciones</button></li>
+<li><button class="hover:text-white cursor-pointer" onclick="simulateNav('Iniciar Sesión - Portal Vendedores', 'lock')">Portal Vendedores</button></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-4 sm:px-8 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-2">
+<span>© 2025 Apex Motors S.A. Todos los derechos reservados.</span>
+<div class="flex gap-4">
+<span class="hover:text-slate-400 cursor-pointer" onclick="showToast('Términos y condiciones de Apex Motors', 'info')">Términos</span>
+<span class="hover:text-slate-400 cursor-pointer" onclick="showToast('Política de privacidad y protección de datos', 'info')">Privacidad</span>
+<span class="hover:text-slate-400 cursor-pointer" onclick="showToast('Defensa del Consumidor', 'info')">Defensa del Consumidor</span>
+</div>
+</div>
+</footer>
+<!-- Modal: Test Drive -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" id="modal-testdrive">
+<div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-surface-high pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">calendar_month</span>
+<h3 class="text-lg font-bold text-on-surface">Agendar Test Drive</h3>
+</div>
+<button class="p-1 rounded-full hover:bg-surface-low cursor-pointer" onclick="document.getElementById('modal-testdrive').classList.add('hidden')"><span class="material-symbols-outlined">close</span></button>
+</div>
+<p class="text-xs text-on-variant">Coordiná tu prueba de manejo exclusiva para la <strong class="text-on-surface">Toyota Hilux SRX (COD: TOY-2023-014)</strong> en Showroom Vicente López.</p>
+<form class="flex flex-col gap-3" onsubmit="handleTestDriveSubmit(event)">
+<label class="flex flex-col text-xs text-on-variant gap-1">Nombre completo
+        <input class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" id="td-nombre" placeholder="Ej: Juan Pérez" required="" type="text"/>
+</label>
+<label class="flex flex-col text-xs text-on-variant gap-1">Teléfono / WhatsApp
+        <input class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" id="td-tel" placeholder="+54 9 11 ..." required="" type="tel"/>
+</label>
+<div class="grid grid-cols-2 gap-2">
+<label class="flex flex-col text-xs text-on-variant gap-1">Fecha preferida
+          <input class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary" required="" type="date" value="2025-03-20"/>
+</label>
+<label class="flex flex-col text-xs text-on-variant gap-1">Franja horaria
+          <select class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface">
+<option>Mañana (10 a 13 hs)</option>
+<option selected="">Tarde (15 a 18 hs)</option>
+</select>
+</label>
+</div>
+<button class="mt-2 py-3 rounded-xl bg-secondary text-white font-bold text-xs hover:bg-blue-700 shadow-md cursor-pointer flex items-center justify-center gap-1.5" type="submit">
+<span class="material-symbols-outlined text-sm">done_all</span>Confirmar Solicitud de Manejo
+      </button>
+</form>
+</div>
+</div>
+<!-- Modal: Permuta / Tasación -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" id="modal-permuta">
+<div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-surface-high pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">swap_horiz</span>
+<h3 class="text-lg font-bold text-on-surface">Tasación de Vehículo Usado</h3>
+</div>
+<button class="p-1 rounded-full hover:bg-surface-low cursor-pointer" onclick="document.getElementById('modal-permuta').classList.add('hidden')"><span class="material-symbols-outlined">close</span></button>
+</div>
+<p class="text-xs text-on-variant">Entregá tu auto como parte de pago de la <strong class="text-on-surface">Toyota Hilux SRX 2023</strong>. Recibí cotización en 30 min.</p>
+<form class="flex flex-col gap-3" onsubmit="handlePermutaSubmit(event)">
+<div class="grid grid-cols-2 gap-2">
+<label class="flex flex-col text-xs text-on-variant gap-1">Marca y Modelo
+          <input class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface" placeholder="Ej: VW Vento 2.0" required="" type="text"/>
+</label>
+<label class="flex flex-col text-xs text-on-variant gap-1">Año
+          <input class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface" placeholder="2020" required="" type="number" value="2020"/>
+</label>
+</div>
+<label class="flex flex-col text-xs text-on-variant gap-1">WhatsApp para enviarte la tasación
+        <input class="p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface" placeholder="+54 9 11 ..." required="" type="tel"/>
+</label>
+<button class="mt-2 py-3 rounded-xl bg-black text-white font-bold text-xs hover:bg-slate-800 shadow-md cursor-pointer flex items-center justify-center gap-1.5" type="submit">
+<span class="material-symbols-outlined text-sm">send</span>Solicitar Cotización Inmediata
+      </button>
+</form>
+</div>
+</div>
+<!-- Modal: WhatsApp Simulado -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" id="modal-whatsapp">
+<div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl flex flex-col gap-4">
+<div class="flex items-center justify-between border-b border-surface-high pb-3 text-emerald-600">
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 fill-current" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.299.144.347.491 1.2.534 1.288.043.087.072.188.014.303-.058.116-.087.188-.173.289l-.26.303c-.087.087-.178.182-.077.355.101.173.45 0.742.966 1.202.665.592 1.226.776 1.399.863.173.087.275.072.376-.043.101-.116.433-.506.549-.679.116-.173.231-.145.39-.087s1.011.477 1.184.564.289.13.332.202c.043.072.043.419-.101.824zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.662 1.435 5.176L2 22l4.954-1.399C8.409 21.493 10.148 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"></path></svg>
+<h3 class="text-lg font-bold text-on-surface">Consulta por WhatsApp</h3>
+</div>
+<button class="p-1 rounded-full hover:bg-surface-low cursor-pointer" onclick="document.getElementById('modal-whatsapp').classList.add('hidden')"><span class="material-symbols-outlined">close</span></button>
+</div>
+<div class="bg-surface-low p-3 rounded-xl flex items-center gap-3">
+<img class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-l63PlvC1f46KBl4s6V4VzL0nxgAfXzzUXtIHQ4YO_0jKZooCq0qxbyJnGa-Q-BHep50fHHw_STWLXLZZE8VQT5hFljnxX5TIwuQuZ8bhqf1TwsfvjnyUflbiZnXSoE5XkzJs7Yp-9AwCorFcsEECrr-S_9oUjj44NyP-RrZZdhHYXVW31d10M2kxyMQFLVZHilCGnDwFEKhEULx62DmkGaEEG2vpvo4o94OfojUNG-JXzj41ZqAE"/>
+<div class="text-xs">
+<div class="font-bold text-on-surface">Martín Benítez (Asesor Comercial)</div>
+<div class="text-emerald-600 font-semibold">En línea • Showroom Vicente López</div>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-semibold text-on-variant">Mensaje automático a enviar:</span>
+<textarea class="w-full p-2.5 rounded-lg bg-surface-low border border-surface-high text-xs text-on-surface font-mono" id="wsp-text" rows="3">Hola Apex Motors, consulto por la Toyota Hilux SRX 4x4 2023 (COD: TOY-2023-014) publicada en USD 46.500. Quisiera coordinar una visita / opciones de permuta.</textarea>
+</div>
+<button class="py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow cursor-pointer flex items-center justify-center gap-2" onclick="sendWhatsAppSim()">
+<span class="material-symbols-outlined text-sm">send</span>Enviar Mensaje y Abrir Chat
+    </button>
+</div>
+</div>
+<script>
+// --- Smooth Wheel Scroll Preservation ---
+// Ensure the wheel event bubbles and performs standard vertical scrolling unconditionally
+window.addEventListener('wheel', function(e) {
+  // Never prevent default on wheel events so mouse wheel scrolling remains 100% natural & fluid
+}, { passive: true });
+
+// --- Gallery Photos Array ---
+const photos = [
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuCKz12I29YaRWGDvGnU3Uke8TAZDGkgnhldSL5hDV0E6A73OauzZq3xD__ylm0MK2gIo4FsF_axdEQb_NcaU14Edx2ESOjCVwi3-UFeSU2GfHq3xjOgs5nVYI023-2XQQLA1t83f3BKZLQ0camnJr26Q9O-agkVh3-mkDj6JemItUIgDKYk7IG7Epd3EDDeq-cO41HjCQDgfmkpSG-As0LtPw1Xb-DB94CIlWuPSVXQDZKiLXsCMD4n",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuC1oiZLyuiFbolX8JVYWlE4oDtgJmynvzVJHR9rNFL3dcPmO0lBsDPK3I8IVptJWn3KZwJVR5bEdmiif3JC6v_jdnFx7WjgsVl0VOXKNnLSu8qHMZDaCZ0_gGFEgjCZsA6Oq-bt3K46BLgtElqT19rqHn2Q4KS2KD_UHX-eR_92Z8lNCb7lDl7C881MdB7pwO3-oee5TSAYj0LNiJBXZb4SrgOcWA7bH_lpk2cRqjnDW6R30UJLMAwI",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDSxUWgUjh9AaIQzazgP1cKmr1Xh1c5LxOaIkmkGnCk1KE6kcWluzD_PLY22cqOlfqA5Cifb9CBW90w7lcQ_WJTiT0VthDqe51OarwENrju7LzlGQvIssSp6mxSwbxOsx-Qyn3e6mY-bxcLkr8K4v1g_OuhHwIqzqaDinZUezgiN2Qzx-eMmjHUoz9oGYpItE7HSrAST_PSpoDaOGlgZ1slaEmHF2ZytdDQqAf23tTrjMW6dLDc5KQ6",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDcaTWpiUEiOfaMJuTZyWSVKQSoqwkLdS8Zw2_CSXdTUClPoNw1tqZv5hy81YAYYFTJlGj2bOLzjG1nsylNycTisj1dNlKMINs6lLiQ_nYfRqUH0xYT6vH0TmMqbZuZdg7Vscl9XXN74inc5Y6ZDevcKruxoYhnUOqI_a7aujzT1Wiv9nna_K6s_Fq4s8Gsh_9hy94rP6DOVPzcnUQ13ng4Tkbr9oAX2URnKwVAPtHFIpIdxyXm1NM_",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuBPVJI_ua-xD7tQVEH3BEN7PjUiIueUXGDCO6Vrk-WBVDgO8S-oe49pLgCXFIwtsN_Wzg1cVbTW25dVP20nxPBTuGn2YhsORNRd1mO6uk0mWVnZQuGSfvOQZLaOdSxblCYGQjP5uWme17_f4a_wwDSSeNNV5QCiOdLeb3WL3P5BFHkKoKT0rtmoLtsuPAKeHxACG767Ee4TzWNV1-RCEZOvjEfPb0cztA9HUICRNBV5QfopTbRH2Iqt",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuD9-7-67RiuiXjuQq-z55R1MguVnmn6U0ZP1vsYuAKNDXY5Kuc0gp9QUDmSUkrqyzg-QOi3lTZ_RjK7WBhS8bDBbKMK2CGRlQJYe-vJdYHana2_nWsY4NvnrSIPp2IVC6VEeMn0xaqLkKUP0l9HwC6LUUbUAWgjL7CYEDA9aC9EMtg3v1wONvX5XrsUDYrLXeo_Y8iu4GcmBBAx-cDglzoB2clH5pRodit0O9sAlIOGBiNK6i1EZzRi",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDeLwRErpM4o8_lnSo1mVpxC2xNpN9kjhP3iukrLTQ1WLBiXyyUgf27NS8rzzI0vzkzaiytGfadkJyB7-n6JF_36smDHibh22DeIhxBNdSGCCSrqV20Yv9GT5aFYuLLyxoP5W8vQPhHRjyHIzj4yny4eAiMVVMbyKX0IU8P7w51uqTbdje-At7u3F1mrAZ3S8c5_f9gJsAHUsfOCb1B_R-_nBdXmwr1cAh2119smxZ5-F7SylKD85mi",
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuDYgdGHEDhx10CrdQ7um9BVlwkI-Gisa7RHI9abPIu-gxZXKW-W7qHis7r0FreuUvcAthMo9rrypKcXDJKVUoustHnT4mf8P2kfTNII3mb-0gV2ROI4hFsGzK1oCklDluCN6k083Ws48uRs3n-xzZ0ZLyks_IXD3dt4Ox2O5PgT63nqIE8ccSNRSdouet932VDYnHOFEn2-1WhqmWTNRFQ-v1XzwLpgLw5N3UXstw1Dl6tgZaxb9bpM"
+];
+
+let currentIdx = 0;
+
+function setMainImage(index, btnElem) {
+  currentIdx = index;
+  const mainImg = document.getElementById("main-gallery-image");
+  if(mainImg) mainImg.src = photos[currentIdx];
+  const counter = document.getElementById("photo-counter");
+  if(counter) counter.innerText = `Foto ${currentIdx + 1} de ${photos.length}`;
+  
+  // Highlight active thumbnail
+  const btns = document.querySelectorAll(".thumb-btn");
+  btns.forEach((b, i) => {
+    if(i === currentIdx) {
+      b.className = "thumb-btn aspect-[16/10] rounded-lg overflow-hidden border-2 border-secondary cursor-pointer shadow-sm";
+    } else {
+      b.className = "thumb-btn aspect-[16/10] rounded-lg overflow-hidden border border-surface-high opacity-70 hover:opacity-100 cursor-pointer";
+    }
+  });
+}
+
+function nextSlide() {
+  currentIdx = (currentIdx + 1) % photos.length;
+  setMainImage(currentIdx);
+}
+
+function prevSlide() {
+  currentIdx = (currentIdx - 1 + photos.length) % photos.length;
+  setMainImage(currentIdx);
+}
+
+// --- Media Mode Tabs Switch ---
+function switchMediaTab(mode) {
+  const vPhotos = document.getElementById("viewport-photos");
+  const vVideo = document.getElementById("viewport-video");
+  const v360 = document.getElementById("viewport-360");
+  const strip = document.getElementById("thumbnail-strip");
+  
+  const tabP = document.getElementById("tab-photos");
+  const tabV = document.getElementById("tab-video");
+  const tab3 = document.getElementById("tab-360");
+
+  vPhotos.classList.add("hidden");
+  vVideo.classList.add("hidden");
+  v360.classList.add("hidden");
+
+  tabP.className = "px-3.5 py-1.5 rounded-lg text-on-variant hover:text-on-surface text-xs font-semibold flex items-center gap-1.5 cursor-pointer";
+  tabV.className = "px-3.5 py-1.5 rounded-lg text-on-variant hover:text-on-surface text-xs font-semibold flex items-center gap-1.5 cursor-pointer";
+  tab3.className = "px-3.5 py-1.5 rounded-lg text-on-variant hover:text-on-surface text-xs font-semibold flex items-center gap-1.5 cursor-pointer";
+
+  if(mode === 'photos') {
+    vPhotos.classList.remove("hidden");
+    strip.classList.remove("hidden");
+    tabP.className = "px-3.5 py-1.5 rounded-lg bg-black text-white text-xs font-bold shadow-sm flex items-center gap-1.5 cursor-pointer";
+    showToast("Visualizando galería fotográfica en alta definición", "photo_camera");
+  } else if(mode === 'video') {
+    vVideo.classList.remove("hidden");
+    strip.classList.add("hidden");
+    tabV.className = "px-3.5 py-1.5 rounded-lg bg-black text-white text-xs font-bold shadow-sm flex items-center gap-1.5 cursor-pointer";
+    showToast("Reproduciendo Video Walk-Around oficial 4K", "smart_display");
+  } else if(mode === '360') {
+    v360.classList.remove("hidden");
+    strip.classList.add("hidden");
+    tab3.className = "px-3.5 py-1.5 rounded-lg bg-black text-white text-xs font-bold shadow-sm flex items-center gap-1.5 cursor-pointer";
+    showToast("Tour virtual interactivo 360° habilitado", "360");
+  }
+}
+
+// --- Video & 360 Pan Simulation ---
+let isPlaying = true;
+function toggleVideoPlayback() {
+  isPlaying = !isPlaying;
+  const icon = document.getElementById("video-play-icon");
+  const text = document.getElementById("video-status-text");
+  if(isPlaying) {
+    icon.innerText = "pause";
+    text.innerText = "Reproduciendo: Encendido de motor 2.8 D-4D & aceleración";
+    showToast("Reanudando reproducción", "play_arrow");
+  } else {
+    icon.innerText = "play_arrow";
+    text.innerText = "Video pausado";
+    showToast("Video en pausa", "pause");
+  }
+}
+
+let panoRot = 0;
+function rotatePano(delta) {
+  panoRot += delta;
+  const pano = document.getElementById("pano-bg");
+  if(pano) {
+    pano.style.transform = `scale(1.15) rotate(${panoRot * 0.15}deg) scaleX(${Math.cos(panoRot * 0.02) > 0 ? 1 : -1})`;
+  }
+}
+
+// --- Loan Calculator Logic ---
+let selectedTerm = 36;
+function toggleCalculator() {
+  const box = document.getElementById("calculator-box");
+  const txt = document.getElementById("calc-toggle-text");
+  if(box.classList.contains("hidden")) {
+    box.classList.remove("hidden");
+    txt.innerText = "Ocultar calculadora";
+    updateLoanCalculation();
+  } else {
+    box.classList.add("hidden");
+    txt.innerText = "Calcular cuota";
+  }
+}
+
+function updateLoanCalculation() {
+  const range = document.getElementById("calc-range-down");
+  const downVal = parseInt(range.value, 10);
+  const total = 46500;
+  const percent = Math.round((downVal / total) * 100);
+  
+  document.getElementById("calc-downpayment-val").innerText = `USD ${downVal.toLocaleString()} (${percent}%)`;
+  
+  const balance = total - downVal;
+  const annualRate = 0.085;
+  const monthlyRate = annualRate / 12;
+  const monthlyPayment = Math.round((balance * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -selectedTerm)));
+  
+  document.getElementById("calc-monthly-val").innerText = `USD ${monthlyPayment.toLocaleString()} / mes`;
+}
+
+function setLoanTerm(term, btn) {
+  selectedTerm = term;
+  document.querySelectorAll(".loan-btn").forEach(b => {
+    b.className = "loan-btn px-2 py-0.5 rounded bg-white text-xs font-bold border border-surface-high";
+  });
+  btn.className = "loan-btn px-2 py-0.5 rounded bg-secondary text-white text-xs font-bold";
+  updateLoanCalculation();
+}
+
+function applyFinancing() {
+  showToast("Solicitud de pre-aprobación enviada. Un oficial de crédito te contactará.", "task_alt");
+}
+
+// --- Carousel Scroll ---
+function scrollCarousel(distance) {
+  const c = document.getElementById("carousel-similares");
+  if(c) c.scrollBy({left: distance, behavior: "smooth"});
+}
+
+function selectSimilarCar(model, price) {
+  showToast(`Cargando publicación comparativa: ${model} (${price})`, "directions_car");
+}
+
+// --- Modals & Submissions ---
+function openWhatsAppModal() {
+  document.getElementById("modal-whatsapp").classList.remove("hidden");
+}
+
+function sendWhatsAppSim() {
+  document.getElementById("modal-whatsapp").classList.add("hidden");
+  showToast("Conectando con WhatsApp Web / App (+54 9 11 5560-8800)...", "chat");
+}
+
+function handleTestDriveSubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById("td-nombre").value;
+  document.getElementById("modal-testdrive").classList.add("hidden");
+  showToast(`¡Excelente ${name}! Test Drive agendado. Martín Benítez te aguarda en Vicente López.`, "event_available");
+}
+
+function handlePermutaSubmit(e) {
+  e.preventDefault();
+  document.getElementById("modal-permuta").classList.add("hidden");
+  showToast("Ficha de usado recibida. Te enviaremos la cotización de peritaje en 30 minutos.", "verified");
+}
+
+function handleShareClick() {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(window.location.href);
+  }
+  showToast("¡Enlace de publicación copiado al portapapeles!", "share");
+}
+
+// --- Navigation & Toasts Simulation ---
+function simulateNav(screenName, iconName) {
+  showToast(`Navegando a: ${screenName}...`, iconName || "explore");
+}
+
+function showToast(message, icon) {
+  const container = document.getElementById("toast-container");
+  if(!container) return;
+  const toast = document.createElement("div");
+  toast.className = "px-4 py-3 rounded-xl bg-slate-950/95 backdrop-blur-md text-white shadow-2xl border border-slate-700/60 flex items-center gap-3 text-xs font-medium animate-[fadeIn_0.2s_ease-out] pointer-events-auto transition-all";
+  toast.innerHTML = `
+    <span class="material-symbols-outlined text-secondary text-base">${icon || 'info'}</span>
+    <span class="flex-1">${message}</span>
+    <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white"><span class="material-symbols-outlined text-xs">close</span></button>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+</script>
+</body></html>
