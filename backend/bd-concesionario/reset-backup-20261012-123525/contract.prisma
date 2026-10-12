@@ -1,0 +1,219 @@
+// use prisma-8
+
+// ==========================================
+// USUARIOS Y PUBLICACIONES
+// ==========================================
+
+model Usuario {
+  idUsuario     Int           @id @default(autoincrement())
+  nombre        String
+  email         String        @unique
+  contrasena    String        @map("contraseña")
+  publicaciones Publicacion[]
+}
+
+model Publicacion {
+  idPublicacion Int                    @id @default(autoincrement())
+  titulo        String
+  descripcion   String
+  precio        Float
+  idUsuario     Int
+  usuario       Usuario                @relation(fields: [idUsuario], references: [idUsuario])
+  multimedia    Multimedia[]
+  metricas      MetricasPublicacion[]
+  historial     HistorialPublicacion[]
+  vehiculo      Vehiculo?
+}
+
+model Multimedia {
+  idArchivo         Int         @id @default(autoincrement())
+  urlArchMultimedia String
+  idPublicacion     Int
+  publicacion       Publicacion @relation(fields: [idPublicacion], references: [idPublicacion], onDelete: Cascade)
+}
+
+// ==========================================
+// MÉTRICAS Y EVENTOS
+// ==========================================
+
+model MetricasPublicacion {
+  idMetrica     Int         @id @default(autoincrement())
+  fechaHora     TimestamptzString
+  idTipoEvento  Int
+  idPublicacion Int
+  tipoEvento    TipoEvento  @relation(fields: [idTipoEvento], references: [idTipoEvento])
+  publicacion   Publicacion @relation(fields: [idPublicacion], references: [idPublicacion], onDelete: Cascade)
+}
+
+model TipoEvento {
+  idTipoEvento Int                   @id @default(autoincrement())
+  nombre       String // Ej: "Click boton wtpp en publicacion", "Click en determinado segmento", "Click en una marca"
+  metricas     MetricasPublicacion[]
+}
+
+// ==========================================
+// ESTADOS E HISTORIAL
+// ==========================================
+
+model HistorialPublicacion {
+  
+  @@id([idPublicacion, fechaHoraInicio])
+  fechaHoraInicio       TimestamptzString
+  fechaHoraFinalizacion TimestamptzString?
+  idEstado              Int
+  idPublicacion         Int
+  estado                Estado      @relation(fields: [idEstado], references: [idEstado])
+  publicacion           Publicacion @relation(fields: [idPublicacion], references: [idPublicacion], onDelete: Cascade)
+
+  }
+
+model Estado {
+  idEstado  Int                    @id @default(autoincrement())
+  nombre    String // Ej: "Disponible", "Pausada", "Finalizada"
+  historial HistorialPublicacion[]
+}
+
+// ==========================================
+// VEHÍCULO
+// ==========================================
+
+model Vehiculo {
+  patente           String         @id
+  codigoVehiculo    String         @unique
+  idPublicacion     Int            @unique
+  anio              Int
+  kilometros        Int
+  cantidadPuertas   Int
+  color             String
+  cantidadAsientos  Int
+  capacidadRemolque Float?
+  capacidadBaul     Float?
+  capacidadTanque   Float?
+  cantidadAirbags   Int
+  idTraccion        Int
+  idSegmento        Int
+  idModelo          Int
+  idTipoCarroceria  Int
+  idCondicion       Int
+  idTipoTapizado    Int
+  idDimensiones     Int
+  idCaja            Int
+  idMotor           Int
+  idCombustible     Int
+  idTipoDireccion   Int
+
+  publicacion    Publicacion    @relation(fields: [idPublicacion], references: [idPublicacion], onDelete: Cascade)
+  traccion       Traccion       @relation(fields: [idTraccion], references: [idTraccion])
+  segmento       Segmento       @relation(fields: [idSegmento], references: [idSegmento])
+  modelo         Modelo         @relation(fields: [idModelo], references: [idModelo])
+  tipoCarroceria TipoCarroceria @relation(fields: [idTipoCarroceria], references: [idTipoCarroceria])
+  condicion      Condicion      @relation(fields: [idCondicion], references: [idCondicion])
+  tipoTapizado   TipoTapizado   @relation(fields: [idTipoTapizado], references: [idTipoTapizado])
+  dimensiones    Dimensiones    @relation(fields: [idDimensiones], references: [idDimensiones])
+  caja           Caja           @relation(fields: [idCaja], references: [idCaja])
+  motor          Motor          @relation(fields: [idMotor], references: [idMotor])
+  combustible    Combustible    @relation(fields: [idCombustible], references: [idCombustible])
+  tipoDireccion  TipoDireccion  @relation(fields: [idTipoDireccion], references: [idTipoDireccion])
+}
+
+// ==========================================
+// CATÁLOGOS Y ESPECIFICACIONES
+// ==========================================
+
+model Dimensiones {
+  idDimensiones Int        @id @default(autoincrement())
+  largo         Float
+  alto          Float
+  ancho         Float
+  vehiculos     Vehiculo[]
+}
+
+model Condicion {
+  idCondicion     Int        @id @default(autoincrement())
+  nombreCondicion String // Ej: "Usado", "0Km", "Nuevo"
+  vehiculos       Vehiculo[]
+}
+
+model Marca {
+  idMarca     Int      @id @default(autoincrement())
+  nombreMarca String
+  modelos     Modelo[]
+}
+
+model Modelo {
+  idModelo     Int        @id @default(autoincrement())
+  nombreModelo String
+  idMarca      Int
+  marca        Marca      @relation(fields: [idMarca], references: [idMarca])
+  versiones    Version[]
+  vehiculos    Vehiculo[]
+}
+
+model Version {
+  idVersion     Int     @id @default(autoincrement())
+  nombreVersion String
+  descripcion   String?
+  idModelo      Int
+  modelo        Modelo  @relation(fields: [idModelo], references: [idModelo])
+}
+
+model Caja {
+  idCaja      Int        @id @default(autoincrement())
+  nombreCaja  String // Ej: "manual", "Automatica"
+  descripcion String?
+  vehiculos   Vehiculo[]
+}
+
+model Traccion {
+  idTraccion     Int        @id @default(autoincrement())
+  nombreTraccion String
+  vehiculos      Vehiculo[]
+}
+
+model Segmento {
+  idSegmento     Int        @id @default(autoincrement())
+  nombreSegmento String
+  vehiculos      Vehiculo[]
+}
+
+model TipoCarroceria {
+  idTipoCarroceria     Int        @id @default(autoincrement())
+  nombreTipoCarroceria String
+  vehiculos            Vehiculo[]
+}
+
+model TipoTapizado {
+  idTipoTapizado     Int        @id @default(autoincrement())
+  nombreTipoTapizado String // Ej: "pana", "cuero natural", "cuero sintetico", etc.
+  descripcion        String?
+  vehiculos          Vehiculo[]
+}
+
+model TipoDireccion {
+  idTipoDireccion Int        @id @default(autoincrement())
+  nombre          String // Ej: "Electrica", "hidraulica", "mecanica"
+  descripcion     String?
+  vehiculos       Vehiculo[]
+}
+
+model Combustible {
+  idCombustible     Int        @id @default(autoincrement())
+  nombreCombustible String // Ej: "Nafta", "Diesel", "GNC"
+  vehiculos         Vehiculo[]
+}
+
+model Motor {
+  idMotor     Int        @id @default(autoincrement())
+  idTipoMotor Int
+  descripcion String?
+  potencia    Float?
+  torque      Float?
+  tipoMotor   TipoMotor  @relation(fields: [idTipoMotor], references: [idTipoMotor])
+  vehiculos   Vehiculo[]
+}
+
+model TipoMotor {
+  idTipoMotor Int     @id @default(autoincrement())
+  nombreTipo  String // Ej: "Combustion", "hibrido", "electrico"
+  motores     Motor[]
+}

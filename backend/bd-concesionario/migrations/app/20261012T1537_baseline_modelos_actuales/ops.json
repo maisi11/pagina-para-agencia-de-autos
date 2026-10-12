@@ -1,0 +1,2665 @@
+[
+  {
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [],
+    "execute": [
+      {
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
+      }
+    ],
+    "postcheck": []
+  },
+  {
+    "id": "table.Caja",
+    "label": "Create table \"Caja\"",
+    "summary": "Creates table \"Caja\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Caja"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Caja\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Caja\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Caja\"",
+        "sql": "CREATE TABLE \"public\".\"Caja\" (\n  \"descripcion\" text,\n  \"idCaja\" SERIAL NOT NULL,\n  \"nombreCaja\" text NOT NULL,\n  PRIMARY KEY (\"idCaja\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Caja\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Caja\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Combustible",
+    "label": "Create table \"Combustible\"",
+    "summary": "Creates table \"Combustible\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Combustible"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Combustible\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Combustible\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Combustible\"",
+        "sql": "CREATE TABLE \"public\".\"Combustible\" (\n  \"idCombustible\" SERIAL NOT NULL,\n  \"nombreCombustible\" text NOT NULL,\n  PRIMARY KEY (\"idCombustible\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Combustible\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Combustible\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Condicion",
+    "label": "Create table \"Condicion\"",
+    "summary": "Creates table \"Condicion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Condicion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Condicion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Condicion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Condicion\"",
+        "sql": "CREATE TABLE \"public\".\"Condicion\" (\n  \"idCondicion\" SERIAL NOT NULL,\n  \"nombreCondicion\" text NOT NULL,\n  PRIMARY KEY (\"idCondicion\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Condicion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Condicion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Dimensiones",
+    "label": "Create table \"Dimensiones\"",
+    "summary": "Creates table \"Dimensiones\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Dimensiones"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Dimensiones\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Dimensiones\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Dimensiones\"",
+        "sql": "CREATE TABLE \"public\".\"Dimensiones\" (\n  \"alto\" float8 NOT NULL,\n  \"ancho\" float8 NOT NULL,\n  \"idDimensiones\" SERIAL NOT NULL,\n  \"largo\" float8 NOT NULL,\n  PRIMARY KEY (\"idDimensiones\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Dimensiones\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Dimensiones\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Estado",
+    "label": "Create table \"Estado\"",
+    "summary": "Creates table \"Estado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Estado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Estado\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Estado\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Estado\"",
+        "sql": "CREATE TABLE \"public\".\"Estado\" (\n  \"idEstado\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"idEstado\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Estado\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Estado\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.HistorialPublicacion",
+    "label": "Create table \"HistorialPublicacion\"",
+    "summary": "Creates table \"HistorialPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "HistorialPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"HistorialPublicacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"HistorialPublicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"HistorialPublicacion\"",
+        "sql": "CREATE TABLE \"public\".\"HistorialPublicacion\" (\n  \"fechaHoraFinalizacion\" timestamptz,\n  \"fechaHoraInicio\" timestamptz NOT NULL,\n  \"idEstado\" int4 NOT NULL,\n  \"idPublicacion\" int4 NOT NULL,\n  PRIMARY KEY (\"idPublicacion\", \"fechaHoraInicio\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"HistorialPublicacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"HistorialPublicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Marca",
+    "label": "Create table \"Marca\"",
+    "summary": "Creates table \"Marca\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Marca"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Marca\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Marca\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Marca\"",
+        "sql": "CREATE TABLE \"public\".\"Marca\" (\n  \"idMarca\" SERIAL NOT NULL,\n  \"nombreMarca\" text NOT NULL,\n  PRIMARY KEY (\"idMarca\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Marca\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Marca\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.MetricasPublicacion",
+    "label": "Create table \"MetricasPublicacion\"",
+    "summary": "Creates table \"MetricasPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "MetricasPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"MetricasPublicacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MetricasPublicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"MetricasPublicacion\"",
+        "sql": "CREATE TABLE \"public\".\"MetricasPublicacion\" (\n  \"fechaHora\" timestamptz NOT NULL,\n  \"idMetrica\" SERIAL NOT NULL,\n  \"idPublicacion\" int4 NOT NULL,\n  \"idTipoEvento\" int4 NOT NULL,\n  PRIMARY KEY (\"idMetrica\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"MetricasPublicacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MetricasPublicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Modelo",
+    "label": "Create table \"Modelo\"",
+    "summary": "Creates table \"Modelo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Modelo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Modelo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Modelo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Modelo\"",
+        "sql": "CREATE TABLE \"public\".\"Modelo\" (\n  \"idMarca\" int4 NOT NULL,\n  \"idModelo\" SERIAL NOT NULL,\n  \"nombreModelo\" text NOT NULL,\n  PRIMARY KEY (\"idModelo\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Modelo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Modelo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Motor",
+    "label": "Create table \"Motor\"",
+    "summary": "Creates table \"Motor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Motor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Motor\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Motor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Motor\"",
+        "sql": "CREATE TABLE \"public\".\"Motor\" (\n  \"descripcion\" text,\n  \"idMotor\" SERIAL NOT NULL,\n  \"idTipoMotor\" int4 NOT NULL,\n  \"potencia\" float8,\n  \"torque\" float8,\n  PRIMARY KEY (\"idMotor\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Motor\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Motor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Multimedia",
+    "label": "Create table \"Multimedia\"",
+    "summary": "Creates table \"Multimedia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Multimedia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Multimedia\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Multimedia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Multimedia\"",
+        "sql": "CREATE TABLE \"public\".\"Multimedia\" (\n  \"idArchivo\" SERIAL NOT NULL,\n  \"idPublicacion\" int4 NOT NULL,\n  \"urlArchMultimedia\" text NOT NULL,\n  PRIMARY KEY (\"idArchivo\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Multimedia\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Multimedia\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Publicacion",
+    "label": "Create table \"Publicacion\"",
+    "summary": "Creates table \"Publicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Publicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Publicacion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Publicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Publicacion\"",
+        "sql": "CREATE TABLE \"public\".\"Publicacion\" (\n  \"descripcion\" text NOT NULL,\n  \"idPublicacion\" SERIAL NOT NULL,\n  \"idUsuario\" int4 NOT NULL,\n  \"precio\" float8 NOT NULL,\n  \"titulo\" text NOT NULL,\n  PRIMARY KEY (\"idPublicacion\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Publicacion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Publicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Segmento",
+    "label": "Create table \"Segmento\"",
+    "summary": "Creates table \"Segmento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Segmento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Segmento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Segmento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Segmento\"",
+        "sql": "CREATE TABLE \"public\".\"Segmento\" (\n  \"idSegmento\" SERIAL NOT NULL,\n  \"nombreSegmento\" text NOT NULL,\n  PRIMARY KEY (\"idSegmento\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Segmento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Segmento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.TipoCarroceria",
+    "label": "Create table \"TipoCarroceria\"",
+    "summary": "Creates table \"TipoCarroceria\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "TipoCarroceria"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"TipoCarroceria\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoCarroceria\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"TipoCarroceria\"",
+        "sql": "CREATE TABLE \"public\".\"TipoCarroceria\" (\n  \"idTipoCarroceria\" SERIAL NOT NULL,\n  \"nombreTipoCarroceria\" text NOT NULL,\n  PRIMARY KEY (\"idTipoCarroceria\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"TipoCarroceria\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoCarroceria\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.TipoDireccion",
+    "label": "Create table \"TipoDireccion\"",
+    "summary": "Creates table \"TipoDireccion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "TipoDireccion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"TipoDireccion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoDireccion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"TipoDireccion\"",
+        "sql": "CREATE TABLE \"public\".\"TipoDireccion\" (\n  \"descripcion\" text,\n  \"idTipoDireccion\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"idTipoDireccion\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"TipoDireccion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoDireccion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.TipoEvento",
+    "label": "Create table \"TipoEvento\"",
+    "summary": "Creates table \"TipoEvento\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "TipoEvento"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"TipoEvento\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoEvento\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"TipoEvento\"",
+        "sql": "CREATE TABLE \"public\".\"TipoEvento\" (\n  \"idTipoEvento\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"idTipoEvento\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"TipoEvento\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoEvento\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.TipoMotor",
+    "label": "Create table \"TipoMotor\"",
+    "summary": "Creates table \"TipoMotor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "TipoMotor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"TipoMotor\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoMotor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"TipoMotor\"",
+        "sql": "CREATE TABLE \"public\".\"TipoMotor\" (\n  \"idTipoMotor\" SERIAL NOT NULL,\n  \"nombreTipo\" text NOT NULL,\n  PRIMARY KEY (\"idTipoMotor\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"TipoMotor\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoMotor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.TipoTapizado",
+    "label": "Create table \"TipoTapizado\"",
+    "summary": "Creates table \"TipoTapizado\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "TipoTapizado"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"TipoTapizado\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoTapizado\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"TipoTapizado\"",
+        "sql": "CREATE TABLE \"public\".\"TipoTapizado\" (\n  \"descripcion\" text,\n  \"idTipoTapizado\" SERIAL NOT NULL,\n  \"nombreTipoTapizado\" text NOT NULL,\n  PRIMARY KEY (\"idTipoTapizado\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"TipoTapizado\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"TipoTapizado\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Traccion",
+    "label": "Create table \"Traccion\"",
+    "summary": "Creates table \"Traccion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Traccion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Traccion\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Traccion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Traccion\"",
+        "sql": "CREATE TABLE \"public\".\"Traccion\" (\n  \"idTraccion\" SERIAL NOT NULL,\n  \"nombreTraccion\" text NOT NULL,\n  PRIMARY KEY (\"idTraccion\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Traccion\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Traccion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Usuario",
+    "label": "Create table \"Usuario\"",
+    "summary": "Creates table \"Usuario\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Usuario"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Usuario\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Usuario\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Usuario\"",
+        "sql": "CREATE TABLE \"public\".\"Usuario\" (\n  \"contraseña\" text NOT NULL,\n  \"email\" text NOT NULL,\n  \"idUsuario\" SERIAL NOT NULL,\n  \"nombre\" text NOT NULL,\n  PRIMARY KEY (\"idUsuario\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Usuario\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Usuario\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Vehiculo",
+    "label": "Create table \"Vehiculo\"",
+    "summary": "Creates table \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Vehiculo\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Vehiculo\"",
+        "sql": "CREATE TABLE \"public\".\"Vehiculo\" (\n  \"anio\" int4 NOT NULL,\n  \"cantidadAirbags\" int4 NOT NULL,\n  \"cantidadAsientos\" int4 NOT NULL,\n  \"cantidadPuertas\" int4 NOT NULL,\n  \"capacidadBaul\" float8,\n  \"capacidadRemolque\" float8,\n  \"capacidadTanque\" float8,\n  \"codigoVehiculo\" text NOT NULL,\n  \"color\" text NOT NULL,\n  \"idCaja\" int4 NOT NULL,\n  \"idCombustible\" int4 NOT NULL,\n  \"idCondicion\" int4 NOT NULL,\n  \"idDimensiones\" int4 NOT NULL,\n  \"idModelo\" int4 NOT NULL,\n  \"idMotor\" int4 NOT NULL,\n  \"idPublicacion\" int4 NOT NULL,\n  \"idSegmento\" int4 NOT NULL,\n  \"idTipoCarroceria\" int4 NOT NULL,\n  \"idTipoDireccion\" int4 NOT NULL,\n  \"idTipoTapizado\" int4 NOT NULL,\n  \"idTraccion\" int4 NOT NULL,\n  \"kilometros\" int4 NOT NULL,\n  \"patente\" text NOT NULL,\n  PRIMARY KEY (\"patente\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Vehiculo\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Version",
+    "label": "Create table \"Version\"",
+    "summary": "Creates table \"Version\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Version"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Version\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Version\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Version\"",
+        "sql": "CREATE TABLE \"public\".\"Version\" (\n  \"descripcion\" text,\n  \"idModelo\" int4 NOT NULL,\n  \"idVersion\" SERIAL NOT NULL,\n  \"nombreVersion\" text NOT NULL,\n  PRIMARY KEY (\"idVersion\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Version\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Version\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Usuario.Usuario_email_key",
+    "label": "Add unique constraint on \"Usuario\" (email)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Usuario_email_key",
+        "table": "Usuario"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Usuario_email_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Usuario_email_key",
+          "public",
+          "\"public\".\"Usuario\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Usuario_email_key\"",
+        "sql": "ALTER TABLE \"public\".\"Usuario\" ADD CONSTRAINT \"Usuario_email_key\" UNIQUE (\"email\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Usuario_email_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Usuario_email_key",
+          "public",
+          "\"public\".\"Usuario\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Vehiculo.Vehiculo_codigoVehiculo_key",
+    "label": "Add unique constraint on \"Vehiculo\" (codigoVehiculo)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Vehiculo_codigoVehiculo_key",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Vehiculo_codigoVehiculo_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_codigoVehiculo_key",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Vehiculo_codigoVehiculo_key\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\" ADD CONSTRAINT \"Vehiculo_codigoVehiculo_key\" UNIQUE (\"codigoVehiculo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Vehiculo_codigoVehiculo_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_codigoVehiculo_key",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Vehiculo.Vehiculo_idPublicacion_key",
+    "label": "Add unique constraint on \"Vehiculo\" (idPublicacion)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Vehiculo_idPublicacion_key",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Vehiculo_idPublicacion_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idPublicacion_key",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Vehiculo_idPublicacion_key\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\" ADD CONSTRAINT \"Vehiculo_idPublicacion_key\" UNIQUE (\"idPublicacion\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Vehiculo_idPublicacion_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idPublicacion_key",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.HistorialPublicacion.HistorialPublicacion_idEstado_idx_770bb368",
+    "label": "Create index \"HistorialPublicacion_idEstado_idx_770bb368\" on \"HistorialPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "HistorialPublicacion_idEstado_idx_770bb368",
+        "table": "HistorialPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"HistorialPublicacion_idEstado_idx_770bb368\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"HistorialPublicacion_idEstado_idx_770bb368\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"HistorialPublicacion_idEstado_idx_770bb368\"",
+        "sql": "CREATE INDEX \"HistorialPublicacion_idEstado_idx_770bb368\" ON \"public\".\"HistorialPublicacion\" (\"idEstado\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"HistorialPublicacion_idEstado_idx_770bb368\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"HistorialPublicacion_idEstado_idx_770bb368\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.HistorialPublicacion.HistorialPublicacion_idPublicacion_idx_4d7c111e",
+    "label": "Create index \"HistorialPublicacion_idPublicacion_idx_4d7c111e\" on \"HistorialPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "HistorialPublicacion_idPublicacion_idx_4d7c111e",
+        "table": "HistorialPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"HistorialPublicacion_idPublicacion_idx_4d7c111e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"HistorialPublicacion_idPublicacion_idx_4d7c111e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"HistorialPublicacion_idPublicacion_idx_4d7c111e\"",
+        "sql": "CREATE INDEX \"HistorialPublicacion_idPublicacion_idx_4d7c111e\" ON \"public\".\"HistorialPublicacion\" (\"idPublicacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"HistorialPublicacion_idPublicacion_idx_4d7c111e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"HistorialPublicacion_idPublicacion_idx_4d7c111e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.MetricasPublicacion.MetricasPublicacion_idPublicacion_idx_4d7c111e",
+    "label": "Create index \"MetricasPublicacion_idPublicacion_idx_4d7c111e\" on \"MetricasPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "MetricasPublicacion_idPublicacion_idx_4d7c111e",
+        "table": "MetricasPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"MetricasPublicacion_idPublicacion_idx_4d7c111e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MetricasPublicacion_idPublicacion_idx_4d7c111e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"MetricasPublicacion_idPublicacion_idx_4d7c111e\"",
+        "sql": "CREATE INDEX \"MetricasPublicacion_idPublicacion_idx_4d7c111e\" ON \"public\".\"MetricasPublicacion\" (\"idPublicacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"MetricasPublicacion_idPublicacion_idx_4d7c111e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MetricasPublicacion_idPublicacion_idx_4d7c111e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.MetricasPublicacion.MetricasPublicacion_idTipoEvento_idx_40c15a99",
+    "label": "Create index \"MetricasPublicacion_idTipoEvento_idx_40c15a99\" on \"MetricasPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "MetricasPublicacion_idTipoEvento_idx_40c15a99",
+        "table": "MetricasPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"MetricasPublicacion_idTipoEvento_idx_40c15a99\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MetricasPublicacion_idTipoEvento_idx_40c15a99\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"MetricasPublicacion_idTipoEvento_idx_40c15a99\"",
+        "sql": "CREATE INDEX \"MetricasPublicacion_idTipoEvento_idx_40c15a99\" ON \"public\".\"MetricasPublicacion\" (\"idTipoEvento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"MetricasPublicacion_idTipoEvento_idx_40c15a99\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MetricasPublicacion_idTipoEvento_idx_40c15a99\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Modelo.Modelo_idMarca_idx_b71fc0a3",
+    "label": "Create index \"Modelo_idMarca_idx_b71fc0a3\" on \"Modelo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Modelo_idMarca_idx_b71fc0a3",
+        "table": "Modelo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Modelo_idMarca_idx_b71fc0a3\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Modelo_idMarca_idx_b71fc0a3\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Modelo_idMarca_idx_b71fc0a3\"",
+        "sql": "CREATE INDEX \"Modelo_idMarca_idx_b71fc0a3\" ON \"public\".\"Modelo\" (\"idMarca\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Modelo_idMarca_idx_b71fc0a3\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Modelo_idMarca_idx_b71fc0a3\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Motor.Motor_idTipoMotor_idx_df316074",
+    "label": "Create index \"Motor_idTipoMotor_idx_df316074\" on \"Motor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Motor_idTipoMotor_idx_df316074",
+        "table": "Motor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Motor_idTipoMotor_idx_df316074\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Motor_idTipoMotor_idx_df316074\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Motor_idTipoMotor_idx_df316074\"",
+        "sql": "CREATE INDEX \"Motor_idTipoMotor_idx_df316074\" ON \"public\".\"Motor\" (\"idTipoMotor\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Motor_idTipoMotor_idx_df316074\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Motor_idTipoMotor_idx_df316074\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Multimedia.Multimedia_idPublicacion_idx_4d7c111e",
+    "label": "Create index \"Multimedia_idPublicacion_idx_4d7c111e\" on \"Multimedia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Multimedia_idPublicacion_idx_4d7c111e",
+        "table": "Multimedia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Multimedia_idPublicacion_idx_4d7c111e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Multimedia_idPublicacion_idx_4d7c111e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Multimedia_idPublicacion_idx_4d7c111e\"",
+        "sql": "CREATE INDEX \"Multimedia_idPublicacion_idx_4d7c111e\" ON \"public\".\"Multimedia\" (\"idPublicacion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Multimedia_idPublicacion_idx_4d7c111e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Multimedia_idPublicacion_idx_4d7c111e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Publicacion.Publicacion_idUsuario_idx_2255b915",
+    "label": "Create index \"Publicacion_idUsuario_idx_2255b915\" on \"Publicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Publicacion_idUsuario_idx_2255b915",
+        "table": "Publicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Publicacion_idUsuario_idx_2255b915\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Publicacion_idUsuario_idx_2255b915\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Publicacion_idUsuario_idx_2255b915\"",
+        "sql": "CREATE INDEX \"Publicacion_idUsuario_idx_2255b915\" ON \"public\".\"Publicacion\" (\"idUsuario\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Publicacion_idUsuario_idx_2255b915\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Publicacion_idUsuario_idx_2255b915\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idCaja_idx_4a9438f6",
+    "label": "Create index \"Vehiculo_idCaja_idx_4a9438f6\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idCaja_idx_4a9438f6",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idCaja_idx_4a9438f6\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idCaja_idx_4a9438f6\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idCaja_idx_4a9438f6\"",
+        "sql": "CREATE INDEX \"Vehiculo_idCaja_idx_4a9438f6\" ON \"public\".\"Vehiculo\" (\"idCaja\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idCaja_idx_4a9438f6\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idCaja_idx_4a9438f6\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idCombustible_idx_30d66389",
+    "label": "Create index \"Vehiculo_idCombustible_idx_30d66389\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idCombustible_idx_30d66389",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idCombustible_idx_30d66389\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idCombustible_idx_30d66389\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idCombustible_idx_30d66389\"",
+        "sql": "CREATE INDEX \"Vehiculo_idCombustible_idx_30d66389\" ON \"public\".\"Vehiculo\" (\"idCombustible\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idCombustible_idx_30d66389\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idCombustible_idx_30d66389\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idCondicion_idx_246be109",
+    "label": "Create index \"Vehiculo_idCondicion_idx_246be109\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idCondicion_idx_246be109",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idCondicion_idx_246be109\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idCondicion_idx_246be109\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idCondicion_idx_246be109\"",
+        "sql": "CREATE INDEX \"Vehiculo_idCondicion_idx_246be109\" ON \"public\".\"Vehiculo\" (\"idCondicion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idCondicion_idx_246be109\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idCondicion_idx_246be109\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idDimensiones_idx_ef7e1922",
+    "label": "Create index \"Vehiculo_idDimensiones_idx_ef7e1922\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idDimensiones_idx_ef7e1922",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idDimensiones_idx_ef7e1922\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idDimensiones_idx_ef7e1922\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idDimensiones_idx_ef7e1922\"",
+        "sql": "CREATE INDEX \"Vehiculo_idDimensiones_idx_ef7e1922\" ON \"public\".\"Vehiculo\" (\"idDimensiones\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idDimensiones_idx_ef7e1922\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idDimensiones_idx_ef7e1922\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idModelo_idx_073eb2ad",
+    "label": "Create index \"Vehiculo_idModelo_idx_073eb2ad\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idModelo_idx_073eb2ad",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idModelo_idx_073eb2ad\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idModelo_idx_073eb2ad\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idModelo_idx_073eb2ad\"",
+        "sql": "CREATE INDEX \"Vehiculo_idModelo_idx_073eb2ad\" ON \"public\".\"Vehiculo\" (\"idModelo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idModelo_idx_073eb2ad\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idModelo_idx_073eb2ad\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idMotor_idx_90c9a8a1",
+    "label": "Create index \"Vehiculo_idMotor_idx_90c9a8a1\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idMotor_idx_90c9a8a1",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idMotor_idx_90c9a8a1\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idMotor_idx_90c9a8a1\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idMotor_idx_90c9a8a1\"",
+        "sql": "CREATE INDEX \"Vehiculo_idMotor_idx_90c9a8a1\" ON \"public\".\"Vehiculo\" (\"idMotor\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idMotor_idx_90c9a8a1\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idMotor_idx_90c9a8a1\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idSegmento_idx_42bc43c8",
+    "label": "Create index \"Vehiculo_idSegmento_idx_42bc43c8\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idSegmento_idx_42bc43c8",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idSegmento_idx_42bc43c8\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idSegmento_idx_42bc43c8\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idSegmento_idx_42bc43c8\"",
+        "sql": "CREATE INDEX \"Vehiculo_idSegmento_idx_42bc43c8\" ON \"public\".\"Vehiculo\" (\"idSegmento\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idSegmento_idx_42bc43c8\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idSegmento_idx_42bc43c8\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idTipoCarroceria_idx_f29b7c0e",
+    "label": "Create index \"Vehiculo_idTipoCarroceria_idx_f29b7c0e\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idTipoCarroceria_idx_f29b7c0e",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idTipoCarroceria_idx_f29b7c0e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTipoCarroceria_idx_f29b7c0e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idTipoCarroceria_idx_f29b7c0e\"",
+        "sql": "CREATE INDEX \"Vehiculo_idTipoCarroceria_idx_f29b7c0e\" ON \"public\".\"Vehiculo\" (\"idTipoCarroceria\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idTipoCarroceria_idx_f29b7c0e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTipoCarroceria_idx_f29b7c0e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idTipoDireccion_idx_84a99da7",
+    "label": "Create index \"Vehiculo_idTipoDireccion_idx_84a99da7\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idTipoDireccion_idx_84a99da7",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idTipoDireccion_idx_84a99da7\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTipoDireccion_idx_84a99da7\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idTipoDireccion_idx_84a99da7\"",
+        "sql": "CREATE INDEX \"Vehiculo_idTipoDireccion_idx_84a99da7\" ON \"public\".\"Vehiculo\" (\"idTipoDireccion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idTipoDireccion_idx_84a99da7\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTipoDireccion_idx_84a99da7\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idTipoTapizado_idx_fcb18722",
+    "label": "Create index \"Vehiculo_idTipoTapizado_idx_fcb18722\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idTipoTapizado_idx_fcb18722",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idTipoTapizado_idx_fcb18722\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTipoTapizado_idx_fcb18722\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idTipoTapizado_idx_fcb18722\"",
+        "sql": "CREATE INDEX \"Vehiculo_idTipoTapizado_idx_fcb18722\" ON \"public\".\"Vehiculo\" (\"idTipoTapizado\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idTipoTapizado_idx_fcb18722\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTipoTapizado_idx_fcb18722\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Vehiculo.Vehiculo_idTraccion_idx_332480f9",
+    "label": "Create index \"Vehiculo_idTraccion_idx_332480f9\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Vehiculo_idTraccion_idx_332480f9",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Vehiculo_idTraccion_idx_332480f9\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTraccion_idx_332480f9\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Vehiculo_idTraccion_idx_332480f9\"",
+        "sql": "CREATE INDEX \"Vehiculo_idTraccion_idx_332480f9\" ON \"public\".\"Vehiculo\" (\"idTraccion\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Vehiculo_idTraccion_idx_332480f9\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Vehiculo_idTraccion_idx_332480f9\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Version.Version_idModelo_idx_073eb2ad",
+    "label": "Create index \"Version_idModelo_idx_073eb2ad\" on \"Version\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Version_idModelo_idx_073eb2ad",
+        "table": "Version"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Version_idModelo_idx_073eb2ad\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Version_idModelo_idx_073eb2ad\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Version_idModelo_idx_073eb2ad\"",
+        "sql": "CREATE INDEX \"Version_idModelo_idx_073eb2ad\" ON \"public\".\"Version\" (\"idModelo\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Version_idModelo_idx_073eb2ad\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Version_idModelo_idx_073eb2ad\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.HistorialPublicacion.HistorialPublicacion_idEstado_fkey",
+    "label": "Add foreign key \"HistorialPublicacion_idEstado_fkey\" on \"HistorialPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "HistorialPublicacion_idEstado_fkey",
+        "table": "HistorialPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"HistorialPublicacion_idEstado_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "HistorialPublicacion_idEstado_fkey",
+          "public",
+          "\"public\".\"HistorialPublicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"HistorialPublicacion_idEstado_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"HistorialPublicacion\"\nADD CONSTRAINT \"HistorialPublicacion_idEstado_fkey\"\nFOREIGN KEY (\"idEstado\")\nREFERENCES \"public\".\"Estado\" (\"idEstado\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"HistorialPublicacion_idEstado_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "HistorialPublicacion_idEstado_fkey",
+          "public",
+          "\"public\".\"HistorialPublicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.HistorialPublicacion.HistorialPublicacion_idPublicacion_fkey",
+    "label": "Add foreign key \"HistorialPublicacion_idPublicacion_fkey\" on \"HistorialPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "HistorialPublicacion_idPublicacion_fkey",
+        "table": "HistorialPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"HistorialPublicacion_idPublicacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "HistorialPublicacion_idPublicacion_fkey",
+          "public",
+          "\"public\".\"HistorialPublicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"HistorialPublicacion_idPublicacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"HistorialPublicacion\"\nADD CONSTRAINT \"HistorialPublicacion_idPublicacion_fkey\"\nFOREIGN KEY (\"idPublicacion\")\nREFERENCES \"public\".\"Publicacion\" (\"idPublicacion\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"HistorialPublicacion_idPublicacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "HistorialPublicacion_idPublicacion_fkey",
+          "public",
+          "\"public\".\"HistorialPublicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.MetricasPublicacion.MetricasPublicacion_idTipoEvento_fkey",
+    "label": "Add foreign key \"MetricasPublicacion_idTipoEvento_fkey\" on \"MetricasPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "MetricasPublicacion_idTipoEvento_fkey",
+        "table": "MetricasPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"MetricasPublicacion_idTipoEvento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "MetricasPublicacion_idTipoEvento_fkey",
+          "public",
+          "\"public\".\"MetricasPublicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"MetricasPublicacion_idTipoEvento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"MetricasPublicacion\"\nADD CONSTRAINT \"MetricasPublicacion_idTipoEvento_fkey\"\nFOREIGN KEY (\"idTipoEvento\")\nREFERENCES \"public\".\"TipoEvento\" (\"idTipoEvento\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"MetricasPublicacion_idTipoEvento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "MetricasPublicacion_idTipoEvento_fkey",
+          "public",
+          "\"public\".\"MetricasPublicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.MetricasPublicacion.MetricasPublicacion_idPublicacion_fkey",
+    "label": "Add foreign key \"MetricasPublicacion_idPublicacion_fkey\" on \"MetricasPublicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "MetricasPublicacion_idPublicacion_fkey",
+        "table": "MetricasPublicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"MetricasPublicacion_idPublicacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "MetricasPublicacion_idPublicacion_fkey",
+          "public",
+          "\"public\".\"MetricasPublicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"MetricasPublicacion_idPublicacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"MetricasPublicacion\"\nADD CONSTRAINT \"MetricasPublicacion_idPublicacion_fkey\"\nFOREIGN KEY (\"idPublicacion\")\nREFERENCES \"public\".\"Publicacion\" (\"idPublicacion\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"MetricasPublicacion_idPublicacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "MetricasPublicacion_idPublicacion_fkey",
+          "public",
+          "\"public\".\"MetricasPublicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Modelo.Modelo_idMarca_fkey",
+    "label": "Add foreign key \"Modelo_idMarca_fkey\" on \"Modelo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Modelo_idMarca_fkey",
+        "table": "Modelo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Modelo_idMarca_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Modelo_idMarca_fkey",
+          "public",
+          "\"public\".\"Modelo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Modelo_idMarca_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Modelo\"\nADD CONSTRAINT \"Modelo_idMarca_fkey\"\nFOREIGN KEY (\"idMarca\")\nREFERENCES \"public\".\"Marca\" (\"idMarca\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Modelo_idMarca_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Modelo_idMarca_fkey",
+          "public",
+          "\"public\".\"Modelo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Motor.Motor_idTipoMotor_fkey",
+    "label": "Add foreign key \"Motor_idTipoMotor_fkey\" on \"Motor\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Motor_idTipoMotor_fkey",
+        "table": "Motor"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Motor_idTipoMotor_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Motor_idTipoMotor_fkey",
+          "public",
+          "\"public\".\"Motor\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Motor_idTipoMotor_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Motor\"\nADD CONSTRAINT \"Motor_idTipoMotor_fkey\"\nFOREIGN KEY (\"idTipoMotor\")\nREFERENCES \"public\".\"TipoMotor\" (\"idTipoMotor\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Motor_idTipoMotor_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Motor_idTipoMotor_fkey",
+          "public",
+          "\"public\".\"Motor\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Multimedia.Multimedia_idPublicacion_fkey",
+    "label": "Add foreign key \"Multimedia_idPublicacion_fkey\" on \"Multimedia\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Multimedia_idPublicacion_fkey",
+        "table": "Multimedia"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Multimedia_idPublicacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Multimedia_idPublicacion_fkey",
+          "public",
+          "\"public\".\"Multimedia\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Multimedia_idPublicacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Multimedia\"\nADD CONSTRAINT \"Multimedia_idPublicacion_fkey\"\nFOREIGN KEY (\"idPublicacion\")\nREFERENCES \"public\".\"Publicacion\" (\"idPublicacion\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Multimedia_idPublicacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Multimedia_idPublicacion_fkey",
+          "public",
+          "\"public\".\"Multimedia\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Publicacion.Publicacion_idUsuario_fkey",
+    "label": "Add foreign key \"Publicacion_idUsuario_fkey\" on \"Publicacion\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Publicacion_idUsuario_fkey",
+        "table": "Publicacion"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Publicacion_idUsuario_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Publicacion_idUsuario_fkey",
+          "public",
+          "\"public\".\"Publicacion\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Publicacion_idUsuario_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Publicacion\"\nADD CONSTRAINT \"Publicacion_idUsuario_fkey\"\nFOREIGN KEY (\"idUsuario\")\nREFERENCES \"public\".\"Usuario\" (\"idUsuario\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Publicacion_idUsuario_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Publicacion_idUsuario_fkey",
+          "public",
+          "\"public\".\"Publicacion\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idPublicacion_fkey",
+    "label": "Add foreign key \"Vehiculo_idPublicacion_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idPublicacion_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idPublicacion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idPublicacion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idPublicacion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idPublicacion_fkey\"\nFOREIGN KEY (\"idPublicacion\")\nREFERENCES \"public\".\"Publicacion\" (\"idPublicacion\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idPublicacion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idPublicacion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idTraccion_fkey",
+    "label": "Add foreign key \"Vehiculo_idTraccion_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idTraccion_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idTraccion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTraccion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idTraccion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idTraccion_fkey\"\nFOREIGN KEY (\"idTraccion\")\nREFERENCES \"public\".\"Traccion\" (\"idTraccion\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idTraccion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTraccion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idSegmento_fkey",
+    "label": "Add foreign key \"Vehiculo_idSegmento_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idSegmento_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idSegmento_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idSegmento_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idSegmento_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idSegmento_fkey\"\nFOREIGN KEY (\"idSegmento\")\nREFERENCES \"public\".\"Segmento\" (\"idSegmento\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idSegmento_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idSegmento_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idModelo_fkey",
+    "label": "Add foreign key \"Vehiculo_idModelo_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idModelo_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idModelo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idModelo_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idModelo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idModelo_fkey\"\nFOREIGN KEY (\"idModelo\")\nREFERENCES \"public\".\"Modelo\" (\"idModelo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idModelo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idModelo_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idTipoCarroceria_fkey",
+    "label": "Add foreign key \"Vehiculo_idTipoCarroceria_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idTipoCarroceria_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idTipoCarroceria_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTipoCarroceria_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idTipoCarroceria_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idTipoCarroceria_fkey\"\nFOREIGN KEY (\"idTipoCarroceria\")\nREFERENCES \"public\".\"TipoCarroceria\" (\"idTipoCarroceria\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idTipoCarroceria_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTipoCarroceria_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idCondicion_fkey",
+    "label": "Add foreign key \"Vehiculo_idCondicion_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idCondicion_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idCondicion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idCondicion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idCondicion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idCondicion_fkey\"\nFOREIGN KEY (\"idCondicion\")\nREFERENCES \"public\".\"Condicion\" (\"idCondicion\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idCondicion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idCondicion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idTipoTapizado_fkey",
+    "label": "Add foreign key \"Vehiculo_idTipoTapizado_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idTipoTapizado_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idTipoTapizado_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTipoTapizado_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idTipoTapizado_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idTipoTapizado_fkey\"\nFOREIGN KEY (\"idTipoTapizado\")\nREFERENCES \"public\".\"TipoTapizado\" (\"idTipoTapizado\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idTipoTapizado_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTipoTapizado_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idDimensiones_fkey",
+    "label": "Add foreign key \"Vehiculo_idDimensiones_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idDimensiones_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idDimensiones_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idDimensiones_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idDimensiones_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idDimensiones_fkey\"\nFOREIGN KEY (\"idDimensiones\")\nREFERENCES \"public\".\"Dimensiones\" (\"idDimensiones\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idDimensiones_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idDimensiones_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idCaja_fkey",
+    "label": "Add foreign key \"Vehiculo_idCaja_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idCaja_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idCaja_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idCaja_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idCaja_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idCaja_fkey\"\nFOREIGN KEY (\"idCaja\")\nREFERENCES \"public\".\"Caja\" (\"idCaja\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idCaja_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idCaja_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idMotor_fkey",
+    "label": "Add foreign key \"Vehiculo_idMotor_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idMotor_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idMotor_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idMotor_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idMotor_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idMotor_fkey\"\nFOREIGN KEY (\"idMotor\")\nREFERENCES \"public\".\"Motor\" (\"idMotor\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idMotor_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idMotor_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idCombustible_fkey",
+    "label": "Add foreign key \"Vehiculo_idCombustible_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idCombustible_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idCombustible_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idCombustible_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idCombustible_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idCombustible_fkey\"\nFOREIGN KEY (\"idCombustible\")\nREFERENCES \"public\".\"Combustible\" (\"idCombustible\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idCombustible_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idCombustible_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Vehiculo.Vehiculo_idTipoDireccion_fkey",
+    "label": "Add foreign key \"Vehiculo_idTipoDireccion_fkey\" on \"Vehiculo\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Vehiculo_idTipoDireccion_fkey",
+        "table": "Vehiculo"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Vehiculo_idTipoDireccion_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTipoDireccion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Vehiculo_idTipoDireccion_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Vehiculo\"\nADD CONSTRAINT \"Vehiculo_idTipoDireccion_fkey\"\nFOREIGN KEY (\"idTipoDireccion\")\nREFERENCES \"public\".\"TipoDireccion\" (\"idTipoDireccion\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Vehiculo_idTipoDireccion_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Vehiculo_idTipoDireccion_fkey",
+          "public",
+          "\"public\".\"Vehiculo\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Version.Version_idModelo_fkey",
+    "label": "Add foreign key \"Version_idModelo_fkey\" on \"Version\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Version_idModelo_fkey",
+        "table": "Version"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Version_idModelo_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Version_idModelo_fkey",
+          "public",
+          "\"public\".\"Version\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Version_idModelo_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Version\"\nADD CONSTRAINT \"Version_idModelo_fkey\"\nFOREIGN KEY (\"idModelo\")\nREFERENCES \"public\".\"Modelo\" (\"idModelo\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Version_idModelo_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Version_idModelo_fkey",
+          "public",
+          "\"public\".\"Version\""
+        ]
+      }
+    ]
+  }
+]
