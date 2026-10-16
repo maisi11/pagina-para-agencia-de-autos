@@ -84,4 +84,30 @@ export class PublicacionRepository {
   async delete(idPublicacion: number) {
     return await this.model.where({ idPublicacion }).delete();
   }
+
+   async findAllComplete(options?: { idUsuario?: number; limit?: number; offset?: number }) {
+    let query = this.model
+      .include("usuario")
+      .include("vehiculo", (v) =>
+        v
+          .include("modelo", (m) => m.include("marca"))
+          .include("condicion")
+          .include("caja")
+          .include("combustible")
+          .include("traccion")
+          .include("segmento")
+      )
+      .include("multimedia")
+      .include("historial", (h) => h.include("estado"));
+    if (options?.idUsuario !== undefined) {
+      query = query.where({ idUsuario: options.idUsuario });
+    }
+    if (options?.offset !== undefined) {
+      query = query.offset(options.offset);
+    }
+    if (options?.limit !== undefined) {
+      query = query.limit(options.limit);
+    }
+    return await query.all();
+  }
 }
