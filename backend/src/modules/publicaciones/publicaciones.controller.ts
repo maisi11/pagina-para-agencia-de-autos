@@ -12,6 +12,8 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
+  UseGuards,
+  Req
 } from "@nestjs/common";
 import { PublicacionesService } from "./publicaciones.service.ts";
 import {
@@ -23,6 +25,8 @@ import {
   type CambiarEstadoDto,
 } from "./dto/publicaciones.dto.ts";
 import { ZodValidationPipe } from "../../common/pipes/zod-validation.pipe.ts";
+import { OptionalAuthGuard } from "../../common/guards/optional-auth.guard.ts";
+import { AuthGuard } from "../../common/guards/auth.guard.ts";
 
 @Controller("api/publicaciones")
 export class PublicacionesController{
@@ -32,22 +36,25 @@ export class PublicacionesController{
 
     // listado de publicaciones con filtros
     @Get()
+    @UseGuards(OptionalAuthGuard)
     async listar(
-        @Query(new ZodValidationPipe(FilterPublicacionesSchema)) filtros: FilterPublicacionesDto,
+      @Query(new ZodValidationPipe(FilterPublicacionesSchema)) filtros: FilterPublicacionesDto,
+      @Req() req: any, 
     ){
-        // falta implementar la validadcion de si es vendedor o no. queda con un booolean provisorio
-        const esVendedor = false
-        return await this.publicacionesService.listar(filtros, esVendedor)
-
+      const esVendedor = Boolean(req.esVendedor); 
+      return await this.publicacionesService.listar(filtros, esVendedor);
     }
+
     //consulta de una publicacion especifica
     @Get(":id")
+    @UseGuards(OptionalAuthGuard)
     async buscarPorId(@Param("id", ParseIntPipe) id: number){
         return await this.publicacionesService.buscarPorId(id)
     }
     
     // crear una publicacion
     @Post()
+    @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.CREATED)
     @UsePipes( new ZodValidationPipe(CreatePublicacionSchema))
     async crear(@Body() dto: CreatePublicacionDto){
@@ -55,8 +62,8 @@ export class PublicacionesController{
     }
 
     // Cambiar estado
-
     @Patch(":id/estado")
+    @UseGuards(AuthGuard)
     @UsePipes(new ZodValidationPipe(CambiarEstadoSchema))
     async cambiarEstado(
         @Param("id", ParseIntPipe) id: number,
@@ -67,6 +74,7 @@ export class PublicacionesController{
 
     // eleminar
     @Delete(":id")
+    @UseGuards(AuthGuard)
     async eleminar(@Param("id", ParseIntPipe)id: number){
         return await this.publicacionesService.eleminar(id)
     }
