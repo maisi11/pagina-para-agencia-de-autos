@@ -40,9 +40,9 @@ model MetricasPublicacion {
   idMetrica     Int         @id @default(autoincrement())
   fechaHora     TimestamptzString
   idTipoEvento  Int
-  idPublicacion Int
+  idPublicacion Int?
   tipoEvento    TipoEvento  @relation(fields: [idTipoEvento], references: [idTipoEvento])
-  publicacion   Publicacion @relation(fields: [idPublicacion], references: [idPublicacion], onDelete: Cascade)
+  publicacion   Publicacion? @relation(fields: [idPublicacion], references: [idPublicacion], onDelete: Cascade)
 }
 
 model TipoEvento {
