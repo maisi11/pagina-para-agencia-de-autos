@@ -1,36 +1,57 @@
-# bd-concesionario
+# Apex Motors - Backend API
 
-A minimal nest app with Prisma 8 and Prisma Composer.
+Backend desarrollado con **NestJS**, **Prisma 8 Composer**, **PostgreSQL** y **Zod**.
 
-## Run locally
+---
 
+## 🚀 Cómo levantar el servidor
+
+### 1. Requisito previo: Base de datos PostgreSQL
+Asegurate de que PostgreSQL esté corriendo en el puerto `5432`.
+Este comando crea el contenedor de doker con la bd
 ```bash
-npm run dev:composer
+docker compose -f docker-compose.postgres.yml up -d
 ```
 
-This builds the app and starts it with Composer. PostgreSQL projects get a local Prisma Postgres database and apply the committed migrations automatically.
-
-## Deploy
-
+En caso de que la bd ya se encuentre creada para levantarla simplemenete ejecutar: 
 ```bash
-npm run deploy
+docker start postgres-prisma
 ```
 
-The deploy script builds the framework output, provisions Prisma Postgres when selected, applies migrations, and deploys the app to Prisma Compute.
-
-The starter users are inserted idempotently from `src/prisma/seed.ts` on the first database query through the Composer service binding.
-
-
-## Prisma
-
-- Contract: `src/prisma/contract.prisma`
-- Prisma and Composer config: `prisma.config.ts`
-- Composer app: `module.ts` and `service.ts`
-
-After changing the contract, run:
-
+Actualmete quedo modificado para que al ejecutar  
 ```bash
-npm run contract:emit
+npm run dev
+```  
+se levante la bd al mismo tiempo que el servidor del backend.
+
+### 2. Iniciar el servidor en modo desarrollo
+```bash
+npm run dev
+```
+*Utiliza `tsx watch src/main.ts` con recarga en vivo (hot-reload).*
+*El servidor escuchará en `http://localhost:3000` con CORS habilitado.*
+
+### 3. Compilar para producción (Opcional)
+```bash
+npm run build
+npm run start
 ```
 
-To use the framework's development server directly, run `npm run dev`. This direct mode requires `DATABASE_URL`.
+---
+
+## 🗄️ Comandos de Prisma 8 Composer
+
+* **Actualizar el contrato de modelos** (luego de editar `src/prisma/contract.prisma`):
+  ```bash
+  npm run contract:emit
+  ```
+
+* **Crear / Actualizar tablas en la base de datos:**
+  ```bash
+  npm run db:init
+  ```
+
+* **Ver estado de migraciones:**
+  ```bash
+  npm run migration:status
+  ```

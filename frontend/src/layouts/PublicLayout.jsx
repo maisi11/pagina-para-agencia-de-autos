@@ -1,7 +1,20 @@
 import { Link, NavLink, Outlet } from 'react-router-dom'
 
+function formatPhoneNumber(phone) {
+  if (!phone) return '+54 9 11 5560-8800'
+  const clean = String(phone).replace(/\D/g, '')
+  if (clean.startsWith('549') && clean.length === 13) {
+    return `+54 9 ${clean.slice(3, 6)} ${clean.slice(6, 9)}-${clean.slice(9)}`
+  }
+  if (clean.startsWith('54') && clean.length === 12) {
+    return `+54 ${clean.slice(2, 4)} ${clean.slice(4, 8)}-${clean.slice(8)}`
+  }
+  return `+${clean}`
+}
+
 export default function PublicLayout() {
   const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '5491155608800'
+  const formattedPhone = formatPhoneNumber(whatsappPhone)
 
   return (
     <div className="min-h-screen flex flex-col bg-surface font-sans text-on-surface antialiased selection:bg-secondary selection:text-white">
@@ -15,10 +28,10 @@ export default function PublicLayout() {
             <div className="flex items-center gap-4 sm:gap-6">
               <a
                 className="flex items-center gap-1.5 hover:text-white transition-colors"
-                href="tel:+541148902300"
+                href={`tel:+${whatsappPhone}`}
               >
                 <span className="material-symbols-outlined text-[16px] text-blue-400">call</span>
-                <span>+54 11 4890-2300</span>
+                <span>{formattedPhone}</span>
               </a>
               <a
                 className="hidden sm:flex items-center gap-1.5 hover:text-white transition-colors"
@@ -26,8 +39,8 @@ export default function PublicLayout() {
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                <span className="material-symbols-outlined text-[16px] text-emerald-400">chat</span>
-                <span>WhatsApp: +54 9 11 5560-8800</span>
+                <span className="material-symbols-outlined text-[16px] text-[#25D366]">chat</span>
+                <span>WhatsApp: {formattedPhone}</span>
               </a>
             </div>
             <div className="flex items-center gap-4">
@@ -116,13 +129,6 @@ export default function PublicLayout() {
                 <span className="hidden sm:inline">Agendar Visita</span>
                 <span className="sm:hidden">Visita</span>
               </a>
-              <Link
-                to="/login"
-                className="w-9 h-9 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-700 hover:bg-slate-200 transition-colors"
-                title="Acceso Asesores"
-              >
-                <span className="material-symbols-outlined text-[20px]">person</span>
-              </Link>
             </div>
           </div>
         </div>
@@ -150,7 +156,7 @@ export default function PublicLayout() {
                 <span className="text-xl font-extrabold text-white tracking-tight">Apex Motors</span>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Concesionaria oficial multimarca. Líderes en comercialización de vehículos 0km y seleccionados certificados con peritaje computarizado en 150 puntos y garantía de transferencia inmediata.
+                Concesionaria oficial multimarca. Líderes en comercialización de vehículos 0km y seleccionados certificados con garantía y documentación lista para transferencia inmediata.
               </p>
               <div className="flex items-center gap-3 pt-1">
                 <a
@@ -172,7 +178,7 @@ export default function PublicLayout() {
                   <span className="material-symbols-outlined text-[18px]">public</span>
                 </a>
                 <a
-                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-secondary hover:text-white flex items-center justify-center text-slate-300 transition-colors"
+                  className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-[#25D366] hover:text-white flex items-center justify-center text-slate-300 transition-colors"
                   href={`https://wa.me/${whatsappPhone}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -197,7 +203,7 @@ export default function PublicLayout() {
                 </div>
                 <div>
                   <span className="text-slate-300 font-semibold block">Domingos & Feriados:</span>
-                  <span className="text-slate-400">Guardia Pasiva WhatsApp</span>
+                  <span className="text-slate-400">Atención Online por WhatsApp</span>
                 </div>
               </div>
               <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded bg-slate-800/80 border border-slate-700 text-[11px] text-emerald-400 font-bold w-fit">
@@ -216,11 +222,15 @@ export default function PublicLayout() {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-blue-400 text-[16px] shrink-0">call</span>
-                  <span>Central: +54 11 4890-2300</span>
+                  <a href={`tel:+${whatsappPhone}`} className="hover:text-white transition-colors">
+                    Central: {formattedPhone}
+                  </a>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-emerald-400 text-[16px] shrink-0">chat</span>
-                  <span>WhatsApp: +54 9 11 5560-8800</span>
+                  <a href={`https://wa.me/${whatsappPhone}`} target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
+                    WhatsApp: {formattedPhone}
+                  </a>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-blue-400 text-[16px] shrink-0">mail</span>

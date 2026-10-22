@@ -1,144 +1,274 @@
+import { useState } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 
 export default function AdminLayout() {
   const navigate = useNavigate()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = () => {
-    // Más adelante aquí llamamos al logout de Auth0
+    localStorage.removeItem('apex_auth_token')
     navigate('/login')
   }
 
+  const navLinks = [
+    {
+      to: '/admin/metricas',
+      label: 'Dashboard / Métricas',
+      icon: 'analytics',
+    },
+    {
+      to: '/admin/inventario',
+      label: 'Catálogo & Inventario',
+      icon: 'inventory_2',
+      badge: null,
+    },
+    {
+      to: '/admin/publicar',
+      label: 'Nueva Publicación',
+      icon: 'add_circle',
+      badge: '+ Crear',
+    },
+  ]
+
   return (
-    <div className="min-h-screen flex flex-col bg-surface font-sans text-on-surface antialiased">
-      {/* ==========================================
-          BACKOFFICE HEADER & SYSTEM BAR
-          ========================================== */}
-      <header className="fixed top-0 left-0 right-0 w-full z-50 bg-surface/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(11,28,48,0.04)] border-b border-surface-container">
-        {/* System Bar */}
-        <div className="w-full bg-primary text-on-primary px-4 sm:px-8">
-          <div className="max-w-7xl mx-auto h-9 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-3">
-              <span className="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></span>
-              <span className="text-tertiary-fixed font-semibold">Apex Backoffice OS</span>
-              <span className="text-slate-500">|</span>
-              <span className="text-slate-400 hidden sm:inline">v2.4.1 Estable · Conexión Segura SSL</span>
-            </div>
-            <div className="flex items-center gap-4">
+    <div className="min-h-screen flex bg-slate-50 font-sans text-slate-900 antialiased selection:bg-secondary selection:text-white">
+      {/* =========================================================
+          PERSISTENT DESKTOP SIDEBAR (md:flex w-64 fixed left-0)
+          ========================================================= */}
+      <aside className="hidden md:flex flex-col w-64 fixed left-0 top-0 bottom-0 bg-slate-900 text-slate-200 z-40 border-r border-slate-800 shadow-2xl">
+        {/* Brand Header */}
+        <div className="h-18 px-5 border-b border-slate-800 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-secondary text-white flex items-center justify-center font-bold shadow-md shadow-secondary/20">
+            <span className="material-symbols-outlined text-xl">admin_panel_settings</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-base font-extrabold text-white tracking-tight leading-none">
+              Apex Motors
+            </span>
+            <span className="text-[10px] text-blue-400 font-bold uppercase tracking-wider mt-1">
+              Portal Vendedores OS
+            </span>
+          </div>
+        </div>
+
+        {/* Navigation Sections */}
+        <div className="flex-1 py-5 px-3 space-y-6 overflow-y-auto">
+          {/* Main Menus */}
+          <div>
+            <span className="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-2">
+              Gestión Comercial
+            </span>
+            <nav className="space-y-1">
+              {navLinks.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                      isActive
+                        ? 'bg-secondary text-white font-bold shadow-lg shadow-secondary/30 translate-x-1'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    }`
+                  }
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className="material-symbols-outlined text-lg">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span
+                      className={`text-[9px] px-1.5 py-0.5 rounded font-extrabold uppercase tracking-wide ${
+                        item.badge.includes('+')
+                          ? 'bg-emerald-500/20 text-emerald-300'
+                          : 'bg-white/20 text-white'
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                </NavLink>
+              ))}
+            </nav>
+          </div>
+
+          {/* External / Public Shortcuts */}
+          <div>
+            <span className="px-3 text-[10px] font-extrabold uppercase tracking-widest text-slate-400 block mb-2">
+              Vista Cliente
+            </span>
+            <div className="space-y-1">
               <Link
-                to="/"
-                className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors"
-                title="Abrir vista de clientes"
+                to="/catalogo"
+                className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-all group"
+                title="Abrir catálogo público de clientes"
               >
-                <span className="material-symbols-outlined text-sm">open_in_new</span>
-                <span>Ver Catálogo Público</span>
+                <div className="flex items-center gap-2.5">
+                  <span className="material-symbols-outlined text-lg text-emerald-400">storefront</span>
+                  <span>Catálogo Público</span>
+                </div>
+                <span className="material-symbols-outlined text-sm text-slate-500 group-hover:text-white group-hover:translate-x-0.5 transition-all">
+                  open_in_new
+                </span>
               </Link>
-              <span className="text-slate-600">•</span>
+            </div>
+          </div>
+        </div>
+
+        {/* User Profile Card & Sign Out (Sticky Footer) */}
+        <div className="p-3 border-t border-slate-800 bg-slate-950/60">
+          <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <div className="w-8 h-8 rounded-full bg-secondary text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
+                MB
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-xs font-bold text-white truncate">Martín Benítez</span>
+                <span className="text-[10px] text-slate-400 truncate">Asesor Senior Norte</span>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700/60 transition-colors"
+              title="Cerrar Sesión"
+              type="button"
+            >
+              <span className="material-symbols-outlined text-base">logout</span>
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      {/* =========================================================
+          MOBILE TOPBAR & DRAWER (< md)
+          ========================================================= */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-slate-900 text-white border-b border-slate-800 px-4 h-16 flex items-center justify-between">
+        <Link to="/admin/inventario" className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-secondary text-white flex items-center justify-center font-bold">
+            <span className="material-symbols-outlined text-lg">admin_panel_settings</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm font-extrabold text-white">Apex Motors</span>
+            <span className="text-[9px] text-blue-400 font-bold uppercase">Backoffice</span>
+          </div>
+        </Link>
+
+        <div className="flex items-center gap-2">
+          <Link
+            to="/admin/publicar"
+            className="px-2.5 py-1.5 rounded-lg bg-secondary text-white text-xs font-bold flex items-center gap-1"
+          >
+            <span className="material-symbols-outlined text-sm">add</span>
+            <span>Publicar</span>
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+            type="button"
+            aria-label="Abrir menú"
+          >
+            <span className="material-symbols-outlined text-xl">
+              {mobileMenuOpen ? 'close' : 'menu'}
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-30 bg-black/60 backdrop-blur-xs pt-16">
+          <div className="bg-slate-900 border-b border-slate-800 p-5 space-y-4">
+            <nav className="space-y-1.5">
+              {navLinks.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold transition-all ${
+                      isActive
+                        ? 'bg-secondary text-white font-bold'
+                        : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                    }`
+                  }
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-xl">{item.icon}</span>
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-white/20 font-bold">
+                      {item.badge}
+                    </span>
+                  )}
+                </NavLink>
+              ))}
+              <Link
+                to="/catalogo"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-xl text-emerald-400">storefront</span>
+                  <span>Ver Catálogo Público</span>
+                </div>
+                <span className="material-symbols-outlined text-sm">open_in_new</span>
+              </Link>
+            </nav>
+
+            <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-secondary text-white font-bold text-xs flex items-center justify-center">
+                  MB
+                </div>
+                <span className="text-xs font-bold text-white">Martín Benítez</span>
+              </div>
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-1 text-slate-300 hover:text-red-400 transition-colors bg-transparent border-0 cursor-pointer p-0"
+                className="text-xs font-bold text-red-400 flex items-center gap-1"
+                type="button"
               >
                 <span className="material-symbols-outlined text-sm">logout</span>
-                <span>Cerrar Sesión</span>
+                <span>Salir</span>
               </button>
             </div>
           </div>
         </div>
+      )}
 
-        {/* Operational Header */}
-        <div className="w-full px-4 sm:px-8 bg-surface-container-lowest">
-          <div className="max-w-7xl mx-auto h-16 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-6">
-              {/* Brand */}
-              <Link to="/admin/inventario" className="flex items-center gap-3 group">
-                <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold shadow-sm group-hover:bg-secondary transition-colors">
-                  <span className="material-symbols-outlined text-xl">admin_panel_settings</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-lg font-bold text-on-surface tracking-tight leading-none">
-                    Apex Motors
-                  </span>
-                  <span className="text-[10px] text-secondary font-bold uppercase tracking-wider mt-0.5">
-                    Portal Vendedores & Backoffice
-                  </span>
-                </div>
-              </Link>
-
-              {/* Navigation Tabs */}
-              <nav className="hidden md:flex items-center gap-1">
-                <NavLink
-                  to="/admin/inventario"
-                  className={({ isActive }) =>
-                    `flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                      isActive
-                        ? 'bg-surface-container-high text-on-surface font-bold shadow-sm'
-                        : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
-                    }`
-                  }
-                >
-                  <span className="material-symbols-outlined text-base text-secondary">inventory_2</span>
-                  <span>Inventario de Publicaciones</span>
-                </NavLink>
-                <NavLink
-                  to="/admin/metricas"
-                  className={({ isActive }) =>
-                    `flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors ${
-                      isActive
-                        ? 'bg-surface-container-high text-on-surface font-bold shadow-sm'
-                        : 'text-on-surface-variant hover:bg-surface-container hover:text-on-surface'
-                    }`
-                  }
-                >
-                  <span className="material-symbols-outlined text-base text-blue-600">analytics</span>
-                  <span>Métricas y Reportes</span>
-                </NavLink>
-              </nav>
-            </div>
-
-            {/* Right Actions & Profile */}
-            <div className="flex items-center gap-4">
-              <Link
-                to="/admin/publicar"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-semibold shadow-sm hover:bg-primary-container transition-all cursor-pointer active:scale-95"
-              >
-                <span className="material-symbols-outlined text-base text-tertiary-fixed">add_circle</span>
-                <span className="hidden sm:inline">+ Nueva Publicación</span>
-                <span className="sm:hidden">Publicar</span>
-              </Link>
-
-              <div className="flex items-center gap-2.5 pl-3 border-l border-surface-container">
-                <div className="w-9 h-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs shadow-sm">
-                  MB
-                </div>
-                <div className="hidden lg:flex flex-col">
-                  <span className="text-xs font-bold text-on-surface leading-tight">
-                    Martín Benítez
-                  </span>
-                  <span className="text-[10px] text-on-surface-variant leading-none">
-                    Asesor Senior • Sucursal Norte
-                  </span>
-                </div>
-              </div>
-            </div>
+      {/* =========================================================
+          MAIN CONTENT WRAPPER WITH PROPER DESKTOP OFFSET
+          ========================================================= */}
+      <div className="flex-1 flex flex-col md:pl-64 min-w-0 pt-16 md:pt-0">
+        {/* Top Context Bar on Desktop */}
+        <header className="hidden md:flex h-14 bg-white border-b border-slate-200 px-8 items-center justify-between z-10 sticky top-0">
+          <div className="flex items-center gap-2 text-xs text-slate-500">
+            <span className="material-symbols-outlined text-sm text-secondary">shield_person</span>
+            <span className="font-semibold text-slate-800">Apex Motors Terminal</span>
           </div>
-        </div>
-      </header>
 
-      {/* ==========================================
-          BACKOFFICE VIEW CONTENT (OUTLET)
-          ========================================== */}
-      <main className="w-full pt-26 flex-1 bg-surface">
-        <Outlet />
-      </main>
+          <div className="flex items-center gap-4">
+            <Link
+              to="/catalogo"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-secondary hover:text-secondary-container transition-colors"
+            >
+              <span className="material-symbols-outlined text-sm">open_in_new</span>
+              <span>Visitar Salón Web</span>
+            </Link>
+            <span className="text-slate-200">|</span>
+          </div>
+        </header>
 
-      {/* ==========================================
-          FOOTER MINIMALISTA OPERACIONAL
-          ========================================== */}
-      <footer className="w-full bg-surface-container-lowest border-t border-surface-container py-3 px-4 sm:px-8 text-xs text-on-surface-variant">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Apex Motors Backoffice • Terminal Segura de Gestión de Stock y Leads</span>
-          <span className="text-[11px] text-slate-400">© {new Date().getFullYear()} Sistema Interno Homologado</span>
-        </div>
-      </footer>
+        {/* View Content (Outlet) */}
+        <main className="flex-1 bg-surface">
+          <Outlet />
+        </main>
+
+        {/* Minimal Operational Footer */}
+        <footer className="w-full bg-white border-t border-slate-200 py-3 px-6 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>Apex Motors Enterprise OS • Terminal de Salón y Ventas</span>
+          <span className="text-[11px] text-slate-400">© {new Date().getFullYear()} Todos los derechos reservados</span>
+        </footer>
+      </div>
     </div>
   )
 }
