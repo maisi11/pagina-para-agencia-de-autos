@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { MetricasService } from '../../services/metricas.service'
+import { optimizarUrlCloudinary } from '../../utils/cloudinary'
 
 export default function VehicleCard({ publicacion }) {
   if (!publicacion) return null
@@ -47,14 +48,20 @@ export default function VehicleCard({ publicacion }) {
   const marcaNombre =
     vehiculo?.modelo?.marca?.nombreMarca || vehiculo?.modelo?.marca?.nombre || 'Vehículo'
   const modeloNombre = vehiculo?.modelo?.nombreModelo || vehiculo?.modelo?.nombre || ''
-  const versionNombre = vehiculo?.version?.nombreVersion || vehiculo?.version?.nombre || ''
+  const versionNombre =
+    vehiculo?.version?.nombreVersion ||
+    vehiculo?.version?.nombre ||
+    (vehiculo?.modelo?.versiones?.[0]?.nombreVersion || '')
   const anio = vehiculo?.anio || ''
   const tituloCompleto = `${marcaNombre} ${modeloNombre} ${versionNombre} ${anio}`.trim()
 
   const precioUSD = Number(precio) || 0
   const precioFormateado = `${moneda || 'USD'} ${precioUSD.toLocaleString('es-AR')}`
   const kilometros = vehiculo?.kilometros ?? vehiculo?.kilometraje
-  const cajaNombre = vehiculo?.caja?.nombreCaja || vehiculo?.caja?.nombre || 'Manual'
+  const condicionNombre =
+    vehiculo?.condicion?.nombreCondicion ||
+    vehiculo?.condicion?.nombre ||
+    (vehiculo?.kilometros === 0 ? '0km' : 'Usado')
   const segmentoNombre =
     vehiculo?.segmento?.nombreSegmento || vehiculo?.tipoCarroceria?.nombreTipoCarroceria
 
@@ -99,7 +106,7 @@ export default function VehicleCard({ publicacion }) {
       <div className="relative aspect-[16/9] w-full bg-slate-900 overflow-hidden">
         <Link to={`/vehiculo/${id}`} className="block w-full h-full">
           <img
-            src={fotoPortada}
+            src={optimizarUrlCloudinary(fotoPortada, 'c_fill,w_800,h_533,f_auto,q_auto')}
             alt={`${tituloCompleto} - Vista concesionaria`}
             className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ${
               isVendida ? 'filter grayscale contrast-90 brightness-90' : ''
@@ -121,27 +128,11 @@ export default function VehicleCard({ publicacion }) {
             </span>
           </div>
         )}
-
-        {/* Wishlist Button (Esquina superior derecha - Sobre gradiente protector) */}
-        <button
-          onClick={toggleFavorito}
-          aria-label={esFavorito ? 'Quitar de favoritos' : 'Guardar en favoritos'}
-          className={`absolute top-3 right-3 w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-200 active:scale-90 cursor-pointer shadow-md z-10 ${
-            esFavorito
-              ? 'bg-rose-500 text-white shadow-rose-500/30'
-              : 'bg-black/40 hover:bg-white text-white hover:text-rose-500 border border-white/30'
-          }`}
-        >
-          <span
-            className="material-symbols-outlined text-[19px]"
-            style={{ fontVariationSettings: esFavorito ? "'FILL' 1" : "'FILL' 0" }}
-          >
-            favorite
-          </span>
-        </button>
+         
+       
 
         {/* Badges de Estado con Regla de No-Dependencia Cromática (Ícono + Texto) */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5 pointer-events-none z-10">
+        <div className="absolute top-3 right-3 flex flex-wrap gap-1.5 pointer-events-none z-10">
           {isDisponible && (
             <span className="px-2.5 py-1 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold uppercase tracking-wider shadow flex items-center gap-1">
               <span className="material-symbols-outlined text-[13px]">check_circle</span>
@@ -162,14 +153,6 @@ export default function VehicleCard({ publicacion }) {
           )}
         </div>
 
-        {/* Segmento / Carrocería Pill (Esquina inferior izquierda) */}
-        {segmentoNombre && (
-          <div className="absolute bottom-2.5 left-3 pointer-events-none z-10">
-            <span className="px-2.5 py-0.5 rounded-md bg-black/60 backdrop-blur-md text-white text-[10px] font-semibold tracking-wide border border-white/20">
-              {segmentoNombre}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* =========================================================================
@@ -177,27 +160,33 @@ export default function VehicleCard({ publicacion }) {
           ========================================================================= */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-3.5">
         <div>
-          {/* Título Principal (H3 Bold) con Puntos de Anclaje Tipográficos */}
+          {/* Título Principal (H3 Bold) y Versión */}
           <Link to={`/vehiculo/${id}`} className="block group-hover:text-blue-600 transition-colors">
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 leading-snug line-clamp-1 tracking-tight">
               {marcaNombre} {modeloNombre}
             </h3>
-            <p className="text-xs text-slate-500 line-clamp-1 font-medium mt-0.5">
-              {versionNombre || 'Edición Oficial Certificada'}
+            <p className="text-xs text-slate-500 line-clamp-1 font-semibold mt-0.5">
+              {versionNombre || '—'}
             </p>
           </Link>
 
-          {/* Límite de Máximo 3 Atributos Clave (Año, Kilometraje, Transmisión) */}
-          <div className="grid grid-cols-3 gap-1.5 text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100">
+          {/* Límite de 3 Atributos Clave (Año, Kilometraje, Condición) */}
+          <div className="grid grid-cols-3 gap-2 text-xs text-slate-600 mt-3 pt-3 border-t border-slate-100">
             {/* 1. Año */}
-            <div className="flex items-center gap-1 bg-slate-50 px-2 py-1.5 rounded-lg font-medium text-slate-700 justify-center">
-              <span className="material-symbols-outlined text-[15px] text-blue-600">calendar_today</span>
-              <span className="truncate">{anio || 2024}</span>
+            <div
+              className="flex items-center gap-1.5 bg-slate-50 px-2 py-1.5 rounded-lg font-semibold text-slate-700 justify-center min-w-0"
+              title={`Año: ${anio}`}
+            >
+              <span className="material-symbols-outlined text-[15px] text-blue-600 shrink-0">calendar_today</span>
+              <span className="truncate">{anio}</span>
             </div>
 
             {/* 2. Kilometraje */}
-            <div className="flex items-center gap-1 bg-slate-50 px-2 py-1.5 rounded-lg font-medium text-slate-700 justify-center">
-              <span className="material-symbols-outlined text-[15px] text-blue-600">speed</span>
+            <div
+              className="flex items-center gap-1.5 bg-slate-50 px-2 py-1.5 rounded-lg font-semibold text-slate-700 justify-center min-w-0"
+              title={`Kilometraje: ${kilometros === undefined || kilometros === 0 ? '0 km' : `${Number(kilometros).toLocaleString('es-AR')} km`}`}
+            >
+              <span className="material-symbols-outlined text-[15px] text-blue-600 shrink-0">speed</span>
               <span className="truncate">
                 {kilometros === undefined || kilometros === 0
                   ? '0 km'
@@ -205,10 +194,13 @@ export default function VehicleCard({ publicacion }) {
               </span>
             </div>
 
-            {/* 3. Transmisión */}
-            <div className="flex items-center gap-1 bg-slate-50 px-2 py-1.5 rounded-lg font-medium text-slate-700 justify-center">
-              <span className="material-symbols-outlined text-[15px] text-blue-600">settings</span>
-              <span className="truncate">{cajaNombre}</span>
+            {/* 3. Condición */}
+            <div
+              className="flex items-center gap-1.5 bg-slate-50 px-2 py-1.5 rounded-lg font-semibold text-slate-700 justify-center min-w-0"
+              title={`Condición: ${condicionNombre}`}
+            >
+              <span className="material-symbols-outlined text-[15px] text-blue-600 shrink-0">verified</span>
+              <span className="truncate">{condicionNombre}</span>
             </div>
           </div>
         </div>
@@ -248,13 +240,6 @@ export default function VehicleCard({ publicacion }) {
               </span>
             )}
 
-            <Link
-              to={`/vehiculo/${id}`}
-              className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-colors inline-flex items-center gap-1 border border-slate-200/60"
-            >
-              <span>Ver</span>
-              <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-            </Link>
           </div>
         </div>
       </div>

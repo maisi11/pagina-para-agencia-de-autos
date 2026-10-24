@@ -38,6 +38,10 @@ export class MultimediaRepository {
   }
 
   async deleteByPublicacion(idPublicacion: number) {
-    return await this.model.where({ idPublicacion }).delete();
+    const existentes = await this.model.where({ idPublicacion }).all();
+    for (const item of existentes) {
+      await this.model.where({ idArchivo: item.idArchivo }).delete();
+    }
+    return existentes;
   }
 }

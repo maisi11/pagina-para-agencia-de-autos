@@ -171,9 +171,9 @@ INSERT INTO "Motor" ("idMotor", "idTipoMotor", "descripcion", "potencia", "torqu
 
 -- 16. DIMENSIONES
 INSERT INTO "Dimensiones" ("idDimensiones", "largo", "alto", "ancho") VALUES
-  (1, 5325, 1815, 1855),
-  (2, 4630, 1435, 1780),
-  (3, 4055, 1453, 1745);
+  (1, 5.325, 1.815, 1.855),
+  (2, 4.630, 1.435, 1.780),
+  (3, 4.055, 1.453, 1.745);
 
 -- 17. USUARIO VENDEDOR TEST
 INSERT INTO "Usuario" ("idUsuario", "nombre", "email", "contraseña") VALUES

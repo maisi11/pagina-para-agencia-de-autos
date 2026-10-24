@@ -25,6 +25,13 @@ export const PublicacionesService = {
     });
   },
 
+  async actualizar(id, datosPublicacion) {
+    return await apiClient(`/publicaciones/${id}`, {
+      method: 'PATCH',
+      body: datosPublicacion,
+    });
+  },
+
   async cambiarEstado(id, nuevoEstado) {
     return await apiClient(`/publicaciones/${id}/estado`, {
       method: 'PATCH',

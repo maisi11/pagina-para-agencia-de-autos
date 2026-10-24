@@ -62,7 +62,7 @@ export class PublicacionRepository {
       .include("usuario")
       .include("vehiculo", (v) =>
         v
-          .include("modelo", (m) => m.include("marca"))
+          .include("modelo", (m) => m.include("marca").include("versiones"))
           .include("condicion")
           .include("caja")
           .include("combustible")
@@ -96,7 +96,7 @@ export class PublicacionRepository {
       .include("usuario")
       .include("vehiculo", (v) =>
         v
-          .include("modelo", (m) => m.include("marca"))
+          .include("modelo", (m) => m.include("marca").include("versiones"))
           .include("condicion")
           .include("caja")
           .include("combustible")

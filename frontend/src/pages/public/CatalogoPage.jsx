@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { PublicacionesService } from '../../services/publicaciones.service'
 import { CatalogosService } from '../../services/catalogos.service'
+import { MetricasService } from '../../services/metricas.service'
 import VehicleCard from '../../components/public/VehicleCard'
 
 export default function CatalogoPage() {
@@ -38,6 +39,8 @@ export default function CatalogoPage() {
   const listaAnios = Array.from({ length: anioActual - 2014 }, (_, i) => anioActual - i)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+
     async function cargarDatos() {
       try {
         setCargando(true)
@@ -57,6 +60,16 @@ export default function CatalogoPage() {
 
     cargarDatos()
   }, [])
+
+  // Registrar búsqueda / interés para métricas de demanda insatisfecha
+  useEffect(() => {
+    const termino = busquedaTexto.trim() || (marcaFiltro ? `Marca #${marcaFiltro}` : '')
+    if (!termino) return
+    const timer = setTimeout(() => {
+      MetricasService.registrarEvento('BUSQUEDA_CATALOGO', { busqueda: termino, marca: marcaFiltro, modelo: modeloFiltro })
+    }, 1500)
+    return () => clearTimeout(timer)
+  }, [busquedaTexto, marcaFiltro, modeloFiltro])
 
   // Modelos filtrados según la marca seleccionada
   const modelosDisponibles = catalogos?.modelos
@@ -261,12 +274,10 @@ export default function CatalogoPage() {
       : null,
   ].filter(Boolean)
 
-  // =========================================================================
-  // FILTROS ESTRUCTURADOS CON BUSCADOR ARRIBA Y DESPLEGABLES PARAMÉTRICOS
-  // =========================================================================
+  
   const FilterControls = () => (
     <div className="space-y-5">
-      {/* 1. BUSCADOR POR PALABRA CLAVE (Arriba de todo según UX) */}
+      
       <div className="space-y-1.5 pb-4 border-b border-slate-100">
         <label className="text-xs font-extrabold text-[#0F172A] uppercase tracking-wider flex items-center gap-1.5">
           <span className="material-symbols-outlined text-[16px] text-[#2563EB]">search</span>
@@ -290,7 +301,7 @@ export default function CatalogoPage() {
           )}
         </div>
       </div>
-            {/* 13. Rango de Precios (USD) con 'Menos de...' y 'Más de...' */}
+
       <div className="space-y-2 pb-4 border-b border-slate-100">
         <label className="text-xs font-extrabold text-[#0F172A] uppercase tracking-wider block">
           Rango de Precio (USD)
@@ -412,7 +423,7 @@ export default function CatalogoPage() {
             Marca
           </label>
           {marcaFiltro && (
-            <button onClick={() => setMarcaFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setMarcaFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -437,7 +448,7 @@ export default function CatalogoPage() {
         </select>
       </div>
 
-      {/* 3. Modelo (En cascada según la marca seleccionada) */}
+
       <div className="space-y-1.5 pb-4 border-b border-slate-100">
         <div className="flex items-center justify-between">
           <label className="text-xs font-extrabold text-[#0F172A] uppercase tracking-wider flex items-center gap-1.5">
@@ -445,7 +456,7 @@ export default function CatalogoPage() {
             Modelo
           </label>
           {modeloFiltro && (
-            <button onClick={() => setModeloFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setModeloFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -478,7 +489,7 @@ export default function CatalogoPage() {
             Tipo de Carrocería
           </label>
           {carroceriaFiltro && (
-            <button onClick={() => setCarroceriaFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setCarroceriaFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -508,7 +519,7 @@ export default function CatalogoPage() {
             Segmento
           </label>
           {segmentoFiltro && (
-            <button onClick={() => setSegmentoFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setSegmentoFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -538,7 +549,7 @@ export default function CatalogoPage() {
             Condición
           </label>
           {condicionFiltro && (
-            <button onClick={() => setCondicionFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setCondicionFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -568,7 +579,7 @@ export default function CatalogoPage() {
             Transmisión / Caja
           </label>
           {cajaFiltro && (
-            <button onClick={() => setCajaFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setCajaFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -598,7 +609,7 @@ export default function CatalogoPage() {
             Combustible
           </label>
           {combustibleFiltro && (
-            <button onClick={() => setCombustibleFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setCombustibleFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -628,7 +639,7 @@ export default function CatalogoPage() {
             Tracción
           </label>
           {traccionFiltro && (
-            <button onClick={() => setTraccionFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setTraccionFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -658,7 +669,7 @@ export default function CatalogoPage() {
             Tipo de Motor
           </label>
           {tipoMotorFiltro && (
-            <button onClick={() => setTipoMotorFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setTipoMotorFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -688,7 +699,7 @@ export default function CatalogoPage() {
             Tapizado
           </label>
           {tapizadoFiltro && (
-            <button onClick={() => setTapizadoFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setTapizadoFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -718,7 +729,7 @@ export default function CatalogoPage() {
             Dirección
           </label>
           {direccionFiltro && (
-            <button onClick={() => setDireccionFiltro('')} className="text-[10px] text-[#2563EB] font-bold hover:underline cursor-pointer">
+            <button onClick={() => setDireccionFiltro('')} className="text-[11px] text-[#2563EB] font-bold hover:underline cursor-pointer">
               Limpiar
             </button>
           )}
@@ -816,9 +827,6 @@ export default function CatalogoPage() {
                   {publicacionesOrdenadas.length}{' '}
                   {publicacionesOrdenadas.length === 1 ? 'vehículo encontrado' : 'vehículos disponibles'}
                 </span>
-                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#2563EB] text-xs font-extrabold border border-blue-100">
-                  Stock Real
-                </span>
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-auto">
@@ -884,7 +892,7 @@ export default function CatalogoPage() {
 
             {/* Loading Skeleton */}
             {cargando ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <div key={i} className="bg-white rounded-2xl h-88 animate-pulse border border-slate-200"></div>
                 ))}
@@ -911,8 +919,8 @@ export default function CatalogoPage() {
                 </button>
               </div>
             ) : (
-              /* Vehicle Cards Grid (Modular Bento: 3 cols en Desktop, 2 en Tablet, 1 en Mobile) */
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              /* Vehicle Cards Grid */
+              <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-6">
                 {publicacionesOrdenadas.map((pub) => (
                   <VehicleCard key={pub.idPublicacion ?? pub.id} publicacion={pub} />
                 ))}
@@ -922,9 +930,7 @@ export default function CatalogoPage() {
         </div>
       </div>
 
-      {/* =========================================================================
-          MOBILE DRAWER / BOTTOM SHEET DE FILTROS
-          ========================================================================= */}
+  
       {mobileFiltersOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex flex-col justify-end bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
           <div

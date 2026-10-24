@@ -1,63 +1,94 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { apiClient } from '../../api/client'
 import { CatalogosService } from '../../services/catalogos.service'
 import { PublicacionesService } from '../../services/publicaciones.service'
+import { MultimediaService } from '../../services/multimedia.service'
+import { comprimirImagen } from '../../utils/imageCompressor'
+import { optimizarUrlCloudinary } from '../../utils/cloudinary'
+
+function getYouTubeVideoId(url) {
+  if (!url || typeof url !== 'string') return null
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i
+  const match = url.match(regExp)
+  return match ? match[1] : null
+}
+
+function getYouTubeEmbedUrl(url) {
+  const videoId = getYouTubeVideoId(url)
+  return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1` : null
+}
+
+function isYouTubeUrl(url) {
+  if (!url || typeof url !== 'string') return false
+  return /^(https?:\/\/)?(www\.|m\.)?(youtube\.com|youtu\.be)\//i.test(url.trim())
+}
 
 export default function CrearPublicacionPage() {
   const navigate = useNavigate()
   const [catalogos, setCatalogos] = useState(null)
+  const [usuarioActual, setUsuarioActual] = useState(null)
   const [cargando, setCargando] = useState(true)
   const [guardando, setGuardando] = useState(false)
   const [statusState, setStatusState] = useState('disponible') // 'disponible' | 'pausada'
   const [toastMessage, setToastMessage] = useState(null)
 
+  // Estado del Modal para agregar elementos paramétricos
+  const [modalAbierto, setModalAbierto] = useState(false)
+  const [modalConfig, setModalConfig] = useState(null)
+  const [modalNombre, setModalNombre] = useState('')
+  const [modalMarcaId, setModalMarcaId] = useState('')
+  const [modalError, setModalError] = useState(null)
+  const [guardandoParametrico, setGuardandoParametrico] = useState(false)
+
   // Step 1: Identificación
-  const [idMarca, setIdMarca] = useState(1)
-  const [idModelo, setIdModelo] = useState(1)
-  const [titulo, setTitulo] = useState('Toyota Hilux SRX 4x4 2.8 TDI AT6 2024')
-  const [version, setVersion] = useState('SRX 4x4 2.8 TDI 6AT Cuero Bi-Tono')
-  const [idCarroceria, setIdCarroceria] = useState(8) // Pick-up
-  const [idSegmento, setIdSegmento] = useState(4) // Segmento D
-  const [idCondicion, setIdCondicion] = useState(1) // Usado
-  const [anio, setAnio] = useState(2024)
-  const [kilometros, setKilometros] = useState(18400)
+  const [idMarca, setIdMarca] = useState('')
+  const [idModelo, setIdModelo] = useState('')
+  const [titulo, setTitulo] = useState('')
+  const [version, setVersion] = useState('')
+  const [idCarroceria, setIdCarroceria] = useState('')
+  const [idSegmento, setIdSegmento] = useState('')
+  const [idCondicion, setIdCondicion] = useState('')
+  const [anio, setAnio] = useState('')
+  const [kilometros, setKilometros] = useState('')
   const [es0km, setEs0km] = useState(false)
-  const [patente, setPatente] = useState('AF 892 XQ')
-  const [colorExt, setColorExt] = useState('Blanco Perlado')
-  const [colorInt, setColorInt] = useState('Cuero Negro')
+  const [patente, setPatente] = useState('')
+  const [colorExt, setColorExt] = useState('')
+  const [colorInt, setColorInt] = useState('')
 
   // Step 2: Mecánica & Tren Motriz
-  const [idCombustible, setIdCombustible] = useState(4) // Gasoil Grado 3
-  const [idCaja, setIdCaja] = useState(2) // Automática
-  const [idTraccion, setIdTraccion] = useState(4) // 4x4 conectable
-  const [idTipoDireccion, setIdTipoDireccion] = useState(1) // Eléctrica
-  const [idTipoTapizado, setIdTipoTapizado] = useState(2) // Cuero
-  const [idMotor, setIdMotor] = useState(1) // 2.8 TDI
-  const [puertas, setPuertas] = useState(4)
-  const [asientos, setAsientos] = useState(5)
-  const [airbags, setAirbags] = useState(7)
-  const [remolque, setRemolque] = useState(3500)
-  const [baul, setBaul] = useState(1000)
-  const [tanque, setTanque] = useState(80)
+  const [idCombustible, setIdCombustible] = useState('')
+  const [idCaja, setIdCaja] = useState('')
+  const [idTraccion, setIdTraccion] = useState('')
+  const [idTipoDireccion, setIdTipoDireccion] = useState('')
+  const [idTipoTapizado, setIdTipoTapizado] = useState('')
+  const [idTipoMotor, setIdTipoMotor] = useState('')
+  const [descripcionMotor, setDescripcionMotor] = useState('')
+  const [potenciaMotor, setPotenciaMotor] = useState('')
+  const [torqueMotor, setTorqueMotor] = useState('')
+  const [puertas, setPuertas] = useState('')
+  const [asientos, setAsientos] = useState('')
+  const [airbags, setAirbags] = useState('')
+  const [remolque, setRemolque] = useState('')
+  const [baul, setBaul] = useState('')
+  const [tanque, setTanque] = useState('')
 
   // Dimensiones
-  const [largo, setLargo] = useState(5325)
-  const [ancho, setAncho] = useState(1855)
-  const [alto, setAlto] = useState(1815)
+  const [largo, setLargo] = useState('')
+  const [ancho, setAncho] = useState('')
+  const [alto, setAlto] = useState('')
 
   // Step 3: Precio, Descripción & Galería de Imágenes
-  const [precio, setPrecio] = useState(47500)
-  const [descripcion, setDescripcion] = useState(
-    'Unidad seleccionada en estado inmaculado. Servicios oficiales al día en concesionario oficial. Tratamiento cerámico recién aplicado y garantía mecánica oficial certificada. Lista para transferir con entrega inmediata.'
-  )
+  const [precio, setPrecio] = useState('')
+  const [descripcion, setDescripcion] = useState('')
 
-  // Galería de fotos con soporte de reordenamiento
-  const [galeria, setGaleria] = useState([
-    'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
-    'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1200&q=80',
-  ])
-  const [nuevaFotoUrl, setNuevaFotoUrl] = useState('')
+  // Galería de fotos Cloudinary (Máximo 15 imágenes)
+  const MAX_FOTOS = 15
+  const fileInputRef = useRef(null)
+  const [galeria, setGaleria] = useState([])
+  const [subiendoArchivos, setSubiendoArchivos] = useState([])
+  const [arrastrando, setArrastrando] = useState(false)
+  const [videoUrl, setVideoUrl] = useState('')
 
   // Control de campos tocados (touched) para feedback UX en tiempo real
   const [touched, setTouched] = useState({
@@ -66,7 +97,7 @@ export default function CrearPublicacionPage() {
     patente: false,
     anio: false,
     kilometros: false,
-    nuevaFotoUrl: false,
+    videoUrl: false,
   })
 
   const markTouched = (field) => setTouched((prev) => ({ ...prev, [field]: true }))
@@ -76,9 +107,6 @@ export default function CrearPublicacionPage() {
     setTimeout(() => setToastMessage(null), 4000)
   }
 
-  // =========================================================
-  // MOTOR DE VALIDACIÓN EN TIEMPO REAL (ZOD COMPATIBLE)
-  // =========================================================
   const errores = useMemo(() => {
     const errs = {}
 
@@ -90,61 +118,84 @@ export default function CrearPublicacionPage() {
     }
 
     // Precio: numérico > 0
-    if (isNaN(Number(precio)) || Number(precio) <= 0) {
+    if (precio === '' || isNaN(Number(precio)) || Number(precio) <= 0) {
       errs.precio = 'El precio debe ser un valor mayor a 0 USD.'
     }
 
     // Patente: 6 a 8 caracteres alfanuméricos
     const patenteClean = patente.replace(/\s+/g, '')
     if (!patenteClean || patenteClean.length < 6 || patenteClean.length > 8) {
-      errs.patente = 'Patente inválida (debe contener entre 6 y 8 caracteres).'
+      errs.patente = 'Patente requerida (entre 6 y 8 caracteres alfanuméricos).'
     }
 
-    // Año: 1990 - 2026
+    // Año: validado entre 1900 y el actual + 1
     const anioNum = Number(anio)
-    if (isNaN(anioNum) || anioNum < 1990 || anioNum > 2026) {
-      errs.anio = 'El año debe estar entre 1990 y 2026.'
+    const anioMaximo = new Date().getFullYear() + 1
+    if (
+      anio === '' ||
+      isNaN(anioNum) ||
+      !Number.isInteger(anioNum) ||
+      anioNum < 1900 ||
+      anioNum > anioMaximo
+    ) {
+      errs.anio = `El año debe estar comprendido entre 1900 y ${anioMaximo}.`
     }
 
     // Kilómetros: >= 0
-    if (isNaN(Number(kilometros)) || Number(kilometros) < 0) {
-      errs.kilometros = 'Los kilómetros no pueden ser un valor negativo.'
+    if (kilometros === '' || isNaN(Number(kilometros)) || Number(kilometros) < 0) {
+      errs.kilometros = 'Ingresá el kilometraje (0 para unidades sin rodar).'
     }
 
-    // Galería: al menos 1 foto válida
+    // Marca y Modelo
+    if (!idMarca) errs.idMarca = 'Seleccioná una marca.'
+    if (!idModelo) errs.idModelo = 'Seleccioná un modelo.'
+
+    // Galería: al menos 1 foto válida y máximo 15
     if (galeria.length === 0) {
-      errs.galeria = 'Debe cargar al menos una fotografía de portada.'
+      errs.galeria = 'Debes cargar al menos una fotografía de portada para el catálogo.'
+    } else if (galeria.length > MAX_FOTOS) {
+      errs.galeria = `No se pueden cargar más de ${MAX_FOTOS} fotografías por vehículo.`
+    }
+
+    // Video URL: opcional, pero si se ingresa debe ser un link válido de YouTube
+    if (videoUrl && videoUrl.trim()) {
+      const vId = getYouTubeVideoId(videoUrl.trim())
+      if (!isYouTubeUrl(videoUrl) || !vId) {
+        errs.videoUrl = 'Ingresá un enlace válido de YouTube (ej: https://www.youtube.com/watch?v=... o https://youtu.be/...)'
+      }
     }
 
     return errs
-  }, [titulo, precio, patente, anio, kilometros, galeria])
+  }, [titulo, precio, patente, anio, kilometros, idMarca, idModelo, galeria, videoUrl])
 
   const formularioValido = Object.keys(errores).length === 0
 
   useEffect(() => {
-    async function cargarCatalogos() {
+    async function inicializar() {
       try {
-        const data = await CatalogosService.obtenerTodos()
-        if (data) {
-          setCatalogos(data)
-          if (data.marcas?.[0]) setIdMarca(data.marcas[0].idMarca ?? data.marcas[0].id)
-          if (data.modelos?.[0]) setIdModelo(data.modelos[0].idModelo ?? data.modelos[0].id)
-          if (data.carrocerias?.[0]) setIdCarroceria(data.carrocerias[0].idTipoCarroceria ?? data.carrocerias[0].id)
-          if (data.segmentos?.[0]) setIdSegmento(data.segmentos[0].idSegmento ?? data.segmentos[0].id)
-          if (data.combustibles?.[0]) setIdCombustible(data.combustibles[0].idCombustible ?? data.combustibles[0].id)
-          if (data.cajas?.[0]) setIdCaja(data.cajas[0].idCaja ?? data.cajas[0].id)
-          if (data.tracciones?.[0]) setIdTraccion(data.tracciones[0].idTraccion ?? data.tracciones[0].id)
-          if (data.condiciones?.[0]) setIdCondicion(data.condiciones[0].idCondicion ?? data.condiciones[0].id)
-          if (data.direcciones?.[0]) setIdTipoDireccion(data.direcciones[0].idTipoDireccion ?? data.direcciones[0].id)
-          if (data.tapizados?.[0]) setIdTipoTapizado(data.tapizados[0].idTipoTapizado ?? data.tapizados[0].id)
+        const [catData, userData] = await Promise.allSettled([
+          CatalogosService.obtenerTodos(),
+          apiClient('/auth/perfil'),
+        ])
+        if (catData.status === 'fulfilled' && catData.value) {
+          setCatalogos(catData.value)
+        }
+        if (userData.status === 'fulfilled' && userData.value) {
+          setUsuarioActual(userData.value)
+          if (userData.value.idUsuario) {
+            localStorage.setItem('apex_user_id', String(userData.value.idUsuario))
+          }
+          if (userData.value.nombre) {
+            localStorage.setItem('apex_user_name', userData.value.nombre)
+          }
         }
       } catch (err) {
-        console.error('Error cargando catálogos:', err)
+        console.error('Error inicializando pantalla de publicación:', err)
       } finally {
         setCargando(false)
       }
     }
-    cargarCatalogos()
+    inicializar()
   }, [])
 
   // Modelos filtrados por marca
@@ -153,26 +204,248 @@ export default function CrearPublicacionPage() {
     : []
 
   const handleMarcaChange = (e) => {
-    const nuevaMarcaId = Number(e.target.value)
+    const nuevaMarcaId = e.target.value ? Number(e.target.value) : ''
     setIdMarca(nuevaMarcaId)
-    const primerModelo = catalogos?.modelos?.find((m) => Number(m.idMarca) === nuevaMarcaId)
-    if (primerModelo) {
-      setIdModelo(primerModelo.idModelo ?? primerModelo.id)
+    setIdModelo('')
+  }
+
+  // =========================================================
+  // GESTIÓN DE MODAL PARA AGREGAR ELEMENTOS PARAMÉTRICOS
+  // =========================================================
+  const abrirModalAgregar = (tipo) => {
+    setModalError(null)
+    setModalNombre('')
+    setGuardandoParametrico(false)
+
+    switch (tipo) {
+      case 'marca':
+        setModalConfig({
+          tipo,
+          titulo: 'Marca',
+          placeholder: 'Ej: Alfa Romeo',
+          ayuda: 'Ingresá el nombre oficial de la marca vehicular.',
+        })
+        break
+      case 'modelo':
+        setModalConfig({
+          tipo,
+          titulo: 'Modelo',
+          placeholder: 'Ej: Giulia',
+          ayuda: 'Ingresá la denominación del modelo para la marca seleccionada.',
+        })
+        setModalMarcaId(idMarca || (catalogos?.marcas?.[0]?.idMarca ?? ''))
+        break
+      case 'carroceria':
+        setModalConfig({
+          tipo,
+          titulo: 'Carrocería',
+          placeholder: 'Ej: Fastback',
+          ayuda: 'Ingresá la silueta o tipo de carrocería.',
+        })
+        break
+      case 'segmento':
+        setModalConfig({
+          tipo,
+          titulo: 'Segmento',
+          placeholder: 'Ej: Segmento Premium',
+          ayuda: 'Categoría o segmento comercial del vehículo.',
+        })
+        break
+      case 'condicion':
+        setModalConfig({
+          tipo,
+          titulo: 'Condición',
+          placeholder: 'Ej: Semi-nuevo',
+          ayuda: 'Condición comercial del rodado.',
+        })
+        break
+      case 'combustible':
+        setModalConfig({
+          tipo,
+          titulo: 'Tipo de Combustible',
+          placeholder: 'Ej: Híbrido Enchufable (PHEV)',
+          ayuda: 'Tecnología o tipo de combustible vehicular.',
+        })
+        break
+      case 'caja':
+        setModalConfig({
+          tipo,
+          titulo: 'Transmisión',
+          placeholder: 'Ej: Secuencial doble embrague (DSG)',
+          ayuda: 'Tipo de transmisión o caja de cambios.',
+        })
+        break
+      case 'traccion':
+        setModalConfig({
+          tipo,
+          titulo: 'Tracción',
+          placeholder: 'Ej: e-AWD Eléctrica Integral',
+          ayuda: 'Esquema de tracción motriz.',
+        })
+        break
+      case 'tipoMotor':
+      case 'motor':
+        setModalConfig({
+          tipo: 'tipoMotor',
+          titulo: 'Tipo de Motor',
+          placeholder: 'Ej: Combustión, Híbrido, Eléctrico',
+          ayuda: 'Clasificación tecnológica del motor.',
+        })
+        break
+      case 'direccion':
+        setModalConfig({
+          tipo,
+          titulo: 'Tipo de Dirección',
+          placeholder: 'Ej: Electro-hidráulica variable',
+          ayuda: 'Asistencia y sistema de la dirección.',
+        })
+        break
+      case 'tapizado':
+        setModalConfig({
+          tipo,
+          titulo: 'Tipo de Tapizado',
+          placeholder: 'Ej: Cuero Windsor Microperforado',
+          ayuda: 'Material de los tapizados del habitáculo.',
+        })
+        break
+      default:
+        return
+    }
+    setModalAbierto(true)
+  }
+
+  const handleGuardarParametrico = async (e) => {
+    if (e) e.preventDefault()
+    const val = modalNombre.trim()
+    if (!val) {
+      setModalError('Por favor ingresá un nombre.')
+      return
+    }
+    if (val.length < 2) {
+      setModalError('Debe contener al menos 2 caracteres.')
+      return
+    }
+
+    setGuardandoParametrico(true)
+    setModalError(null)
+
+    try {
+      let nuevoItem = null
+      const { tipo } = modalConfig
+
+      if (tipo === 'marca') {
+        nuevoItem = await CatalogosService.crearMarca(val)
+      } else if (tipo === 'modelo') {
+        const marcaParaModelo = modalMarcaId || idMarca
+        if (!marcaParaModelo) {
+          setModalError('Debés seleccionar una marca a la que pertenezca el modelo.')
+          setGuardandoParametrico(false)
+          return
+        }
+        nuevoItem = await CatalogosService.crearModelo(val, marcaParaModelo)
+      } else if (tipo === 'carroceria') {
+        nuevoItem = await CatalogosService.crearCarroceria(val)
+      } else if (tipo === 'segmento') {
+        nuevoItem = await CatalogosService.crearSegmento(val)
+      } else if (tipo === 'condicion') {
+        nuevoItem = await CatalogosService.crearCondicion(val)
+      } else if (tipo === 'combustible') {
+        nuevoItem = await CatalogosService.crearCombustible(val)
+      } else if (tipo === 'caja') {
+        nuevoItem = await CatalogosService.crearCaja(val)
+      } else if (tipo === 'traccion') {
+        nuevoItem = await CatalogosService.crearTraccion(val)
+      } else if (tipo === 'tipoMotor' || tipo === 'motor') {
+        nuevoItem = await CatalogosService.crearTipoMotor(val)
+      } else if (tipo === 'direccion') {
+        nuevoItem = await CatalogosService.crearDireccion(val)
+      } else if (tipo === 'tapizado') {
+        nuevoItem = await CatalogosService.crearTapizado(val)
+      }
+
+      // Refrescar catálogo completo desde la base de datos
+      const catalogosActualizados = await CatalogosService.obtenerTodos()
+      if (catalogosActualizados) {
+        setCatalogos(catalogosActualizados)
+      }
+
+      // Auto-seleccionar el nuevo elemento en el formulario
+      if (nuevoItem) {
+        if (tipo === 'marca') {
+          const id = nuevoItem.idMarca ?? nuevoItem.id
+          setIdMarca(id)
+          setIdModelo('')
+        } else if (tipo === 'modelo') {
+          const id = nuevoItem.idModelo ?? nuevoItem.id
+          const marcaUsada = modalMarcaId || idMarca
+          setIdMarca(Number(marcaUsada))
+          setIdModelo(id)
+        } else if (tipo === 'carroceria') {
+          setIdCarroceria(nuevoItem.idTipoCarroceria ?? nuevoItem.id)
+        } else if (tipo === 'segmento') {
+          setIdSegmento(nuevoItem.idSegmento ?? nuevoItem.id)
+        } else if (tipo === 'condicion') {
+          setIdCondicion(nuevoItem.idCondicion ?? nuevoItem.id)
+        } else if (tipo === 'combustible') {
+          setIdCombustible(nuevoItem.idCombustible ?? nuevoItem.id)
+        } else if (tipo === 'caja') {
+          setIdCaja(nuevoItem.idCaja ?? nuevoItem.id)
+        } else if (tipo === 'traccion') {
+          setIdTraccion(nuevoItem.idTraccion ?? nuevoItem.id)
+        } else if (tipo === 'tipoMotor' || tipo === 'motor') {
+          setIdTipoMotor(nuevoItem.idTipoMotor ?? nuevoItem.id)
+        } else if (tipo === 'direccion') {
+          setIdTipoDireccion(nuevoItem.idTipoDireccion ?? nuevoItem.id)
+        } else if (tipo === 'tapizado') {
+          setIdTipoTapizado(nuevoItem.idTipoTapizado ?? nuevoItem.id)
+        }
+      }
+
+      notificar(`¡${modalConfig.titulo} "${val}" guardado exitosamente en la base de datos!`)
+      setModalAbierto(false)
+      setModalNombre('')
+    } catch (err) {
+      console.error('Error al agregar elemento paramétrico:', err)
+      setModalError(err.message || 'Error al guardar el nuevo elemento en la base de datos')
+    } finally {
+      setGuardandoParametrico(false)
     }
   }
+
+  // Componente de botón '+' para los títulos de los desplegables
+  const BotonAgregarParametrico = ({ tipo }) => (
+    <button
+      type="button"
+      onClick={() => abrirModalAgregar(tipo)}
+      title="Agregar nuevo elemento"
+      className="w-5 h-5 rounded-full bg-blue-600 hover:bg-blue-700 text-white inline-flex items-center justify-center shadow-sm transition-transform hover:scale-110 active:scale-90 cursor-pointer ml-1.5 focus:outline-none"
+    >
+      <span className="material-symbols-outlined text-[13px] font-bold leading-none select-none">
+        add
+      </span>
+    </button>
+  )
 
   const handleCheckbox0km = (checked) => {
     setEs0km(checked)
     if (checked) {
-      setKilometros(1)
-      setIdCondicion(2) // 0km / Nuevo
+      setKilometros(0)
+      const condicion0km = catalogos?.condiciones?.find(
+        (c) =>
+          (c.nombreCondicion || c.nombre || '').toLowerCase().includes('0km') ||
+          (c.nombreCondicion || c.nombre || '').toLowerCase().includes('nuevo')
+      )
+      if (condicion0km) {
+        setIdCondicion(condicion0km.idCondicion ?? condicion0km.id)
+      }
     } else {
-      setKilometros(18400)
-      setIdCondicion(1) // Usado
+      setKilometros('')
     }
   }
 
-  // Gestión de Galería: Reordenar / Eliminar / Agregar
+  // =========================================================
+  // GESTIÓN DE GALERÍA MULTIMEDIA (CLOUDINARY DIRECT UPLOAD)
+  // =========================================================
   const moverFoto = (index, direccion) => {
     const nuevaLista = [...galeria]
     const destino = index + direccion
@@ -184,22 +457,109 @@ export default function CrearPublicacionPage() {
   }
 
   const eliminarFoto = (index) => {
-    if (galeria.length <= 0) {
-      notificar('Debe mantener al menos una fotografía de portada', 'error')
-      return
-    }
-    setGaleria(galeria.filter((_, i) => i !== index))
+    setGaleria((prev) => prev.filter((_, i) => i !== index))
   }
 
-  const agregarFoto = () => {
-    const url = nuevaFotoUrl.trim()
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      notificar('La URL debe comenzar con http:// o https://', 'error')
+  const procesarArchivos = async (archivosRaw) => {
+    if (!archivosRaw || archivosRaw.length === 0) return
+
+    const soloImagenes = Array.from(archivosRaw).filter((f) => f.type.startsWith('image/'))
+    if (soloImagenes.length === 0) {
+      notificar('Solo se permiten archivos de imagen (JPG, PNG, WebP).', 'error')
       return
     }
-    setGaleria([...galeria, url])
-    setNuevaFotoUrl('')
-    notificar('Fotografía agregada a la galería')
+
+    const cupoActual = galeria.length + subiendoArchivos.length
+    const cupoDisponible = MAX_FOTOS - cupoActual
+
+    if (cupoDisponible <= 0) {
+      notificar(`Ya alcanzaste el límite máximo de ${MAX_FOTOS} fotografías por publicación.`, 'error')
+      return
+    }
+
+    let archivosAProcesar = soloImagenes
+    if (soloImagenes.length > cupoDisponible) {
+      notificar(`Solo se agregaron las primeras ${cupoDisponible} fotos para respetar el límite de ${MAX_FOTOS}.`, 'error')
+      archivosAProcesar = soloImagenes.slice(0, cupoDisponible)
+    }
+
+    // Procesar cada archivo en paralelo controlado
+    for (const file of archivosAProcesar) {
+      const tempId = Math.random().toString(36).substring(2, 9)
+      const previewLocal = URL.createObjectURL(file)
+
+      // Registrar en la lista de subida en progreso
+      setSubiendoArchivos((prev) => [
+        ...prev,
+        {
+          id: tempId,
+          nombre: file.name,
+          preview: previewLocal,
+          progreso: 5,
+        },
+      ])
+
+      try {
+        // 1. Compresión previa en el cliente (reduce 12 MB a ~800 KB en < 300 ms)
+        const archivoComprimido = await comprimirImagen(file)
+
+        // 2. Subida directa a Cloudinary con reporte de progreso en tiempo real
+        const resultado = await MultimediaService.subirACloudinary(archivoComprimido, {
+          onProgress: (pct) => {
+            setSubiendoArchivos((prev) =>
+              prev.map((item) => (item.id === tempId ? { ...item, progreso: Math.max(10, pct) } : item))
+            )
+          },
+        })
+
+        if (resultado?.secure_url) {
+          setGaleria((prev) => {
+            if (prev.length >= MAX_FOTOS) return prev
+            return [...prev, resultado.secure_url]
+          })
+          notificar(`Foto "${file.name}" cargada con éxito a Cloudinary.`)
+        }
+      } catch (err) {
+        console.error('Error al subir imagen a Cloudinary:', err)
+        notificar(`Error al subir "${file.name}": ${err.message}`, 'error')
+      } finally {
+        URL.revokeObjectURL(previewLocal)
+        setSubiendoArchivos((prev) => prev.filter((item) => item.id !== tempId))
+      }
+    }
+  }
+
+  const handleArchivosInput = async (e) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      await procesarArchivos(files)
+    }
+    // Limpiar input para permitir seleccionar el mismo archivo si fue eliminado
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const handleDragOver = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!arrastrando) setArrastrando(true)
+  }
+
+  const handleDragLeave = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setArrastrando(false)
+  }
+
+  const handleDrop = async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setArrastrando(false)
+
+    if (e.dataTransfer && e.dataTransfer.files) {
+      await procesarArchivos(e.dataTransfer.files)
+    }
   }
 
   // Guardar publicación
@@ -213,7 +573,9 @@ export default function CrearPublicacionPage() {
       patente: true,
       anio: true,
       kilometros: true,
-      nuevaFotoUrl: false,
+      idMarca: true,
+      idModelo: true,
+      videoUrl: true,
     })
 
     if (!formularioValido) {
@@ -225,26 +587,34 @@ export default function CrearPublicacionPage() {
 
     const codigoGenerado = `APX-${patente.replace(/\s+/g, '').slice(0, 6).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`
 
+    // Obtener idUsuario según el usuario que se encuentre logueado actualmente
+    const idUsuarioLogueado = usuarioActual?.idUsuario
+      || Number(localStorage.getItem('apex_user_id'))
+      || 1
+
     const payload = {
       titulo: titulo.trim(),
       descripcion: descripcion.trim(),
       precio: Number(precio),
-      idUsuario: 1, // Vendedor logueado (Martín Benítez)
+      idUsuario: idUsuarioLogueado,
+      videoUrl: videoUrl.trim(),
+      multimedia: galeria,
       vehiculo: {
         codigoVehiculo: codigoGenerado,
         patente: patente.trim().toUpperCase(),
         anio: Number(anio),
         kilometros: Number(kilometros),
         cantidadPuertas: Number(puertas),
-        color: colorExt.trim(),
+        color: colorExt.trim() || 'A coordinar',
         cantidadAsientos: Number(asientos),
-        capacidadRemolque: Number(remolque),
-        capacidadBaul: Number(baul),
-        capacidadTanque: Number(tanque),
+        capacidadRemolque: remolque ? Number(remolque) : undefined,
+        capacidadBaul: baul ? Number(baul) : undefined,
+        capacidadTanque: tanque ? Number(tanque) : undefined,
         cantidadAirbags: Number(airbags),
 
         idMarca: Number(idMarca),
         idModelo: Number(idModelo),
+        version: version.trim() || undefined,
         idSegmento: Number(idSegmento),
         idTipoCarroceria: Number(idCarroceria),
         idCondicion: Number(idCondicion),
@@ -253,7 +623,12 @@ export default function CrearPublicacionPage() {
         idCombustible: Number(idCombustible),
         idTipoDireccion: Number(idTipoDireccion),
         idTipoTapizado: Number(idTipoTapizado),
-        idMotor: Number(idMotor),
+        motor: {
+          idTipoMotor: Number(idTipoMotor),
+          descripcion: descripcionMotor?.trim() || undefined,
+          potencia: potenciaMotor ? Number(potenciaMotor) : undefined,
+          torque: torqueMotor ? Number(torqueMotor) : undefined,
+        },
 
         dimensiones: {
           largo: Number(largo),
@@ -297,7 +672,7 @@ export default function CrearPublicacionPage() {
     return `${base} bg-emerald-50/40 border-emerald-500 text-slate-900 focus:bg-white focus:ring-2 focus:ring-emerald-400`
   }
 
-  const fotoPrincipal = galeria[0] || 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&q=80'
+  const fotoPrincipal = galeria[0] || null
 
   return (
     <div className="w-full bg-slate-50 min-h-[calc(100vh-60px)] pb-20 selection:bg-secondary selection:text-white">
@@ -341,9 +716,7 @@ export default function CrearPublicacionPage() {
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
                   Alta de Vehículo para Salón
                 </h1>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-100 text-blue-800 uppercase tracking-wider">
-                  Validación Zod Activa
-                </span>
+                
               </div>
               <p className="text-xs text-slate-500 mt-1">
                 Ficha técnica oficial, validación en tiempo real y reordenamiento de fotos para el showroom.
@@ -352,28 +725,6 @@ export default function CrearPublicacionPage() {
 
             {/* Estado Inicial y Botón de Publicación */}
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center bg-slate-100 p-1 rounded-xl shadow-inner">
-                <button
-                  type="button"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    statusState === 'disponible' ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600'
-                  }`}
-                  onClick={() => setStatusState('disponible')}
-                >
-                  <span className="w-2 h-2 rounded-full bg-white animate-pulse"></span>
-                  Disponible (Tráfico)
-                </button>
-                <button
-                  type="button"
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    statusState === 'pausada' ? 'bg-amber-500 text-white shadow-sm' : 'text-slate-600'
-                  }`}
-                  onClick={() => setStatusState('pausada')}
-                >
-                  <span className="w-2 h-2 rounded-full bg-white"></span>
-                  Pausada (Seña)
-                </button>
-              </div>
 
               <Link
                 to="/admin/inventario"
@@ -444,6 +795,7 @@ export default function CrearPublicacionPage() {
                     className={getInputClass('titulo', 'w-full h-11 px-3.5 border rounded-xl text-sm transition-all')}
                     type="text"
                     required
+                    placeholder="Ej: Toyota Hilux SRX 4x4 2.8 TDI AT6 2024"
                     value={titulo}
                     onFocus={() => markTouched('titulo')}
                     onChange={(e) => {
@@ -461,34 +813,72 @@ export default function CrearPublicacionPage() {
 
                 {/* Brand Selector */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Marca *</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Marca *</span>
+                      <BotonAgregarParametrico tipo="marca" />
+                    </label>
+                    {touched.idMarca && !errores.idMarca && (
+                      <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs">check_circle</span>
+                        Válido
+                      </span>
+                    )}
+                  </div>
                   <select
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                     value={idMarca}
                     onChange={handleMarcaChange}
+                    onFocus={() => markTouched('idMarca')}
                   >
+                    <option value="">Seleccionar marca...</option>
                     {catalogos?.marcas?.map((m) => (
                       <option key={m.idMarca ?? m.id} value={m.idMarca ?? m.id}>
                         {m.nombreMarca ?? m.nombre}
                       </option>
                     ))}
                   </select>
+                  {touched.idMarca && errores.idMarca && (
+                    <p className="text-[11px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">error</span>
+                      {errores.idMarca}
+                    </p>
+                  )}
                 </div>
 
                 {/* Model Selector (Cascading) */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Modelo *</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Modelo *</span>
+                      <BotonAgregarParametrico tipo="modelo" />
+                    </label>
+                    {touched.idModelo && !errores.idModelo && (
+                      <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
+                        <span className="material-symbols-outlined text-xs">check_circle</span>
+                        Válido
+                      </span>
+                    )}
+                  </div>
                   <select
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                     value={idModelo}
-                    onChange={(e) => setIdModelo(Number(e.target.value))}
+                    onChange={(e) => setIdModelo(e.target.value ? Number(e.target.value) : '')}
+                    onFocus={() => markTouched('idModelo')}
                   >
+                    <option value="">{idMarca ? 'Seleccionar modelo...' : 'Primero seleccioná una marca'}</option>
                     {modelosFiltrados.map((m) => (
                       <option key={m.idModelo ?? m.id} value={m.idModelo ?? m.id}>
                         {m.nombreModelo ?? m.nombre}
                       </option>
                     ))}
                   </select>
+                  {touched.idModelo && errores.idModelo && (
+                    <p className="text-[11px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">error</span>
+                      {errores.idModelo}
+                    </p>
+                  )}
                 </div>
 
                 {/* Versión específica */}
@@ -501,18 +891,24 @@ export default function CrearPublicacionPage() {
                     type="text"
                     value={version}
                     onChange={(e) => setVersion(e.target.value)}
-                    placeholder="Ej: SRX 4x4 2.8 TDI 6AT Cuero"
+                    placeholder="Ej: SRX 4x4 2.8 TDI 6AT Cuero Bi-Tono"
                   />
                 </div>
 
                 {/* Carrocería */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Carrocería *</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Carrocería *</span>
+                      <BotonAgregarParametrico tipo="carroceria" />
+                    </label>
+                  </div>
                   <select
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                     value={idCarroceria}
-                    onChange={(e) => setIdCarroceria(Number(e.target.value))}
+                    onChange={(e) => setIdCarroceria(e.target.value ? Number(e.target.value) : '')}
                   >
+                    <option value="">Seleccionar carrocería...</option>
                     {catalogos?.carrocerias?.map((c) => (
                       <option key={c.idTipoCarroceria ?? c.id} value={c.idTipoCarroceria ?? c.id}>
                         {c.nombreTipoCarroceria ?? c.nombre}
@@ -521,7 +917,51 @@ export default function CrearPublicacionPage() {
                   </select>
                 </div>
 
-                {/* Año con Validación */}
+                {/* Segmento */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Segmento</span>
+                      <BotonAgregarParametrico tipo="segmento" />
+                    </label>
+                  </div>
+                  <select
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
+                    value={idSegmento}
+                    onChange={(e) => setIdSegmento(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Seleccionar segmento...</option>
+                    {catalogos?.segmentos?.map((s) => (
+                      <option key={s.idSegmento ?? s.id} value={s.idSegmento ?? s.id}>
+                        {s.nombreSegmento ?? s.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Condición */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Condición</span>
+                      <BotonAgregarParametrico tipo="condicion" />
+                    </label>
+                  </div>
+                  <select
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
+                    value={idCondicion}
+                    onChange={(e) => setIdCondicion(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Seleccionar condición...</option>
+                    {catalogos?.condiciones?.map((c) => (
+                      <option key={c.idCondicion ?? c.id} value={c.idCondicion ?? c.id}>
+                        {c.nombreCondicion ?? c.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Año con Validación (Escritura: 1900 a año actual + 1) */}
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-xs font-bold text-slate-800">Año de Fabricación *</label>
@@ -532,21 +972,20 @@ export default function CrearPublicacionPage() {
                       </span>
                     )}
                   </div>
-                  <select
-                    className={getInputClass('anio', 'w-full h-11 px-3.5 border rounded-xl text-xs font-semibold text-slate-900 focus:outline-none cursor-pointer')}
+                  <input
+                    type="number"
+                    min="1900"
+                    max={new Date().getFullYear() + 1}
+                    step="1"
+                    placeholder={`Ej: ${new Date().getFullYear()}`}
+                    className={getInputClass('anio', 'w-full h-11 px-3.5 border rounded-xl text-sm transition-all')}
                     value={anio}
                     onFocus={() => markTouched('anio')}
                     onChange={(e) => {
-                      setAnio(Number(e.target.value))
+                      setAnio(e.target.value === '' ? '' : Number(e.target.value))
                       markTouched('anio')
                     }}
-                  >
-                    {[2026, 2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016, 2015].map((y) => (
-                      <option key={y} value={y}>
-                        {y}
-                      </option>
-                    ))}
-                  </select>
+                  />
                   {touched.anio && errores.anio && (
                     <p className="text-[11px] text-rose-600 font-semibold mt-1 flex items-center gap-1">
                       <span className="material-symbols-outlined text-xs">error</span>
@@ -574,10 +1013,11 @@ export default function CrearPublicacionPage() {
                       className={getInputClass('kilometros', 'w-full h-11 pl-3.5 pr-12 border rounded-xl text-sm')}
                       type="number"
                       min="0"
+                      placeholder="Ej: 34000 (0 para 0km)"
                       value={kilometros}
                       onFocus={() => markTouched('kilometros')}
                       onChange={(e) => {
-                        setKilometros(Number(e.target.value))
+                        setKilometros(e.target.value === '' ? '' : Number(e.target.value))
                         markTouched('kilometros')
                       }}
                     />
@@ -609,6 +1049,7 @@ export default function CrearPublicacionPage() {
                       className={getInputClass('patente', 'w-full h-11 px-3.5 border rounded-xl font-mono text-sm uppercase')}
                       type="text"
                       maxLength={8}
+                      placeholder="Ej: AF 892 XQ"
                       value={patente}
                       onFocus={() => markTouched('patente')}
                       onChange={(e) => {
@@ -634,6 +1075,7 @@ export default function CrearPublicacionPage() {
                   <input
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                     type="text"
+                    placeholder="Ej: Blanco Perlado, Gris Plata..."
                     value={colorExt}
                     onChange={(e) => setColorExt(e.target.value)}
                   />
@@ -643,6 +1085,7 @@ export default function CrearPublicacionPage() {
                   <input
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                     type="text"
+                    placeholder="Ej: Cuero Negro, Tela Grafito..."
                     value={colorInt}
                     onChange={(e) => setColorInt(e.target.value)}
                   />
@@ -665,12 +1108,18 @@ export default function CrearPublicacionPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Combustible */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Tipo de Combustible</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Tipo de Combustible</span>
+                      <BotonAgregarParametrico tipo="combustible" />
+                    </label>
+                  </div>
                   <select
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                     value={idCombustible}
-                    onChange={(e) => setIdCombustible(Number(e.target.value))}
+                    onChange={(e) => setIdCombustible(e.target.value ? Number(e.target.value) : '')}
                   >
+                    <option value="">Seleccionar combustible...</option>
                     {catalogos?.combustibles?.map((c) => (
                       <option key={c.idCombustible ?? c.id} value={c.idCombustible ?? c.id}>
                         {c.nombreCombustible ?? c.nombre}
@@ -681,12 +1130,18 @@ export default function CrearPublicacionPage() {
 
                 {/* Transmisión */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Transmisión</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Transmisión</span>
+                      <BotonAgregarParametrico tipo="caja" />
+                    </label>
+                  </div>
                   <select
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                     value={idCaja}
-                    onChange={(e) => setIdCaja(Number(e.target.value))}
+                    onChange={(e) => setIdCaja(e.target.value ? Number(e.target.value) : '')}
                   >
+                    <option value="">Seleccionar transmisión...</option>
                     {catalogos?.cajas?.map((c) => (
                       <option key={c.idCaja ?? c.id} value={c.idCaja ?? c.id}>
                         {c.nombreCaja ?? c.nombre}
@@ -697,15 +1152,139 @@ export default function CrearPublicacionPage() {
 
                 {/* Tracción */}
                 <div>
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Tracción</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Tracción</span>
+                      <BotonAgregarParametrico tipo="traccion" />
+                    </label>
+                  </div>
                   <select
                     className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
                     value={idTraccion}
-                    onChange={(e) => setIdTraccion(Number(e.target.value))}
+                    onChange={(e) => setIdTraccion(e.target.value ? Number(e.target.value) : '')}
                   >
+                    <option value="">Seleccionar tracción...</option>
                     {catalogos?.tracciones?.map((t) => (
                       <option key={t.idTraccion ?? t.id} value={t.idTraccion ?? t.id}>
                         {t.nombreTraccion ?? t.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Tipo de Motor */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Tipo de Motor</span>
+                      <BotonAgregarParametrico tipo="tipoMotor" />
+                    </label>
+                  </div>
+                  <select
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
+                    value={idTipoMotor}
+                    onChange={(e) => setIdTipoMotor(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Seleccionar tipo de motor...</option>
+                    {catalogos?.tiposMotor?.map((tm) => (
+                      <option key={tm.idTipoMotor ?? tm.id} value={tm.idTipoMotor ?? tm.id}>
+                        {tm.nombreTipo ?? tm.nombre ?? `Tipo #${tm.idTipoMotor ?? tm.id}`}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Potencia (HP) */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Potencia (HP)</span>
+                    </label>
+                  </div>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Ej: 220"
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary placeholder:text-slate-400 placeholder:font-normal"
+                    value={potenciaMotor}
+                    onChange={(e) => setPotenciaMotor(e.target.value)}
+                  />
+                </div>
+
+                {/* Torque (Nm) */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Torque (Nm)</span>
+                    </label>
+                  </div>
+                  <input
+                    type="number"
+                    min="1"
+                    step="1"
+                    placeholder="Ej: 350"
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary placeholder:text-slate-400 placeholder:font-normal"
+                    value={torqueMotor}
+                    onChange={(e) => setTorqueMotor(e.target.value)}
+                  />
+                </div>
+
+                {/* Descripción del Motor */}
+                <div className="md:col-span-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Descripción del Motor</span>
+                    </label>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Ej: 2.0L TSI Turbo 16V DOHC Intercooler"
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary placeholder:text-slate-400 placeholder:font-normal"
+                    value={descripcionMotor}
+                    onChange={(e) => setDescripcionMotor(e.target.value)}
+                  />
+                </div>
+
+                {/* Tipo de Dirección */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Tipo de Dirección</span>
+                      <BotonAgregarParametrico tipo="direccion" />
+                    </label>
+                  </div>
+                  <select
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
+                    value={idTipoDireccion}
+                    onChange={(e) => setIdTipoDireccion(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Seleccionar dirección...</option>
+                    {catalogos?.direcciones?.map((d) => (
+                      <option key={d.idTipoDireccion ?? d.id} value={d.idTipoDireccion ?? d.id}>
+                        {d.nombre ?? d.nombreTipoDireccion}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Tipo de Tapizado */}
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="text-xs font-bold text-slate-800 flex items-center">
+                      <span>Tipo de Tapizado</span>
+                      <BotonAgregarParametrico tipo="tapizado" />
+                    </label>
+                  </div>
+                  <select
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
+                    value={idTipoTapizado}
+                    onChange={(e) => setIdTipoTapizado(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Seleccionar tapizado...</option>
+                    {catalogos?.tapizados?.map((t) => (
+                      <option key={t.idTipoTapizado ?? t.id} value={t.idTipoTapizado ?? t.id}>
+                        {t.nombreTipoTapizado ?? t.nombre}
                       </option>
                     ))}
                   </select>
@@ -716,58 +1295,128 @@ export default function CrearPublicacionPage() {
                   <div>
                     <label className="block text-xs font-bold text-slate-800 mb-1">Puertas</label>
                     <input
-                      className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900"
+                      className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                       type="number"
                       min="2"
                       max="6"
+                      placeholder="Ej: 4"
                       value={puertas}
-                      onChange={(e) => setPuertas(Number(e.target.value))}
+                      onChange={(e) => setPuertas(e.target.value === '' ? '' : Number(e.target.value))}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-800 mb-1">Airbags</label>
+                    <label className="block text-xs font-bold text-slate-800 mb-1">Asientos</label>
                     <input
-                      className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900"
+                      className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                       type="number"
-                      min="0"
-                      max="12"
-                      value={airbags}
-                      onChange={(e) => setAirbags(Number(e.target.value))}
+                      min="1"
+                      max="9"
+                      placeholder="Ej: 5"
+                      value={asientos}
+                      onChange={(e) => setAsientos(e.target.value === '' ? '' : Number(e.target.value))}
                     />
                   </div>
                 </div>
 
-                {/* Dimensiones (mm) */}
+                {/* Airbags */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1">Cantidad de Airbags</label>
+                  <input
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
+                    type="number"
+                    min="0"
+                    max="12"
+                    placeholder="Ej: 6"
+                    value={airbags}
+                    onChange={(e) => setAirbags(e.target.value === '' ? '' : Number(e.target.value))}
+                  />
+                </div>
+
+                {/* Capacidades & Volúmenes */}
                 <div className="sm:col-span-2 pt-2 border-t border-slate-100">
                   <label className="block text-xs font-bold text-slate-800 mb-2">
-                    Dimensiones del Vehículo (en milímetros)
+                    Capacidades &amp; Volúmenes
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Baúl (Litros VDA)</span>
+                      <input
+                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
+                        type="number"
+                        min="50"
+                        placeholder="Ej: 470"
+                        value={baul}
+                        onChange={(e) => setBaul(e.target.value === '' ? '' : Number(e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Tanque (Litros)</span>
+                      <input
+                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
+                        type="number"
+                        min="20"
+                        placeholder="Ej: 80"
+                        value={tanque}
+                        onChange={(e) => setTanque(e.target.value === '' ? '' : Number(e.target.value))}
+                      />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Remolque (kg)</span>
+                      <input
+                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
+                        type="number"
+                        min="100"
+                        placeholder="Ej: 3500"
+                        value={remolque}
+                        onChange={(e) => setRemolque(e.target.value === '' ? '' : Number(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Dimensiones (metros) */}
+                <div className="sm:col-span-2 pt-2 border-t border-slate-100">
+                  <label className="block text-xs font-bold text-slate-800 mb-2">
+                    Dimensiones del Vehículo (en metros)
                   </label>
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Largo (mm)</span>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Largo (m)</span>
                       <input
-                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900"
+                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                         type="number"
+                        step="0.01"
+                        min="0.1"
+                        max="20"
+                        placeholder="Ej: 5.33"
                         value={largo}
-                        onChange={(e) => setLargo(Number(e.target.value))}
+                        onChange={(e) => setLargo(e.target.value === '' ? '' : Number(e.target.value))}
                       />
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Ancho (mm)</span>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Ancho (m)</span>
                       <input
-                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900"
+                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                         type="number"
+                        step="0.01"
+                        min="0.1"
+                        max="20"
+                        placeholder="Ej: 1.85"
                         value={ancho}
-                        onChange={(e) => setAncho(Number(e.target.value))}
+                        onChange={(e) => setAncho(e.target.value === '' ? '' : Number(e.target.value))}
                       />
                     </div>
                     <div>
-                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Alto (mm)</span>
+                      <span className="text-[10px] text-slate-500 uppercase font-semibold">Alto (m)</span>
                       <input
-                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900"
+                        className="w-full h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                         type="number"
+                        step="0.01"
+                        min="0.1"
+                        max="20"
+                        placeholder="Ej: 1.82"
                         value={alto}
-                        onChange={(e) => setAlto(Number(e.target.value))}
+                        onChange={(e) => setAlto(e.target.value === '' ? '' : Number(e.target.value))}
                       />
                     </div>
                   </div>
@@ -806,10 +1455,11 @@ export default function CrearPublicacionPage() {
                       type="number"
                       min="1000"
                       step="500"
+                      placeholder="Ej: 47500"
                       value={precio}
                       onFocus={() => markTouched('precio')}
                       onChange={(e) => {
-                        setPrecio(Number(e.target.value))
+                        setPrecio(e.target.value === '' ? '' : Number(e.target.value))
                         markTouched('precio')
                       }}
                     />
@@ -821,8 +1471,18 @@ export default function CrearPublicacionPage() {
                     </p>
                   )}
                 </div>
-
-                {/* Galería de Fotos con Reordenamiento y Previsualización */}
+                 {/* Descripción */}
+                <div className="pt-2 border-t border-slate-100">
+                  <label className="block text-xs font-bold text-slate-800 mb-1">Descripción de la Unidad</label>
+                  <textarea
+                    className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary leading-relaxed"
+                    rows="3"
+                    value={descripcion}
+                    placeholder="Escribí aquí los detalles, historial de mantenimientos y equipamiento destacado de la unidad..."
+                    onChange={(e) => setDescripcion(e.target.value)}
+                  ></textarea>
+                </div>
+                {/* Galería de Fotos con Carga Directa a Cloudinary (Máx 15 fotos) */}
                 <div className="space-y-3 pt-2 border-t border-slate-100">
                   <div className="flex items-center justify-between">
                     <div>
@@ -833,97 +1493,264 @@ export default function CrearPublicacionPage() {
                         La primera imagen corresponde a la portada del catálogo. Usa las flechas para reordenar.
                       </span>
                     </div>
-                    <span className="text-xs font-mono font-bold text-secondary bg-blue-50 px-2 py-0.5 rounded">
-                      {galeria.length} fotos cargadas
+                    <span
+                      className={`text-xs font-mono font-bold px-2.5 py-1 rounded-full border transition-all ${
+                        galeria.length >= MAX_FOTOS
+                          ? 'bg-rose-50 text-rose-700 border-rose-200'
+                          : 'bg-blue-50 text-secondary border-blue-200'
+                      }`}
+                    >
+                      {galeria.length} / {MAX_FOTOS} fotos cargadas
                     </span>
                   </div>
 
-                  {/* Strip de Miniaturas con Controles */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {galeria.map((url, idx) => (
-                      <div
-                        key={idx}
-                        className={`relative rounded-xl overflow-hidden border p-2 bg-white flex flex-col gap-2 shadow-sm ${
-                          idx === 0 ? 'border-secondary ring-2 ring-secondary/20' : 'border-slate-200'
-                        }`}
-                      >
-                        <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-slate-900">
-                          <img src={url} alt={`Foto ${idx + 1}`} className="w-full h-full object-cover" />
-                          {idx === 0 && (
-                            <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-secondary text-white text-[9px] font-bold uppercase tracking-wide">
-                              ★ Portada Principal
-                            </span>
-                          )}
-                          <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/70 text-white text-[9px] font-mono">
-                            #{idx + 1}
-                          </span>
-                        </div>
+                  {/* Input de archivo nativo oculto (PC y Móvil) */}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleArchivosInput}
+                    className="hidden"
+                  />
 
-                        {/* Botones de Reordenamiento */}
-                        <div className="flex items-center justify-between text-xs text-slate-500">
-                          <div className="flex items-center gap-1">
+                  {/* Zona de Arrastrar y Soltar / Clic para Seleccionar */}
+                  <div
+                    onClick={() => {
+                      if (galeria.length + subiendoArchivos.length < MAX_FOTOS) {
+                        fileInputRef.current?.click()
+                      } else {
+                        notificar(`Se alcanzó el límite máximo de ${MAX_FOTOS} fotos por publicación.`, 'error')
+                      }
+                    }}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`relative rounded-2xl border-2 border-dashed p-6 text-center transition-all cursor-pointer select-none flex flex-col items-center justify-center gap-2 ${
+                      arrastrando
+                        ? 'border-secondary bg-blue-50/70 scale-[1.01]'
+                        : galeria.length >= MAX_FOTOS
+                        ? 'border-slate-200 bg-slate-100/70 cursor-not-allowed opacity-60'
+                        : 'border-slate-300 hover:border-secondary bg-slate-50/80 hover:bg-blue-50/30'
+                    }`}
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-white shadow-sm border border-slate-200 flex items-center justify-center text-secondary">
+                      <span className="material-symbols-outlined text-2xl">
+                        {galeria.length >= MAX_FOTOS ? 'lock' : 'cloud_upload'}
+                      </span>
+                    </div>
+                    <div className="space-y-0.5">
+                      <p className="text-xs font-bold text-slate-800">
+                        {galeria.length >= MAX_FOTOS
+                          ? `Límite máximo de ${MAX_FOTOS} fotos alcanzado`
+                          : 'Hacé clic para seleccionar o arrastrá tus fotos aquí'}
+                      </p>
+                      <p className="text-[11px] text-slate-500">
+                        {galeria.length >= MAX_FOTOS
+                          ? 'Eliminá alguna imagen si deseás subir una nueva.'
+                          : 'En PC abre el explorador de archivos; en celulares abre la galería o cámara.'}
+                      </p>
+                    </div>
+                    <span className="text-[10px] text-slate-400 font-medium">
+                      Formatos JPG, PNG, WebP • Se optimizan en tu dispositivo y se transfieren a Cloudinary
+                    </span>
+                  </div>
+
+                  {/* Strip de Miniaturas y Cargas en Progreso */}
+                  {galeria.length === 0 && subiendoArchivos.length === 0 ? (
+                    <div className="rounded-xl border border-slate-200 p-6 text-center bg-slate-50/50 flex flex-col items-center justify-center gap-1.5">
+                      <span className="material-symbols-outlined text-3xl text-slate-400">photo_library</span>
+                      <p className="text-xs font-semibold text-slate-600">Aún no hay fotos cargadas</p>
+                      <p className="text-[11px] text-slate-400">
+                        Seleccioná al menos una foto para la portada del vehículo.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {/* Fotos ya cargadas en Cloudinary */}
+                      {galeria.map((url, idx) => (
+                        <div
+                          key={idx}
+                          className={`relative rounded-xl overflow-hidden border p-2 bg-white flex flex-col gap-2 shadow-sm transition-all ${
+                            idx === 0 ? 'border-secondary ring-2 ring-secondary/20' : 'border-slate-200'
+                          }`}
+                        >
+                          <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-slate-900">
+                            <img
+                              src={optimizarUrlCloudinary(url, 'c_fill,w_500,h_320,f_auto,q_auto')}
+                              alt={`Foto ${idx + 1}`}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                            />
+                            {idx === 0 && (
+                              <span className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded bg-secondary text-white text-[9px] font-bold uppercase tracking-wide shadow">
+                                ★ Portada Principal
+                              </span>
+                            )}
+                            <span className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/70 text-white text-[9px] font-mono">
+                              #{idx + 1}
+                            </span>
+                          </div>
+
+                          {/* Botones de Reordenamiento */}
+                          <div className="flex items-center justify-between text-xs text-slate-500">
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => moverFoto(idx, -1)}
+                                disabled={idx === 0}
+                                className="p-1 rounded hover:bg-slate-100 disabled:opacity-30 cursor-pointer"
+                                title="Mover a la izquierda"
+                              >
+                                <span className="material-symbols-outlined text-sm">arrow_back</span>
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => moverFoto(idx, 1)}
+                                disabled={idx === galeria.length - 1}
+                                className="p-1 rounded hover:bg-slate-100 disabled:opacity-30 cursor-pointer"
+                                title="Mover a la derecha"
+                              >
+                                <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                              </button>
+                            </div>
                             <button
                               type="button"
-                              onClick={() => moverFoto(idx, -1)}
-                              disabled={idx === 0}
-                              className="p-1 rounded hover:bg-slate-100 disabled:opacity-30 cursor-pointer"
-                              title="Mover a la izquierda"
+                              onClick={() => eliminarFoto(idx)}
+                              className="p-1 text-slate-400 hover:text-rose-600 rounded hover:bg-rose-50 cursor-pointer"
+                              title="Quitar foto"
                             >
-                              <span className="material-symbols-outlined text-sm">arrow_back</span>
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => moverFoto(idx, 1)}
-                              disabled={idx === galeria.length - 1}
-                              className="p-1 rounded hover:bg-slate-100 disabled:opacity-30 cursor-pointer"
-                              title="Mover a la derecha"
-                            >
-                              <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                              <span className="material-symbols-outlined text-sm">delete</span>
                             </button>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => eliminarFoto(idx)}
-                            className="p-1 text-slate-400 hover:text-rose-600 rounded hover:bg-rose-50 cursor-pointer"
-                            title="Quitar foto"
-                          >
-                            <span className="material-symbols-outlined text-sm">delete</span>
-                          </button>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+
+                      {/* Fotos en proceso de compresión / subida a Cloudinary */}
+                      {subiendoArchivos.map((item) => (
+                        <div
+                          key={item.id}
+                          className="relative rounded-xl overflow-hidden border border-blue-300 p-2 bg-blue-50/30 flex flex-col gap-2 shadow-sm animate-pulse"
+                        >
+                          <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-slate-900">
+                            <img
+                              src={item.preview}
+                              alt="Subiendo..."
+                              className="w-full h-full object-cover opacity-60"
+                            />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/50 text-white p-2">
+                              <span className="material-symbols-outlined text-xl animate-spin text-blue-400">
+                                progress_activity
+                              </span>
+                              <span className="text-[10px] font-bold">Subiendo {item.progreso}%</span>
+                              <div className="w-full max-w-[80px] h-1.5 bg-white/20 rounded-full overflow-hidden">
+                                <div
+                                  className="h-full bg-blue-400 transition-all duration-200"
+                                  style={{ width: `${item.progreso}%` }}
+                                ></div>
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-[10px] text-slate-500 truncate text-center font-mono">
+                            {item.nombre}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Video Walk-Around de YouTube */}
+                <div className="space-y-3 pt-4 border-t border-slate-100">
+                  <div className="flex items-center justify-between flex-wrap gap-1">
+                    <div>
+                      <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-red-600 text-sm">smart_display</span>
+                        Video Walk-Around (YouTube)
+                        <span className="text-[10px] text-slate-400 font-normal">(Opcional)</span>
+                      </label>
+                      <span className="text-[11px] text-slate-500">
+                        Pegá el link del video de YouTube (ej. https://www.youtube.com/watch?v=... o https://youtu.be/...). 
+                      </span>
+                    </div>
+                    {videoUrl.trim() && getYouTubeVideoId(videoUrl.trim()) && (
+                      <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        <span className="material-symbols-outlined text-xs">check_circle</span>
+                        YouTube detectado
+                      </span>
+                    )}
                   </div>
 
-                  {/* Input para Agregar Nueva Foto */}
-                  <div className="flex gap-2 pt-2">
+                  <div className="relative">
+                    <div className="absolute left-3.5 top-3 text-red-600 pointer-events-none">
+                      <span className="material-symbols-outlined text-base">play_circle</span>
+                    </div>
                     <input
-                      className="flex-1 h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
                       type="url"
-                      value={nuevaFotoUrl}
-                      onChange={(e) => setNuevaFotoUrl(e.target.value)}
-                      placeholder="Pegar URL de foto adicional (https://...)"
+                      className={`w-full h-11 pl-10 pr-10 bg-slate-50 border rounded-xl text-xs font-mono text-slate-800 focus:bg-white focus:outline-none focus:ring-2 ${
+                        videoUrl && errores.videoUrl
+                          ? 'border-rose-300 focus:ring-rose-500 bg-rose-50/30'
+                          : 'border-slate-200 focus:ring-secondary'
+                      }`}
+                      placeholder="https://www.youtube.com/watch?v=..."
+                      value={videoUrl}
+                      onChange={(e) => {
+                        setVideoUrl(e.target.value)
+                        markTouched('videoUrl')
+                      }}
+                      onFocus={() => markTouched('videoUrl')}
                     />
-                    <button
-                      type="button"
-                      onClick={agregarFoto}
-                      className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
-                    >
-                      <span className="material-symbols-outlined text-sm">add_photo_alternate</span>
-                      <span>Agregar Foto</span>
-                    </button>
+                    {videoUrl && (
+                      <button
+                        type="button"
+                        onClick={() => setVideoUrl('')}
+                        className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 cursor-pointer"
+                        title="Limpiar enlace"
+                      >
+                        <span className="material-symbols-outlined text-base">cancel</span>
+                      </button>
+                    )}
                   </div>
+
+                  {videoUrl && errores.videoUrl && (
+                    <p className="text-[11px] text-rose-600 font-semibold flex items-center gap-1">
+                      <span className="material-symbols-outlined text-xs">error</span>
+                      {errores.videoUrl}
+                    </p>
+                  )}
+
+                  {/* Vista previa en vivo del reproductor embebido */}
+                  {videoUrl.trim() && getYouTubeVideoId(videoUrl.trim()) && (
+                    <div className="rounded-xl overflow-hidden border border-slate-200 bg-slate-900 shadow-sm mt-2">
+                      <div className="px-3 py-1.5 bg-slate-800 text-slate-300 text-[11px] flex items-center justify-between">
+                        <span className="font-semibold flex items-center gap-1">
+                          <span className="material-symbols-outlined text-xs text-red-400">smart_display</span>
+                          Previsualización del reproductor embebido
+                        </span>
+                        <a
+                          href={videoUrl.trim()}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-white hover:text-secondary flex items-center gap-0.5 text-[10px]"
+                        >
+                          Probar en YouTube
+                          <span className="material-symbols-outlined text-[10px]">open_in_new</span>
+                        </a>
+                      </div>
+                      <div className="relative aspect-[16/9] w-full">
+                        <iframe
+                          src={getYouTubeEmbedUrl(videoUrl.trim())}
+                          title="Previsualización Video Walk-Around"
+                          className="w-full h-full border-0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* Descripción */}
-                <div className="pt-2 border-t border-slate-100">
-                  <label className="block text-xs font-bold text-slate-800 mb-1">Descripción de la Unidad</label>
-                  <textarea
-                    className="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary leading-relaxed"
-                    rows="3"
-                    value={descripcion}
-                    onChange={(e) => setDescripcion(e.target.value)}
-                  ></textarea>
-                </div>
+               
               </div>
             </div>
           </form>
@@ -949,8 +1776,19 @@ export default function CrearPublicacionPage() {
 
               {/* Card visual matching VehicleCard con gradientes de protección WCAG */}
               <div className="rounded-2xl overflow-hidden border border-slate-200 bg-white shadow-sm">
-                <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden">
-                  <img className="w-full h-full object-cover" src={fotoPrincipal} alt={titulo} />
+                <div className="relative aspect-[16/9] bg-slate-900 overflow-hidden flex items-center justify-center">
+                  {fotoPrincipal ? (
+                    <img
+                      className="w-full h-full object-cover"
+                      src={optimizarUrlCloudinary(fotoPrincipal, 'c_fill,w_800,h_533,f_auto,q_auto')}
+                      alt={titulo || 'Vehículo'}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-1.5 p-4 text-center text-slate-400">
+                      <span className="material-symbols-outlined text-4xl text-slate-500">photo_camera</span>
+                      <span className="text-xs font-semibold">Sin foto de portada cargada</span>
+                    </div>
+                  )}
                   {/* Gradientes Oscuros de Protección WCAG */}
                   <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/60 to-transparent pointer-events-none z-1"></div>
                   <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-1"></div>
@@ -959,18 +1797,20 @@ export default function CrearPublicacionPage() {
                     <span className="material-symbols-outlined text-[13px]">check_circle</span>
                     {statusState.toUpperCase()}
                   </span>
-                  <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/80 text-white text-[10px] font-bold z-10 shadow">
-                    {anio}
-                  </span>
+                  {anio && (
+                    <span className="absolute top-2 right-2 px-2 py-0.5 rounded-full bg-black/80 text-white text-[10px] font-bold z-10 shadow">
+                      {anio}
+                    </span>
+                  )}
                 </div>
                 <div className="p-4 space-y-2">
-                  <h3 className="text-sm font-bold text-slate-900 line-clamp-1">{titulo}</h3>
+                  <h3 className="text-sm font-bold text-slate-900 line-clamp-1">{titulo || 'Título de la publicación'}</h3>
                   <div className="text-base font-extrabold text-slate-900">
-                    USD {Number(precio).toLocaleString('es-AR')}
+                    {precio ? `USD ${Number(precio).toLocaleString('es-AR')}` : 'USD —'}
                   </div>
                   <div className="grid grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1 border-t border-slate-100">
-                    <span>{kilometros > 0 ? `${Number(kilometros).toLocaleString()} km` : '0 km'}</span>
-                    <span className="text-right truncate">{version.slice(0, 16)}</span>
+                    <span>{kilometros !== '' ? (Number(kilometros) > 0 ? `${Number(kilometros).toLocaleString()} km` : '0 km') : '— km'}</span>
+                    <span className="text-right truncate">{version ? version.slice(0, 16) : 'Versión —'}</span>
                   </div>
                 </div>
               </div>
@@ -1028,6 +1868,105 @@ export default function CrearPublicacionPage() {
           </div>
         </div>
       </div>
+
+      {/* POP UP MODAL PARA AGREGAR NUEVO ELEMENTO PARAMÉTRICO */}
+      {modalAbierto && modalConfig && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-md w-full p-6 space-y-4 animate-in zoom-in-95 duration-150">
+            {/* Parte superior con texto "Agregar (Nombre del elemento que se seleccionó)" */}
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="text-base font-bold text-slate-900">
+                Agregar {modalConfig.titulo}
+              </h3>
+              <button
+                type="button"
+                onClick={() => setModalAbierto(false)}
+                className="text-slate-400 hover:text-slate-600 rounded-lg p-1 transition-colors cursor-pointer"
+                title="Cerrar"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+
+            {/* Contenido / Campo para escribir con validaciones correspondientes */}
+            <form onSubmit={handleGuardarParametrico} className="space-y-4">
+              {modalConfig.tipo === 'modelo' && (
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1">
+                    Marca a la que pertenece *
+                  </label>
+                  <select
+                    className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-secondary cursor-pointer"
+                    value={modalMarcaId}
+                    onChange={(e) => setModalMarcaId(e.target.value ? Number(e.target.value) : '')}
+                  >
+                    <option value="">Seleccionar marca...</option>
+                    {catalogos?.marcas?.map((m) => (
+                      <option key={m.idMarca ?? m.id} value={m.idMarca ?? m.id}>
+                        {m.nombreMarca ?? m.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1">
+                  {modalConfig.tipo === 'motor'
+                    ? 'Descripción del motor *'
+                    : `Nombre de ${modalConfig.titulo.toLowerCase()} *`}
+                </label>
+                <input
+                  type="text"
+                  autoFocus
+                  className="w-full h-11 px-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-secondary"
+                  placeholder={modalConfig.placeholder}
+                  value={modalNombre}
+                  onChange={(e) => {
+                    setModalNombre(e.target.value)
+                    if (modalError) setModalError(null)
+                  }}
+                />
+                {modalConfig.ayuda && (
+                  <p className="text-[11px] text-slate-400 mt-1">{modalConfig.ayuda}</p>
+                )}
+                {modalError && (
+                  <p className="text-[11px] text-rose-600 font-semibold mt-1.5 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs">error</span>
+                    {modalError}
+                  </p>
+                )}
+              </div>
+
+              {/* Parte inferior: dos botones, uno para aceptar y el otro para cancelar */}
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setModalAbierto(false)}
+                  disabled={guardandoParametrico}
+                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  disabled={guardandoParametrico}
+                  className="px-5 py-2 rounded-xl bg-secondary hover:bg-secondary-container text-white text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer flex items-center gap-1.5"
+                >
+                  {guardandoParametrico ? (
+                    <>
+                      <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                      <span>Guardando...</span>
+                    </>
+                  ) : (
+                    <span>Aceptar</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

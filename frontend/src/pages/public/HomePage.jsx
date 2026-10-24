@@ -37,8 +37,11 @@ export default function HomePage() {
   })
   const [visitaEnviada, setVisitaEnviada] = useState(false)
 
-  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '5491155608800'
+  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || 'Error al cargar el numero de telefono'
   const formattedPhone = formatPhoneNumber(whatsappPhone)
+  const direccionShowroom = import.meta.env.VITE_UBICACION || 'Error al caragr la ubicacion'
+  const urlMapaEmbebido =  `https://www.google.com/maps?q=${encodeURIComponent(direccionShowroom)}&output=embed`
+  const urlGoogleMaps = `https://maps.google.com/?q=${encodeURIComponent(direccionShowroom)}`
 
   useEffect(() => {
     async function cargarDatos() {
@@ -92,99 +95,52 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col w-full bg-[#F8FAFC] selection:bg-[#2563EB] selection:text-white">
-      {/* =========================================================================
-          HERO SECTION CON PATRÓN EN "Z" Y CONSOLA DE BÚSQUEDA DE ALTO CONTRASTE
-          (60% Fondo Claro #F8FAFC / 30% Estructura #0F172A / 10% Acento #2563EB)
-          ========================================================================= */}
+  
       <section className="relative w-full bg-gradient-to-b from-white via-slate-50 to-[#F8FAFC] py-16 lg:py-24 border-b border-slate-200" id="hero">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
-          {/* Fila Superior del Z-Pattern: Trust Badge & Micro-Indicador */}
-          <div className="flex flex-wrap items-center gap-3 mb-6">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#2563EB] text-xs font-extrabold uppercase tracking-wider shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-ping"></span>
-              Stock Homologado • Entrega Inmediata
-            </span>
-            <span className="text-xs sm:text-sm font-semibold text-slate-700 flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-[18px] text-emerald-600">verified</span>
-              Garantía Certificada y Transferencia Inmediata
-            </span>
-          </div>
 
-          {/* Recorrido Diagonal del Z-Pattern: Título Principal + Imagen de Impacto */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-14">
-            {/* Texto y Propuesta de Valor (7 cols) */}
-            <div className="lg:col-span-7 flex flex-col gap-5">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] tracking-tight leading-[1.12]">
-                Vehículos seleccionados y certificados con{' '}
-                <span className="text-[#2563EB] underline decoration-blue-200 underline-offset-8">
-                  garantía total.
-                </span>
-              </h1>
-              <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
-                Concesionaria oficial multimarca. Financiación a medida en cuotas fijas o UVA, toma de usados llave por llave y documentación lista para transferir en el día.
-              </p>
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <Link
-                  to="/catalogo"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white font-extrabold text-sm transition-all shadow-md active:scale-95 cursor-pointer"
-                >
-                  <span>Explorar Catálogo Completo</span>
-                  <span className="material-symbols-outlined text-base">arrow_downward</span>
-                </Link>
-                <a
-                  href="#showroom"
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold text-sm transition-colors shadow-2xs"
-                >
-                  <span className="material-symbols-outlined text-base text-[#2563EB]">location_on</span>
-                  <span>Ver Showroom</span>
-                </a>
-              </div>
+          {/* Hero Content Centrado en el Medio */}
+          <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-14">
+            <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-[#2563EB] text-xs font-extrabold uppercase tracking-wider shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-[#2563EB] animate-ping"></span>
+                Stock Homologado • Entrega Inmediata
+              </span>
+              <span className="text-xs sm:text-sm font-semibold text-slate-700 flex items-center gap-1.5">
+                <span className="material-symbols-outlined text-[18px] text-emerald-600">verified</span>
+                Garantía Certificada y Transferencia Inmediata
+              </span>
             </div>
 
-            {/* Imagen de Impacto Diagonal en el Z-Pattern (5 cols) con DATOS REALES DE LA BD */}
-            <div className="lg:col-span-5 relative">
-              {destacados[0] ? (
-                <Link
-                  to={`/vehiculo/${destacados[0].idPublicacion ?? destacados[0].id}`}
-                  className="block relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-900 group aspect-[4/3]"
-                >
-                  <img
-                    src={
-                      destacados[0].multimedia?.[0]?.urlArchMultimedia ||
-                      destacados[0].multimedia?.[0]?.url ||
-                      'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&q=80'
-                    }
-                    alt={destacados[0].titulo}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20"></div>
-                  <div className="absolute bottom-4 left-4 right-4 p-3 rounded-xl bg-black/60 backdrop-blur-md border border-white/20 text-white text-xs flex items-center justify-between">
-                    <div>
-                      <span className="font-extrabold block text-sm truncate max-w-[220px]">
-                        {destacados[0].titulo}
-                      </span>
-                      <span className="text-slate-300 text-[11px]">
-                        Año {destacados[0].vehiculo?.anio || 2024} •{' '}
-                        {destacados[0].vehiculo?.kilometros
-                          ? `${Number(destacados[0].vehiculo.kilometros).toLocaleString('es-AR')} km`
-                          : '0 km'}{' '}
-                        • En Salón
-                      </span>
-                    </div>
-                    <span className="px-2.5 py-1 rounded bg-[#2563EB] text-white font-extrabold text-[11px] shrink-0">
-                      USD {Number(destacados[0].precio || 0).toLocaleString('es-AR')}
-                    </span>
-                  </div>
-                </Link>
-              ) : (
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-slate-200/80 bg-slate-900 group aspect-[4/3]">
-                  <img
-                    src="https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&q=80"
-                    alt="Apex Motors Showroom"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#0F172A] tracking-tight leading-[1.12] mb-5">
+              Vehículos seleccionados y certificados con{' '}
+              <span className="text-[#2563EB] underline decoration-blue-200 underline-offset-8">
+                garantía total.
+              </span>
+            </h1>
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto mb-8">
+              Concesionaria oficial multimarca. Financiación a medida en cuotas fijas o UVA, toma de usados llave por llave y documentación lista para transferir en el día.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/catalogo"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white font-extrabold text-sm transition-all shadow-md active:scale-95 cursor-pointer"
+              >
+                <span>Explorar Catálogo Completo</span>
+                <span className="material-symbols-outlined text-base">arrow_downward</span>
+              </Link>
+              <a
+                href="#showroom"
+                onClick={(e) => {
+                  e.preventDefault()
+                  document.getElementById('showroom')?.scrollIntoView({ behavior: 'smooth' })
+                  window.history.pushState(null, '', '/#showroom')
+                }}
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold text-sm transition-colors shadow-2xs cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-base text-[#2563EB]">location_on</span>
+                <span>Ver Showroom</span>
+              </a>
             </div>
           </div>
 
@@ -331,9 +287,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* =========================================================================
-          DESTACADOS EN STOCK CON BENTO / MODULAR GRID (Macro-Espacios 60px)
-          ========================================================================= */}
+
       <section className="w-full bg-[#F8FAFC] py-16 lg:py-20 border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
@@ -349,19 +303,19 @@ export default function HomePage() {
               to="/catalogo"
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#2563EB] hover:underline"
             >
-              <span>Ver catálogo completo ({destacados.length} unidades disponibles)</span>
+              <span>Ver catálogo completo</span>
               <span className="material-symbols-outlined text-base">arrow_forward</span>
             </Link>
           </div>
 
           {cargando ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((n) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {[1, 2, 3].map((n) => (
                 <div key={n} className="bg-white rounded-2xl h-84 animate-pulse border border-slate-200"></div>
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {destacados.map((pub) => (
                 <VehicleCard key={pub.idPublicacion ?? pub.id} publicacion={pub} />
               ))}
@@ -373,7 +327,7 @@ export default function HomePage() {
       {/* =========================================================================
           FINANCIAMIENTO & SERVICIOS (#servicios)
           ========================================================================= */}
-      <section className="w-full bg-white py-16 lg:py-24 border-b border-slate-200 scroll-mt-20" id="servicios">
+      <section className="w-full bg-white py-16 lg:py-24 border-b border-slate-200 scroll-mt-32" id="servicios">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="max-w-3xl mb-14">
             <span className="text-xs uppercase tracking-widest text-[#2563EB] font-extrabold">
@@ -398,10 +352,7 @@ export default function HomePage() {
                   Revisión mecánica integral de motor, transmisión, frenos y tren rodante. Cobertura de 12 meses extendible para que manejes con absoluta tranquilidad.
                 </p>
               </div>
-              <div className="mt-6 pt-6 border-t border-slate-200 flex items-center text-xs font-bold text-[#2563EB]">
-                <span>Garantía escrita en cada operación</span>
-                <span className="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
-              </div>
+      
             </div>
 
             {/* Pilar 2: Financiación */}
@@ -414,10 +365,6 @@ export default function HomePage() {
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   Financiamos hasta el 60% del valor de la unidad en cuotas fijas en pesos, créditos UVA o dólares billete con aprobación express en 24 horas y tasas preferenciales bancarias.
                 </p>
-              </div>
-              <div className="mt-6 pt-6 border-t border-slate-200 flex items-center text-xs font-bold text-[#2563EB]">
-                <span>Simulación de cuota en el acto</span>
-                <span className="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
               </div>
             </div>
 
@@ -432,10 +379,6 @@ export default function HomePage() {
                   Cotización profesional en el día de tu vehículo usado al mejor valor del mercado. Realizá la operación llave contra llave sin quedarte sin movilidad ni un solo día.
                 </p>
               </div>
-              <div className="mt-6 pt-6 border-t border-slate-200 flex items-center text-xs font-bold text-[#2563EB]">
-                <span>Operación llave por llave garantizada</span>
-                <span className="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
-              </div>
             </div>
           </div>
         </div>
@@ -444,7 +387,7 @@ export default function HomePage() {
       {/* =========================================================================
           SECCIÓN NOSOTROS (#nosotros)
           ========================================================================= */}
-      <section className="w-full bg-[#0F172A] text-white py-16 lg:py-20 scroll-mt-20" id="nosotros">
+      <section className="w-full bg-[#0F172A] text-white py-16 lg:py-20 scroll-mt-32" id="nosotros">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-6">
@@ -493,7 +436,7 @@ export default function HomePage() {
       {/* =========================================================================
           SHOWROOM, HORARIOS & CONTACTO (#showroom)
           ========================================================================= */}
-      <section className="w-full bg-[#F8FAFC] py-16 lg:py-24 scroll-mt-20" id="showroom">
+      <section className="w-full bg-[#F8FAFC] py-16 lg:py-24 scroll-mt-32" id="showroom">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
           <div className="max-w-2xl mb-12">
             <span className="text-xs uppercase tracking-widest text-[#2563EB] font-extrabold">
@@ -513,26 +456,11 @@ export default function HomePage() {
               <div className="w-full h-80 sm:h-96 rounded-2xl overflow-hidden border border-slate-200 relative bg-slate-100 shadow-sm">
                 <iframe
                   title="Ubicación Showroom Apex Motors"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13146.46733271295!2d-58.485!3d-34.538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb6a282f64e03%3A0x7d6a5c18e38520ec!2sAv.%20del%20Libertador%204580%2C%20Vicente%20L%C3%B3pez%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1710000000000"
+                  src= {urlMapaEmbebido}
                   className="w-full h-full border-0"
                   allowFullScreen
                   loading="lazy"
                 ></iframe>
-                <div className="absolute bottom-4 left-4 right-4 sm:right-auto sm:max-w-sm p-4 rounded-xl bg-white/95 backdrop-blur-md shadow-xl border border-slate-200 pointer-events-none">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-[#2563EB] text-white flex items-center justify-center shrink-0">
-                      <span className="material-symbols-outlined text-[18px]">location_on</span>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-bold text-slate-900">Showroom Vicente López</h4>
-                      <p className="text-xs text-slate-600 mt-0.5">Av. del Libertador 4580, Vicente López, Buenos Aires</p>
-                      <p className="text-[11px] font-bold text-emerald-600 mt-1 flex items-center gap-1">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                        Estacionamiento privado para clientes
-                      </p>
-                    </div>
-                  </div>
-                </div>
               </div>
 
               {/* Horarios y Líneas de Atención */}
@@ -552,10 +480,7 @@ export default function HomePage() {
                       <span className="font-bold text-slate-800">Sábados:</span>
                       <span>09:30 - 18:00 hs</span>
                     </div>
-                    <div className="flex justify-between text-slate-500">
-                      <span className="font-bold">Domingos y Feriados:</span>
-                      <span>Atención Online por WhatsApp</span>
-                    </div>
+                   
                   </div>
                 </div>
 

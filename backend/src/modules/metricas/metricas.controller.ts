@@ -1,4 +1,3 @@
-
 import {
   Controller,
   Get,
@@ -31,8 +30,7 @@ export class MetricasController {
     @Inject(MetricasService) private readonly metricasService: MetricasService,
   ) {}
 
- 
-  // POST /api/metricas/evento (Para Maps, WhatsApp general, Redes, etc.)
+  // POST /api/metricas/evento
   @Post("metricas/evento")
   @HttpCode(HttpStatus.CREATED)
   @UsePipes(new ZodValidationPipe(RegistrarEventoSchema))
@@ -40,7 +38,7 @@ export class MetricasController {
     return await this.metricasService.registrarEvento(dto);
   }
 
-  // POST /api/publicaciones/:id/visitas (Atajo cuando abren la ficha del auto)
+  // POST /api/publicaciones/:id/visitas
   @Post("publicaciones/:id/visitas")
   @HttpCode(HttpStatus.OK)
   async registrarVisitaAuto(@Param("id", ParseIntPipe) id: number) {
@@ -50,7 +48,7 @@ export class MetricasController {
     });
   }
 
-  // POST /api/publicaciones/:id/consultas (Atajo cuando tocan WhatsApp en el auto)
+  // POST /api/publicaciones/:id/consultas
   @Post("publicaciones/:id/consultas")
   @HttpCode(HttpStatus.OK)
   async registrarConsultaAuto(@Param("id", ParseIntPipe) id: number) {
@@ -60,15 +58,22 @@ export class MetricasController {
     });
   }
 
-
-  // GET /api/metricas/kpis?desde=2026-10-01&hasta=2026-10-31
+  // GET /api/metricas/kpis?periodo=semana
   @Get("metricas/kpis")
   @UseGuards(AuthGuard)
   async obtenerKpis(
     @Query(new ZodValidationPipe(FiltroFechasMetricasSchema))
     filtros: FiltroFechasMetricasDto,
+    @Query("periodo") periodo?: string,
   ) {
-    return await this.metricasService.obtenerKpis(filtros);
+    return await this.metricasService.obtenerKpis(filtros, periodo || "semana");
+  }
+
+  // GET /api/metricas/barras?periodo=semana
+  @Get("metricas/barras")
+  @UseGuards(AuthGuard)
+  async obtenerGraficoBarras(@Query("periodo") periodo?: string) {
+    return await this.metricasService.obtenerGraficoBarras(periodo || "semana");
   }
 
   // GET /api/metricas/top-vehiculos?limite=5
@@ -86,5 +91,19 @@ export class MetricasController {
   @UseGuards(AuthGuard)
   async obtenerDistribucionSegmentos() {
     return await this.metricasService.obtenerDistribucionSegmentos();
+  }
+
+  // GET /api/metricas/demanda-insatisfecha
+  @Get("metricas/demanda-insatisfecha")
+  @UseGuards(AuthGuard)
+  async obtenerDemandaInsatisfecha() {
+    return await this.metricasService.obtenerDemandaInsatisfecha();
+  }
+
+  // GET /api/metricas/carrocerias
+  @Get("metricas/carrocerias")
+  @UseGuards(AuthGuard)
+  async obtenerDistribucionCarrocerias() {
+    return await this.metricasService.obtenerDistribucionCarrocerias();
   }
 }

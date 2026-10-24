@@ -2,12 +2,41 @@ import { useState, useEffect } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { PublicacionesService } from '../../services/publicaciones.service'
 import { MetricasService } from '../../services/metricas.service'
+import { optimizarUrlCloudinary } from '../../utils/cloudinary'
 import VehicleCard from '../../components/public/VehicleCard'
+
+function getYouTubeVideoId(url) {
+  if (!url || typeof url !== 'string') return null
+  const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/|youtube\.com\/shorts\/)([^"&?\/\s]{11})/i
+  const match = url.match(regExp)
+  return match ? match[1] : null
+}
+
+function getYouTubeEmbedUrl(url) {
+  const videoId = getYouTubeVideoId(url)
+  return videoId ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1` : null
+}
+
+function isYouTubeUrl(url) {
+  if (!url || typeof url !== 'string') return false
+  return /^(https?:\/\/)?(www\.|m\.)?(youtube\.com|youtu\.be)\//i.test(url.trim())
+}
+
+function formatMedidaMetros(valorMm) {
+  if (valorMm == null || isNaN(Number(valorMm))) return '-'
+  const num = Number(valorMm)
+  const metros = num > 50 ? num / 1000 : num
+  return `${metros.toFixed(2).replace('.', ',')} m`
+}
+
 
 export default function DetallevehiculoPage() {
   const { id } = useParams()
   const navigate = useNavigate()
-  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '5491155608800'
+  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || 'Error al cargar el numero de telefono'
+  const direccionShowroom = import.meta.env.VITE_UBICACION || 'Error al caragr la ubicacion'
+  const urlMapaEmbebido =  `https://www.google.com/maps?q=${encodeURIComponent(direccionShowroom)}&output=embed`
+  const urlGoogleMaps = `https://maps.google.com/?q=${encodeURIComponent(direccionShowroom)}`
 
   const [publicacion, setPublicacion] = useState(null)
   const [similares, setSimilares] = useState([])
@@ -18,8 +47,7 @@ export default function DetallevehiculoPage() {
   const [mediaTab, setMediaTab] = useState('photos') // 'photos' | 'video' | '360'
   const [fotoActiva, setFotoActiva] = useState(0)
   const [videoPlaying, setVideoPlaying] = useState(true)
-  const [panoRotation, setPanoRotation] = useState(0)
-
+  
   // Modales y Toasts
   const [showTestDriveModal, setShowTestDriveModal] = useState(false)
   const [showPermutaModal, setShowPermutaModal] = useState(false)
@@ -118,9 +146,26 @@ export default function DetallevehiculoPage() {
   const precioFormateado = `${moneda || 'USD'} ${precioUSD.toLocaleString('es-AR')}`
   const precioEquivARS = (precioUSD * 1350).toLocaleString('es-AR')
 
-  const fotos =
+  // Extracción del video real almacenado en la BD (campo videoUrl o en tabla Multimedia)
+  const rawVideoUrl =
+    publicacion.videoUrl ||
+    publicacion.VideoUrl ||
+    multimedia?.find((m) => isYouTubeUrl(m.urlArchMultimedia || m.url))?.urlArchMultimedia ||
+    multimedia?.find((m) => isYouTubeUrl(m.urlArchMultimedia || m.url))?.url ||
+    null
+
+  const videoEmbedUrl = getYouTubeEmbedUrl(rawVideoUrl)
+  const hasVideo = Boolean(videoEmbedUrl)
+
+  // Filtrar la galería para mostrar solo imágenes fotográficas (excluyendo el video de YouTube)
+  const rawMediaUrls =
     multimedia && multimedia.length > 0
-      ? multimedia.map((m) => m.urlArchMultimedia || m.url)
+      ? multimedia.map((m) => m.urlArchMultimedia || m.url).filter(Boolean)
+      : []
+
+  const fotos =
+    rawMediaUrls.filter((u) => !isYouTubeUrl(u)).length > 0
+      ? rawMediaUrls.filter((u) => !isYouTubeUrl(u))
       : [
           'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&q=80',
           'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1200&q=80',
@@ -133,7 +178,6 @@ export default function DetallevehiculoPage() {
   const combustible = vehiculo?.combustible?.nombreCombustible || vehiculo?.combustible?.nombre || 'Nafta'
   const traccion = vehiculo?.traccion?.nombreTraccion || vehiculo?.traccion?.nombre || 'Delantera'
   const color = vehiculo?.color || 'A coordinar'
-  const patente = vehiculo?.patente || 'En trámite'
   const carroceria = vehiculo?.tipoCarroceria?.nombreTipoCarroceria || vehiculo?.tipoCarroceria?.nombre || 'Sedán'
   const segmento = vehiculo?.segmento?.nombreSegmento || vehiculo?.segmento?.nombre || 'Segmento C'
   const condicion = vehiculo?.condicion?.nombreCondicion || vehiculo?.condicion?.nombre || 'Usado'
@@ -141,9 +185,22 @@ export default function DetallevehiculoPage() {
   const direccion = vehiculo?.tipoDireccion?.nombre || vehiculo?.tipoDireccion?.nombreTipoDireccion || 'Eléctrica'
   const motor = vehiculo?.motor
   const tipoMotor = motor?.tipoMotor?.nombreTipo || motor?.tipoMotor?.nombre || 'Combustión'
-  const potencia = motor?.potencia ? `${motor.potencia} CV` : null
+  const potencia = motor?.potencia ? `${motor.potencia} HP` : null
   const torque = motor?.torque ? `${motor.torque} Nm` : null
+  const descripcionMotor = motor?.descripcion || null
   const dimensiones = vehiculo?.dimensiones
+  const capacidadRemolque = vehiculo?.capacidadRemolque != null ? Number(vehiculo.capacidadRemolque) : null
+  const capacidadBaul = vehiculo?.capacidadBaul != null ? Number(vehiculo.capacidadBaul) : null
+  const capacidadTanque = vehiculo?.capacidadTanque != null ? Number(vehiculo.capacidadTanque) : null
+
+  const capacidadRemolqueFormateada =
+    capacidadRemolque != null ? `${capacidadRemolque.toLocaleString('es-AR')} kg` : null
+
+  const capacidadBaulFormateada =
+    capacidadBaul != null ? `${capacidadBaul.toLocaleString('es-AR')} litros` : null
+
+  const capacidadTanqueFormateada =
+    capacidadTanque != null ? `${capacidadTanque.toLocaleString('es-AR')} litros` : null
   const asesorNombre = publicacion?.usuario?.nombre || 'Martín Benítez'
   const asesorIniciales = asesorNombre
     .split(' ')
@@ -165,9 +222,7 @@ export default function DetallevehiculoPage() {
   const isVendida = estadoNombre.includes('finaliz') || estadoNombre.includes('vendid')
   const isDisponible = !isPausada && !isVendida
 
-  // Financiación
-  const saldoAFinanciar = Math.max(0, precioUSD - downPayment)
-  const cuotaMensual = loanTerm > 0 ? Math.round((saldoAFinanciar * 1.18) / loanTerm) : 0
+
 
   const handleShareClick = () => {
     if (navigator.clipboard) {
@@ -238,25 +293,7 @@ export default function DetallevehiculoPage() {
         </div>
       )}
 
-      {/* Floating Scroll Navigation Controls */}
-      <div className="fixed right-5 bottom-24 lg:bottom-20 z-40 flex flex-col gap-2">
-        <button
-          className="w-11 h-11 rounded-full bg-white text-slate-800 shadow-xl border border-slate-200 flex items-center justify-center hover:bg-secondary hover:text-white transition-all hover:scale-110 active:scale-95 cursor-pointer"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          title="Subir al inicio"
-          aria-label="Subir al inicio de la página"
-        >
-          <span className="material-symbols-outlined text-xl">arrow_upward</span>
-        </button>
-        <button
-          className="w-11 h-11 rounded-full bg-white text-slate-800 shadow-xl border border-slate-200 flex items-center justify-center hover:bg-secondary hover:text-white transition-all hover:scale-110 active:scale-95 cursor-pointer"
-          onClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
-          title="Bajar al pie"
-          aria-label="Bajar al pie de la página"
-        >
-          <span className="material-symbols-outlined text-xl">arrow_downward</span>
-        </button>
-      </div>
+    
 
       <div className="max-w-7xl mx-auto px-4 sm:px-8 flex flex-col gap-6">
         {/* Breadcrumbs */}
@@ -329,9 +366,6 @@ export default function DetallevehiculoPage() {
                 </span>
               )}
              
-              <span className="text-xs text-slate-500">
-                COD: <strong className="font-mono text-slate-900">{codigoVehiculo}</strong>
-              </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
               {tituloCompleto}
@@ -376,11 +410,16 @@ export default function DetallevehiculoPage() {
                     onClick={() => setMediaTab('video')}
                   >
                     <span className="material-symbols-outlined text-sm">smart_display</span>
-                    Video Walk-Around
+                    <span>Video</span>
+                    {hasVideo ? (
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" title="Video disponible"></span>
+                    ) : (
+                      <span className="text-[10px] text-slate-400 font-normal">(No disp.)</span>
+                    )}
                   </button>
-                
                 </div>
-             
+
+                
               </div>
 
               {/* Viewport 1: Photos */}
@@ -391,7 +430,7 @@ export default function DetallevehiculoPage() {
                     className={`w-full h-full object-cover select-none transition-all duration-300 ${
                       isVendida ? 'filter grayscale contrast-125' : ''
                     }`}
-                    src={fotos[fotoActiva]}
+                    src={optimizarUrlCloudinary(fotos[fotoActiva], 'c_limit,w_1600,f_auto,q_auto')}
                   />
 
                   {/* Overlay Vendido */}
@@ -408,13 +447,15 @@ export default function DetallevehiculoPage() {
                       Foto {fotoActiva + 1} de {fotos.length}
                     </span>
                   </div>
-                  <button
-                    className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur text-xs font-bold text-slate-900 hover:bg-secondary hover:text-white shadow transition-all cursor-pointer"
-                    onClick={() => setMediaTab('video')}
-                  >
-                    <span className="material-symbols-outlined text-sm text-secondary">play_circle</span>
-                    Ver Video &amp; Sonido Motor
-                  </button>
+                  {hasVideo && (
+                    <button
+                      className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/90 backdrop-blur text-xs font-bold text-slate-900 hover:bg-secondary hover:text-white shadow transition-all cursor-pointer"
+                      onClick={() => setMediaTab('video')}
+                    >
+                      <span className="material-symbols-outlined text-sm text-secondary">play_circle</span>
+                      Ver Video
+                    </button>
+                  )}
                   <button
                     aria-label="Foto anterior"
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-900 flex items-center justify-center shadow-lg transition-all hover:scale-110 active:scale-95 cursor-pointer"
@@ -432,104 +473,54 @@ export default function DetallevehiculoPage() {
                 </div>
               )}
 
-              {/* Viewport 2: Video Walk-Around */}
+              {/* Viewport 2: Video Walk-Around Embebido de YouTube */}
               {mediaTab === 'video' && (
-                <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black shadow-inner flex flex-col justify-between p-4">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center opacity-40 filter brightness-75 scale-105"
-                    style={{ backgroundImage: `url(${fotos[0]})` }}
-                  ></div>
-                  <div className="relative z-10 flex items-center justify-between text-white text-xs">
-                    <span className="px-3 py-1 rounded bg-red-600/90 font-bold flex items-center gap-1.5">
-                      <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
-                      WALK-AROUND OFICIAL APEX
-                    </span>
-                    <span className="font-mono bg-black/60 px-2 py-1 rounded">01:45 / 03:20</span>
-                  </div>
-                  <div className="relative z-10 self-center flex flex-col items-center gap-2">
-                    <button
-                      className="w-16 h-16 rounded-full bg-secondary text-white flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all cursor-pointer"
-                      onClick={() => setVideoPlaying(!videoPlaying)}
-                      aria-label={videoPlaying ? 'Pausar video' : 'Reproducir video'}
-                    >
-                      <span className="material-symbols-outlined text-3xl ml-0.5">
-                        {videoPlaying ? 'pause' : 'play_arrow'}
-                      </span>
-                    </button>
-                    <span className="bg-black/70 px-3 py-1 rounded-full text-white text-xs">
-                      {videoPlaying ? 'Reproduciendo: Encendido y sonido motor' : 'En pausa'}
-                    </span>
-                  </div>
-                  <div className="relative z-10 flex flex-col gap-2 pt-4 bg-gradient-to-t from-black/90 to-transparent">
-                    <div
-                      className="w-full bg-white/20 h-1.5 rounded-full overflow-hidden cursor-pointer"
-                      onClick={() => showToast('Avance en video simulado', 'smart_display')}
-                    >
-                      <div className="bg-secondary h-full rounded-full" style={{ width: '55%' }}></div>
-                    </div>
-                    <div className="flex items-center justify-between text-white text-xs">
-                      <span>Capítulo: Exterior, Baúl &amp; Sonido Caño de Escape</span>
-                      <button
-                        className="text-white/80 hover:text-white flex items-center gap-1 cursor-pointer"
-                        onClick={() => setMediaTab('photos')}
-                      >
-                        <span className="material-symbols-outlined text-xs">close</span>
-                        Volver a Fotos
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
+                <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black shadow-inner flex flex-col justify-between">
+                  {hasVideo ? (
+                    <div className="relative w-full h-full flex flex-col">
+                      <div className="absolute top-0 left-0 right-0 z-10 px-4 py-2 bg-gradient-to-b from-black/80 via-black/30 to-transparent flex items-center justify-between pointer-events-none">
+    
+                        <a
+                          href={rawVideoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="pointer-events-auto inline-flex items-center gap-1 px-3 py-1 rounded-lg bg-black/70 hover:bg-black text-white text-xs font-bold backdrop-blur transition-all border border-white/20 cursor-pointer"
+                        >
+                          
+                        </a>
+                      </div>
 
-              {/* Viewport 3: Tour 360 */}
-              {mediaTab === '360' && (
-                <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-950 shadow-inner flex flex-col justify-between p-4 select-none">
-                  <div
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-                    style={{
-                      backgroundImage: `url(${fotos[1] || fotos[0]})`,
-                      transform: `scale(1.15) rotate(${panoRotation}deg)`,
-                    }}
-                  ></div>
-                  <div className="relative z-10 flex items-center justify-between text-white text-xs">
-                    <span className="px-3 py-1 rounded bg-black/60 font-bold flex items-center gap-1.5">
-                      <span className="material-symbols-outlined text-sm text-secondary animate-spin">360</span>
-                      PANORAMA 360° HABITÁCULO
-                    </span>
-                    <div className="flex gap-1">
-                      <button
-                        className="p-1 rounded bg-black/70 hover:bg-black text-white cursor-pointer"
-                        onClick={() => setPanoRotation((r) => r - 15)}
-                        aria-label="Girar a la izquierda"
-                      >
-                        <span className="material-symbols-outlined text-sm">rotate_left</span>
-                      </button>
-                      <button
-                        className="p-1 rounded bg-black/70 hover:bg-black text-white cursor-pointer"
-                        onClick={() => setPanoRotation((r) => r + 15)}
-                        aria-label="Girar a la derecha"
-                      >
-                        <span className="material-symbols-outlined text-sm">rotate_right</span>
-                      </button>
+                      <iframe
+                        src={videoEmbedUrl}
+                        title={`Video Walk-Around - ${tituloCompleto}`}
+                        className="w-full h-full border-0 rounded-xl"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
                     </div>
-                  </div>
-                  <div className="relative z-10 self-center flex flex-wrap gap-2 justify-center">
-                    <button
-                      className="px-3 py-1 rounded-full bg-secondary/90 hover:bg-secondary text-white text-xs font-bold shadow-lg cursor-pointer"
-                      onClick={() => showToast('Pantalla táctil compatible con Apple CarPlay y Android Auto', 'touch_app')}
-                    >
-                      Pantalla Central
-                    </button>
-                    <button
-                      className="px-3 py-1 rounded-full bg-secondary/90 hover:bg-secondary text-white text-xs font-bold shadow-lg cursor-pointer"
-                      onClick={() => showToast('Tapizados premium microperforados ergonómicos', 'airline_seat_recline_extra')}
-                    >
-                      Butacas de Cuero
-                    </button>
-                  </div>
-                  <div className="relative z-10 text-center text-white/80 text-xs bg-black/60 py-1 px-3 rounded-full self-center">
-                    Girá con los controles para inspeccionar cada detalle del interior
-                  </div>
+                  ) : (
+                    <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-slate-900 text-white space-y-4">
+                      <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
+                        <span className="material-symbols-outlined text-3xl text-slate-400">videocam_off</span>
+                      </div>
+                      <div className="max-w-md space-y-1">
+                        <h3 className="text-base font-bold text-white">Video no disponible para esta unidad</h3>
+                        <p className="text-xs text-slate-300 leading-relaxed">
+                          Esta publicación no tiene un video cargado. Podés solicitar un video por WhatsApp.
+                        </p>
+                      </div>
+                      <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                        <button
+                          type="button"
+                          onClick={() => setMediaTab('photos')}
+                          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-all cursor-pointer"
+                        >
+                          <span className="material-symbols-outlined text-sm">photo_camera</span>
+                          <span>Ver galería de fotos</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -549,7 +540,11 @@ export default function DetallevehiculoPage() {
                     }}
                     aria-label={`Ver foto ${idx + 1}`}
                   >
-                    <img className="w-full h-full object-cover" src={url} alt={`Miniatura ${idx + 1}`} />
+                    <img
+                      className="w-full h-full object-cover"
+                      src={optimizarUrlCloudinary(url, 'c_fill,w_300,h_200,f_auto,q_auto')}
+                      alt={`Miniatura ${idx + 1}`}
+                    />
                   </button>
                 ))}
               </div>
@@ -567,6 +562,13 @@ export default function DetallevehiculoPage() {
               </div>
               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1">
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
+                  <span className="material-symbols-outlined text-sm text-secondary">verified</span>
+                  Condicion 
+                </div>
+                <span className="text-xl font-bold text-slate-900">{condicion}</span>
+              </div>
+              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1">
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
                   <span className="material-symbols-outlined text-sm text-secondary">speed</span>
                   Kilometraje
                 </div>
@@ -581,14 +583,7 @@ export default function DetallevehiculoPage() {
                 <span className="text-xl font-bold text-slate-900">{caja}</span>
                 <span className="text-xs text-slate-500">{traccion}</span>
               </div>
-              <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-1">
-                <div className="flex items-center gap-1.5 text-xs text-slate-500 font-semibold">
-                  <span className="material-symbols-outlined text-sm text-secondary">local_gas_station</span>
-                  Combustible &amp; Carrocería
-                </div>
-                <span className="text-xl font-bold text-slate-900">{combustible}</span>
-                <span className="text-xs text-slate-500">{carroceria} • {color}</span>
-              </div>
+              
             </div>
 
             {/* Description & Seller Story */}
@@ -600,7 +595,7 @@ export default function DetallevehiculoPage() {
               <div className="text-sm text-slate-600 space-y-3 leading-relaxed">
                 <p>
                   {descripcion ||
-                    `Presentamos una unidad en estado inmaculado: ${tituloCompleto}. Perteneciente a su titular registral, servicios oficiales al día en concesionario oficial y tratamiento cerámico recién aplicado.`}
+                    `Error al traer la descripcion`}
                 </p>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-slate-800 font-medium pt-1">
                   <li className="flex items-center gap-2">
@@ -627,7 +622,6 @@ export default function DetallevehiculoPage() {
             <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
               <div className="p-5 bg-slate-50 flex items-center justify-between border-b border-slate-200">
                 <h2 className="text-base font-bold text-slate-900">Ficha Técnica &amp; Equipamiento Oficial</h2>
-                <span className="text-xs font-mono font-bold text-slate-500">{patente}</span>
               </div>
               <div className="p-6 space-y-6 text-xs">
                 {/* 1. Mecánica y Rendimiento */}
@@ -665,6 +659,17 @@ export default function DetallevehiculoPage() {
                         <span className="font-bold">{torque}</span>
                       </div>
                     )}
+                    
+                    {descripcionMotor && (
+                      <div className="flex justify-between p-2 rounded bg-slate-50 md:col-span-2">
+                        <span>Descripción del Motor:</span>
+                        <span className="font-bold text-right">{descripcionMotor}</span>
+                      </div>
+                    )}
+                     <div className="flex justify-between p-2 rounded bg-slate-50">
+                      <span>Tipo de Dirección:</span>
+                      <span className="font-bold">{direccion}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -684,29 +689,74 @@ export default function DetallevehiculoPage() {
                       <span className="font-bold">{segmento}</span>
                     </div>
                     <div className="flex justify-between p-2 rounded bg-slate-50">
-                      <span>Condición de Unidad:</span>
-                      <span className="font-bold">{condicion}</span>
+                      <span>Color:</span>
+                      <span className="font-bold">{color}</span>
                     </div>
                     <div className="flex justify-between p-2 rounded">
                       <span>Tapizado:</span>
                       <span className="font-bold">{tapizado}</span>
                     </div>
-                    <div className="flex justify-between p-2 rounded bg-slate-50">
-                      <span>Tipo de Dirección:</span>
-                      <span className="font-bold">{direccion}</span>
-                    </div>
+                   
                     {dimensiones && (
                       <div className="flex justify-between p-2 rounded">
                         <span>Dimensiones (Largo × Ancho × Alto):</span>
                         <span className="font-bold font-mono">
-                          {dimensiones.largo} × {dimensiones.ancho} × {dimensiones.alto} mm
+                          {formatMedidaMetros(dimensiones.largo)} × {formatMedidaMetros(dimensiones.ancho)} × {formatMedidaMetros(dimensiones.alto)}
                         </span>
                       </div>
                     )}
                   </div>
                 </div>
 
-                {/* 3. Seguridad & Confort */}
+                {/* 3. Capacidades & Carga */}
+                <div>
+                  <h3 className="font-bold text-secondary uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <span className="material-symbols-outlined text-sm">inventory_2</span>
+                    Capacidades &amp; Carga
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-slate-800">
+                    <div className="flex flex-col justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                      <span className="text-slate-500 font-semibold text-xs flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-base text-secondary">luggage</span>
+                        Capacidad del Baúl
+                      </span>
+                      <div className="mt-2">
+                        <span className="text-base font-bold text-slate-900 font-mono">
+                          {capacidadBaulFormateada || 'No especificada'}
+                        </span>
+                        <p className="text-[10px] text-slate-500 mt-0.5">Medición oficial bajo el estándar VDA</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                      <span className="text-slate-500 font-semibold text-xs flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-base text-secondary">local_gas_station</span>
+                        Capacidad del Tanque
+                      </span>
+                      <div className="mt-2">
+                        <span className="text-base font-bold text-slate-900 font-mono">
+                          {capacidadTanqueFormateada || 'No especificada'}
+                        </span>
+                        <p className="text-[10px] text-slate-500 mt-0.5">Capacidad en litros de combustible</p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col justify-between p-3 rounded-xl bg-slate-50 border border-slate-200/80 shadow-2xs">
+                      <span className="text-slate-500 font-semibold text-xs flex items-center gap-1.5">
+                        <span className="material-symbols-outlined text-base text-secondary">rv_hookup</span>
+                        Capacidad de Remolque
+                      </span>
+                      <div className="mt-2">
+                        <span className="text-base font-bold text-slate-900 font-mono">
+                          {capacidadRemolqueFormateada || 'No especificada'}
+                        </span>
+                        <p className="text-[10px] text-slate-500 mt-0.5">Capacidad máxima de arrastre con freno</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Seguridad & Confort */}
                 <div>
                   <h3 className="font-bold text-secondary uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <span className="material-symbols-outlined text-sm">shield</span>
@@ -719,15 +769,7 @@ export default function DetallevehiculoPage() {
                     </div>
                     <div className="flex justify-between p-2 rounded">
                       <span>Plazas / Puertas:</span>
-                      <span className="font-bold">{vehiculo?.cantidadAsientos || 5} asientos • {vehiculo?.cantidadPuertas || 5} puertas</span>
-                    </div>
-                    <div className="flex justify-between p-2 rounded bg-slate-50">
-                      <span>Frenos &amp; Estabilidad:</span>
-                      <span className="font-bold">ABS con EBD + Control de tracción ESP</span>
-                    </div>
-                    <div className="flex justify-between p-2 rounded">
-                      <span>Anclajes Isofix:</span>
-                      <span className="font-bold">Sí, para sillas infantiles</span>
+                      <span className="font-bold">{vehiculo?.cantidadAsientos} asientos • {vehiculo?.cantidadPuertas} puertas</span>
                     </div>
                   </div>
                 </div>
@@ -743,13 +785,14 @@ export default function DetallevehiculoPage() {
                     Ubicación del Showroom &amp; Retiro de la Unidad
                   </h3>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Av. del Libertador 4580, Vicente López, Buenos Aires
+                    {direccionShowroom}
                   </p>
                 </div>
                 <a
-                  href="https://maps.google.com/?q=Av.+del+Libertador+4580,+Vicente+Lopez,+Buenos+Aires"
+                  href={urlGoogleMaps}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => MetricasService.registrarEvento('CLICK_MAPS')}
                   className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-secondary text-white text-xs font-bold transition-colors inline-flex items-center gap-1.5 shadow-sm"
                 >
                   <span>Cómo Llegar</span>
@@ -757,11 +800,11 @@ export default function DetallevehiculoPage() {
                 </a>
               </div>
 
-              {/* Mapa Simulado / Tarjeta de Visita */}
+  
               <div className="relative w-full h-56 rounded-xl overflow-hidden bg-slate-100 border border-slate-200">
                 <iframe
                   title="Ubicación Showroom Apex Motors"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13146.46733271295!2d-58.485!3d-34.538!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bcb6a282f64e03%3A0x7d6a5c18e38520ec!2sAv.%20del%20Libertador%204580%2C%20Vicente%20L%C3%B3pez%2C%20Provincia%20de%20Buenos%20Aires!5e0!3m2!1ses-419!2sar!4v1710000000000"
+                  src={urlMapaEmbebido}
                   className="w-full h-full border-0"
                   allowFullScreen
                   loading="lazy"
@@ -788,80 +831,7 @@ export default function DetallevehiculoPage() {
                 </div>
               </div>
 
-              {/* Financing Module with Interactive Calculator */}
-              <div className="p-4 rounded-xl bg-blue-50/50 flex flex-col gap-2 border border-blue-100" id="modulo-financiacion">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-secondary flex items-center gap-1">
-                    <span className="material-symbols-outlined text-sm">account_balance</span>
-                    Financiación Apex
-                  </span>
-                  <button
-                    className="text-xs font-bold text-secondary hover:underline cursor-pointer"
-                    onClick={() => setShowCalculator(!showCalculator)}
-                  >
-                    <span>{showCalculator ? 'Ocultar' : 'Calcular cuota'}</span>
-                  </button>
-                </div>
-                <p className="text-xs text-slate-700 leading-snug">
-                  Anticipo sugerido desde <strong>USD {Math.round(precioUSD * 0.4).toLocaleString('es-AR')}</strong> y saldo en hasta <strong>48 cuotas fijas o UVA</strong>.
-                </p>
-
-                {/* Interactive Embedded Loan Calculator */}
-                {showCalculator && (
-                  <div className="mt-2 pt-3 border-t border-blue-200/60 flex flex-col gap-2.5">
-                    <div>
-                      <div className="flex justify-between text-xs font-semibold text-slate-800 mb-1">
-                        <span>Anticipo:</span>
-                        <span className="font-bold text-secondary">
-                          USD {downPayment.toLocaleString('es-AR')} ({precioUSD > 0 ? Math.round((downPayment / precioUSD) * 100) : 0}%)
-                        </span>
-                      </div>
-                      <input
-                        className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-secondary"
-                        max={precioUSD}
-                        min={Math.round(precioUSD * 0.2)}
-                        step={1000}
-                        type="range"
-                        value={downPayment}
-                        onChange={(e) => setDownPayment(Number(e.target.value))}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-slate-600">Plazo cuotas:</span>
-                      <div className="flex gap-1">
-                        {[12, 24, 36, 48].map((term) => (
-                          <button
-                            key={term}
-                            className={`px-2 py-0.5 rounded text-xs font-bold transition-colors cursor-pointer ${
-                              loanTerm === term
-                                ? 'bg-secondary text-white'
-                                : 'bg-white text-slate-700 border border-slate-200'
-                            }`}
-                            onClick={() => setLoanTerm(term)}
-                          >
-                            {term}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="bg-white p-2.5 rounded-lg border border-slate-200 flex items-center justify-between">
-                      <div>
-                        <div className="text-[11px] text-slate-500">Cuota mensual estimada:</div>
-                        <div className="text-sm font-extrabold text-slate-900">
-                          USD {cuotaMensual.toLocaleString('es-AR')} / mes
-                        </div>
-                      </div>
-                      <button
-                        className="px-3 py-1 rounded bg-black text-white text-xs font-bold hover:bg-slate-800 cursor-pointer"
-                        onClick={handleWhatsAppAction}
-                        disabled={!isDisponible}
-                      >
-                        Solicitar
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+    
 
               {/* Direct Primary WhatsApp CTA (DESKTOP) */}
               <div className="flex flex-col gap-2">
@@ -871,7 +841,7 @@ export default function DetallevehiculoPage() {
                     onClick={handleWhatsAppAction}
                   >
                     <span className="material-symbols-outlined text-[22px]">chat</span>
-                    <span>Consultar por WhatsApp con Asesor</span>
+                    <span>Consultar por WhatsApp con un Asesor</span>
                   </button>
                 ) : (
                   <button
@@ -907,20 +877,6 @@ export default function DetallevehiculoPage() {
                 className="pt-3 border-t border-slate-100 flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded-xl transition-colors"
                 onClick={handleWhatsAppAction}
               >
-                <div className="relative">
-                  <div className="w-11 h-11 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow">
-                    {asesorIniciales}
-                  </div>
-                  <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white"></span>
-                </div>
-                <div className="flex flex-col text-xs">
-                  <span className="font-bold text-slate-900">{asesorNombre}</span>
-                  <span className="text-slate-500 text-[11px]">Asesor Comercial Apex</span>
-                  <span className="text-emerald-600 font-semibold flex items-center gap-1 text-[11px]">
-                    <span className="material-symbols-outlined text-xs">bolt</span>
-                    Responde en menos de 5 min
-                  </span>
-                </div>
               </div>
             </div>
 
@@ -942,10 +898,7 @@ export default function DetallevehiculoPage() {
                 </div>
               </div>
               <div className="flex items-start gap-2 text-slate-600">
-                <span className="material-symbols-outlined text-sm text-emerald-600 shrink-0 mt-0.5">price_check</span>
-                <div>
-                  <strong className="text-slate-900">Aceptamos Dólar / Cripto:</strong> Opciones seguras y convenientes.
-                </div>
+                
               </div>
             </div>
           </div>
@@ -976,10 +929,6 @@ export default function DetallevehiculoPage() {
           </section>
         )}
       </div>
-
-      {/* =========================================================================
-          STICKY BOTTOM ACTION BAR (SOLO MOBILE / ZONA DE ALCANCE DEL PULGAR)
-          ========================================================================= */}
       <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 px-4 shadow-2xl lg:hidden flex items-center justify-between gap-3">
         <div className="flex flex-col">
           <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider leading-none">

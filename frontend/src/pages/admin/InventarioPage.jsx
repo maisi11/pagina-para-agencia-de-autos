@@ -51,13 +51,25 @@ export default function InventarioPage() {
   }, [])
 
   const getEstadoNombre = (p) => {
-    return (
-      p.historial?.[0]?.estado?.nombreEstado ||
-      p.historial?.[0]?.nombreEstado ||
-      p.historial?.[0]?.estado?.nombre ||
-      p.estado ||
-      'disponible'
-    ).toLowerCase()
+    // 1. Estado explícito provisto por el backend
+    if (p?.estadoActual) return p.estadoActual.toLowerCase()
+    if (p?.estado && typeof p.estado === 'string') return p.estado.toLowerCase()
+
+    // 2. Estado actualmente activo del historial (sin fechaHoraFinalizacion)
+    const activo = p?.historial?.find((h) => !h.fechaHoraFinalizacion)
+    if (activo?.estado?.nombre) return activo.estado.nombre.toLowerCase()
+    if (activo?.estado?.nombreEstado) return activo.estado.nombreEstado.toLowerCase()
+    if (activo?.nombreEstado) return activo.nombreEstado.toLowerCase()
+
+    // 3. Último registro cronológico del historial
+    if (Array.isArray(p?.historial) && p.historial.length > 0) {
+      const ultimo = p.historial[p.historial.length - 1]
+      if (ultimo?.estado?.nombre) return ultimo.estado.nombre.toLowerCase()
+      if (ultimo?.estado?.nombreEstado) return ultimo.estado.nombreEstado.toLowerCase()
+      if (ultimo?.nombreEstado) return ultimo.nombreEstado.toLowerCase()
+    }
+
+    return 'disponible'
   }
 
   // Cambio directo de estado en la fila (Disponible / Pausada / Finalizada)
@@ -70,18 +82,23 @@ export default function InventarioPage() {
         prev.map((item) => {
           const itemId = item.idPublicacion ?? item.id
           if (itemId === id) {
-            const historialActualizado = [
-              {
-                ...(item.historial?.[0] || {}),
-                estado: { nombreEstado: nuevoEstado, nombre: nuevoEstado },
-                nombreEstado: nuevoEstado,
-              },
-              ...(item.historial?.slice(1) || []),
-            ]
+            const histPrevio = (item.historial || []).map((h) => ({
+              ...h,
+              fechaHoraFinalizacion: h.fechaHoraFinalizacion || new Date().toISOString(),
+            }))
             return {
               ...item,
               estado: nuevoEstado,
-              historial: historialActualizado,
+              estadoActual: nuevoEstado,
+              historial: [
+                ...histPrevio,
+                {
+                  idEstado: nuevoEstado === 'disponible' ? 1 : nuevoEstado === 'pausada' ? 2 : 3,
+                  fechaHoraInicio: new Date().toISOString(),
+                  fechaHoraFinalizacion: null,
+                  estado: { nombre: nuevoEstado, nombreEstado: nuevoEstado },
+                },
+              ],
             }
           }
           return item
@@ -297,24 +314,17 @@ export default function InventarioPage() {
                 Control de Catálogo &amp; Publicaciones
               </h1>
               <p className="text-xs text-slate-500 mt-1 max-w-2xl">
-                Administración de estados operativos, disponibilidad para WhatsApp en tiempo real y prevención de borrado accidental con resguardo histórico.
+                Administración del inventario.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <Link
-                to="/admin/metricas"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs shadow-sm hover:bg-slate-50 hover:text-secondary transition-all"
-              >
-                <span className="material-symbols-outlined text-base text-secondary">insights</span>
-                Ver Métricas
-              </Link>
               <button
                 onClick={handleExportCSV}
                 className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 font-bold text-xs shadow-sm hover:bg-slate-50 transition-all cursor-pointer"
                 type="button"
               >
                 <span className="material-symbols-outlined text-base text-slate-600">file_download</span>
-                Exportar CSV
+                Exportar CSV del inventario
               </button>
               <Link
                 to="/admin/publicar"
@@ -573,10 +583,9 @@ export default function InventarioPage() {
                 <thead>
                   <tr className="bg-slate-100/80 border-b border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider">
                     <th className="py-3.5 px-4">Vehículo &amp; SKU</th>
-                    <th className="py-3.5 px-3">Segmento</th>
                     <th className="py-3.5 px-4">Precio Publicado</th>
                     <th className="py-3.5 px-4">Asesor Asignado</th>
-                    <th className="py-3.5 px-4 text-center">Estado Semántico</th>
+                    <th className="py-3.5 px-4 text-center">Estado</th>
                     <th className="py-3.5 px-4 text-center">Cambiar Estado</th>
                     <th className="py-3.5 px-4 text-right">Acciones</th>
                   </tr>
@@ -655,12 +664,7 @@ export default function InventarioPage() {
                             </div>
                           </td>
 
-                          {/* Segmento */}
-                          <td className="py-3.5 px-3">
-                            <span className="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-[10px] font-bold uppercase tracking-wide">
-                              {v.segmento?.nombreSegmento || v.tipoCarroceria?.nombreTipoCarroceria || 'Utilitario'}
-                            </span>
-                          </td>
+              
 
                           {/* Precio Publicado */}
                           <td className="py-3.5 px-4">
@@ -732,15 +736,15 @@ export default function InventarioPage() {
                           {/* Acciones Rápidas */}
                           <td className="py-3.5 px-4 text-right">
                             <div className="flex items-center justify-end gap-1">
-                              {/* Atributos / Equipamiento */}
-                              <button
-                                onClick={() => abrirModalAtributos(pub)}
-                                className="p-1.5 rounded-lg text-slate-500 hover:text-secondary hover:bg-blue-50 transition-all cursor-pointer"
-                                title="Gestionar Equipamiento & Atributos"
-                                type="button"
+                          
+                              {/* Modificar Publicación */}
+                              <Link
+                                to={`/admin/editar/${id}`}
+                                className="p-1.5 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 transition-all cursor-pointer"
+                                title="Modificar Publicación"
                               >
-                                <span className="material-symbols-outlined text-base">tune</span>
-                              </button>
+                                <span className="material-symbols-outlined text-base">edit</span>
+                              </Link>
 
                               {/* Ver Detalle Público */}
                               <Link

@@ -5,6 +5,7 @@ import { ParametricosModule } from "./modules/parametricos/parametricos.module.t
 import { PublicacionesModule } from "./modules/publicaciones/publicaciones.module.ts";
 import { AuthModule } from "./modules/auth/auth.module.ts";
 import { MetricasModule } from "./modules/metricas/metricas.module.ts";
+import { MultimediaModule } from "./modules/multimedia/multimedia.module.ts";
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { MetricasModule } from "./modules/metricas/metricas.module.ts";
     ParametricosModule,
     PublicacionesModule,
     AuthModule,
-    MetricasModule
+    MetricasModule,
+    MultimediaModule,
   ],
   controllers: [],
   providers: [

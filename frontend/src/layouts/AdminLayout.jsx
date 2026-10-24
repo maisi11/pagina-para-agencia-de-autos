@@ -1,14 +1,56 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { obtenerTokenActivo, limpiarSesion } from '../api/client'
 
 export default function AdminLayout() {
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [usuarioNombre, setUsuarioNombre] = useState(
+    localStorage.getItem('apex_user_name') || 'Martín Benítez'
+  )
+  const [usuarioEmail, setUsuarioEmail] = useState(
+    localStorage.getItem('apex_user_email') || 'vendedor@concesionaria.com'
+  )
+
+  // Guardia de sesión: verifica autenticación y límite de 1 hora
+  useEffect(() => {
+    const token = obtenerTokenActivo()
+    if (!token) {
+      limpiarSesion()
+      navigate('/login?expirada=1', { replace: true })
+      return
+    }
+
+    const storedName = localStorage.getItem('apex_user_name')
+    const storedEmail = localStorage.getItem('apex_user_email')
+    if (storedName) setUsuarioNombre(storedName)
+    if (storedEmail) setUsuarioEmail(storedEmail)
+
+    // Vigilancia activa: auto-logout si transcurre la hora de vigencia
+    const intervalId = setInterval(() => {
+      const tokenVigente = obtenerTokenActivo()
+      if (!tokenVigente) {
+        limpiarSesion()
+        navigate('/login?expirada=1', { replace: true })
+      }
+    }, 10000)
+
+    return () => clearInterval(intervalId)
+  }, [navigate])
 
   const handleLogout = () => {
-    localStorage.removeItem('apex_auth_token')
+    limpiarSesion()
     navigate('/login')
   }
+
+  const iniciales = usuarioNombre
+    ? usuarioNombre
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase()
+    : 'MB'
 
   const navLinks = [
     {
@@ -46,7 +88,7 @@ export default function AdminLayout() {
               Apex Motors
             </span>
             <span className="text-[10px] text-blue-400 font-bold uppercase tracking-wider mt-1">
-              Portal Vendedores OS
+              Portal Vendedores
             </span>
           </div>
         </div>
@@ -119,16 +161,16 @@ export default function AdminLayout() {
           <div className="p-2.5 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
               <div className="w-8 h-8 rounded-full bg-secondary text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-sm">
-                MB
+                {iniciales}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-bold text-white truncate">Martín Benítez</span>
-                <span className="text-[10px] text-slate-400 truncate">Asesor Senior Norte</span>
+                <span className="text-xs font-bold text-white truncate">{usuarioNombre}</span>
+                <span className="text-[10px] text-slate-400 truncate">{usuarioEmail}</span>
               </div>
             </div>
             <button
               onClick={handleLogout}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700/60 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700/60 transition-colors cursor-pointer"
               title="Cerrar Sesión"
               type="button"
             >
@@ -216,15 +258,18 @@ export default function AdminLayout() {
             </nav>
 
             <div className="pt-4 border-t border-slate-800 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-secondary text-white font-bold text-xs flex items-center justify-center">
-                  MB
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-secondary text-white font-bold text-xs flex items-center justify-center flex-shrink-0">
+                  {iniciales}
                 </div>
-                <span className="text-xs font-bold text-white">Martín Benítez</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-xs font-bold text-white truncate">{usuarioNombre}</span>
+                  <span className="text-[10px] text-slate-400 truncate">{usuarioEmail}</span>
+                </div>
               </div>
               <button
                 onClick={handleLogout}
-                className="text-xs font-bold text-red-400 flex items-center gap-1"
+                className="text-xs font-bold text-red-400 flex items-center gap-1 cursor-pointer shrink-0"
                 type="button"
               >
                 <span className="material-symbols-outlined text-sm">logout</span>
@@ -265,7 +310,7 @@ export default function AdminLayout() {
 
         {/* Minimal Operational Footer */}
         <footer className="w-full bg-white border-t border-slate-200 py-3 px-6 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>Apex Motors Enterprise OS • Terminal de Salón y Ventas</span>
+          <span>Apex Motors • Terminal de Salón y Ventas</span>
           <span className="text-[11px] text-slate-400">© {new Date().getFullYear()} Todos los derechos reservados</span>
         </footer>
       </div>

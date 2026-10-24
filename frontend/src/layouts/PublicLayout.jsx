@@ -1,4 +1,6 @@
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { MetricasService } from '../services/metricas.service'
 
 function formatPhoneNumber(phone) {
   if (!phone) return '+54 9 11 5560-8800'
@@ -13,8 +15,72 @@ function formatPhoneNumber(phone) {
 }
 
 export default function PublicLayout() {
-  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || '5491155608800'
+  const whatsappPhone = import.meta.env.VITE_WHATSAPP_PHONE || 'Error al cargar el numero de telefono'
   const formattedPhone = formatPhoneNumber(whatsappPhone)
+  const direccionShowroom = import.meta.env.VITE_UBICACION || 'Error al caragr la ubicacion'
+  const urlMapaEmbebido =  `https://www.google.com/maps?q=${encodeURIComponent(direccionShowroom)}&output=embed`
+
+  const urlGoogleMaps = `https://maps.google.com/?q=${encodeURIComponent(direccionShowroom)}`
+
+  
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // Llevar arriba del todo al hacer clic en Inicio o en el banner/logo de la empresa
+  const handleInicioClick = (e) => {
+    if (location.pathname === '/') {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      if (location.hash) {
+        window.history.pushState(null, '', '/')
+      }
+    } else {
+      navigate('/')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
+  // Manejo de navegación suave a secciones de la página de inicio
+  const handleScrollToSection = (e, sectionId) => {
+    e.preventDefault()
+    if (location.pathname === '/') {
+      const el = document.getElementById(sectionId)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' })
+        window.history.pushState(null, '', `/#${sectionId}`)
+      }
+    } else {
+      // Si estamos en /catalogo o cualquier otra vista, navegamos a / con el hash de la sección
+      navigate(`/#${sectionId}`)
+    }
+  }
+
+  // Detector de hash y restauración de scroll al cambiar de ruta
+  useEffect(() => {
+    if (location.hash) {
+      if (location.pathname === '/') {
+        const targetId = location.hash.replace('#', '')
+        const scrollToTarget = () => {
+          const el = document.getElementById(targetId)
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' })
+            return true
+          }
+          return false
+        }
+
+        // Intentar scroll de inmediato
+        if (!scrollToTarget()) {
+          // Reintentos progresivos para esperar a que los componentes del Home terminen de montarse
+          const timeouts = [60, 150, 300, 600, 1000].map((t) => setTimeout(scrollToTarget, t))
+          return () => timeouts.forEach(clearTimeout)
+        }
+      }
+    } else {
+      // Si la navegación no incluye hash (ej: navegar a /catalogo o al inicio), llevar siempre arriba de todo
+      window.scrollTo(0, 0)
+    }
+  }, [location.pathname, location.hash])
 
   return (
     <div className="min-h-screen flex flex-col bg-surface font-sans text-on-surface antialiased selection:bg-secondary selection:text-white">
@@ -38,13 +104,14 @@ export default function PublicLayout() {
                 href={`https://wa.me/${whatsappPhone}`}
                 rel="noopener noreferrer"
                 target="_blank"
+                onClick={() => MetricasService.registrarEvento('WHATSAPP_GENERAL')}
               >
                 <span className="material-symbols-outlined text-[16px] text-[#25D366]">chat</span>
                 <span>WhatsApp: {formattedPhone}</span>
               </a>
             </div>
             <div className="flex items-center gap-4">
-              <span className="hidden md:inline text-slate-400">Lun - Sáb: 09:00 - 19:30</span>
+              <span className="hidden md:inline text-slate-400">Lun - Vie: 09:00 - 19:30 hrs</span>
               <Link
                 to="/admin/inventario"
                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-slate-800 hover:bg-slate-700 text-white font-medium text-xs transition-colors border border-slate-700"
@@ -60,7 +127,7 @@ export default function PublicLayout() {
         <div className="w-full px-4 sm:px-8">
           <div className="max-w-7xl mx-auto h-18 py-3 flex items-center justify-between gap-4">
             {/* Logo & Brand */}
-            <Link to="/" className="flex items-center gap-3 group">
+            <Link to="/" onClick={handleInicioClick} className="flex items-center gap-3 group cursor-pointer" title="Ir al inicio">
               <div className="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center font-extrabold text-xl shadow-md group-hover:bg-secondary transition-colors">
                 <span className="material-symbols-outlined text-2xl">directions_car</span>
               </div>
@@ -78,8 +145,9 @@ export default function PublicLayout() {
             <nav className="hidden lg:flex items-center gap-1">
               <NavLink
                 to="/"
+                onClick={handleInicioClick}
                 className={({ isActive }) =>
-                  `px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  `px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer ${
                     isActive ? 'text-secondary bg-blue-50 font-bold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`
                 }
@@ -99,19 +167,22 @@ export default function PublicLayout() {
               </NavLink>
               <a
                 href="/#servicios"
-                className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                onClick={(e) => handleScrollToSection(e, 'servicios')}
+                className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 Financiamiento & Servicios
               </a>
               <a
                 href="/#nosotros"
-                className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                onClick={(e) => handleScrollToSection(e, 'nosotros')}
+                className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 Nosotros
               </a>
               <a
                 href="/#showroom"
-                className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+                onClick={(e) => handleScrollToSection(e, 'showroom')}
+                className="px-3.5 py-2 rounded-lg text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
               >
                 Contacto & Showroom
               </a>
@@ -149,14 +220,14 @@ export default function PublicLayout() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-800">
             {/* Col 1: Brand & Bio */}
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3">
+              <Link to="/" onClick={handleInicioClick} className="flex items-center gap-3 cursor-pointer group" title="Ir al inicio">
                 <div className="w-8 h-8 rounded-lg bg-secondary text-white flex items-center justify-center font-bold">
                   <span className="material-symbols-outlined text-xl">directions_car</span>
                 </div>
-                <span className="text-xl font-extrabold text-white tracking-tight">Apex Motors</span>
-              </div>
+                <span className="text-xl font-extrabold text-white tracking-tight group-hover:text-blue-400 transition-colors">Apex Motors</span>
+              </Link>
               <p className="text-xs text-slate-400 leading-relaxed">
-                Concesionaria oficial multimarca. Líderes en comercialización de vehículos 0km y seleccionados certificados con garantía y documentación lista para transferencia inmediata.
+                Concesionaria oficial multimarca. Líderes en comercialización de vehículos 0km y usados seleccionados certificados con garantía y documentación lista para transferencia inmediata.
               </p>
               <div className="flex items-center gap-3 pt-1">
                 <a
@@ -183,6 +254,7 @@ export default function PublicLayout() {
                   target="_blank"
                   rel="noopener noreferrer"
                   title="WhatsApp"
+                  onClick={() => MetricasService.registrarEvento('WHATSAPP_GENERAL')}
                 >
                   <span className="material-symbols-outlined text-[18px]">chat</span>
                 </a>
@@ -201,15 +273,9 @@ export default function PublicLayout() {
                   <span className="text-slate-300 font-semibold block">Sábados:</span>
                   <span className="text-slate-400">09:30 a 18:00 hs</span>
                 </div>
-                <div>
-                  <span className="text-slate-300 font-semibold block">Domingos & Feriados:</span>
-                  <span className="text-slate-400">Atención Online por WhatsApp</span>
-                </div>
+                
               </div>
-              <div className="mt-2 inline-flex items-center gap-2 px-3 py-1 rounded bg-slate-800/80 border border-slate-700 text-[11px] text-emerald-400 font-bold w-fit">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                Showroom Abierto Hoy
-              </div>
+              
             </div>
 
             {/* Col 3: Contacto Showroom */}
@@ -218,7 +284,15 @@ export default function PublicLayout() {
               <div className="space-y-2.5 text-xs">
                 <div className="flex items-start gap-2">
                   <span className="material-symbols-outlined text-blue-400 text-[16px] shrink-0 mt-0.5">location_on</span>
-                  <span>Av. del Libertador 4580, Vicente López, Buenos Aires</span>
+                  <a href={urlGoogleMaps}
+                     target='_blank'
+                     rel='noopener noreferrer'
+                     className='hover:text-white transition-colors'
+                     title='Ver ubicacion en Google Maps'
+                     onClick={() => MetricasService.registrarEvento('CLICK_MAPS')}
+                  >
+                    {direccionShowroom}
+                  </a>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-blue-400 text-[16px] shrink-0">call</span>
@@ -243,10 +317,35 @@ export default function PublicLayout() {
             <div className="flex flex-col gap-3">
               <h4 className="text-sm font-bold text-white uppercase tracking-wider">Navegación</h4>
               <ul className="space-y-2 text-xs">
-                <li><Link className="hover:text-white transition-colors" to="/">Inicio</Link></li>
+                <li><Link className="hover:text-white transition-colors cursor-pointer" to="/" onClick={handleInicioClick}>Inicio</Link></li>
                 <li><Link className="hover:text-white transition-colors" to="/catalogo">Catálogo de Vehículos</Link></li>
-                <li><a className="hover:text-white transition-colors" href="/#servicios">Financiamiento & Permutas</a></li>
-                <li><a className="hover:text-white transition-colors" href="/#nosotros">Nosotros & Trayectoria</a></li>
+                <li>
+                  <a
+                    className="hover:text-white transition-colors cursor-pointer"
+                    href="/#servicios"
+                    onClick={(e) => handleScrollToSection(e, 'servicios')}
+                  >
+                    Financiamiento & Permutas
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="hover:text-white transition-colors cursor-pointer"
+                    href="/#nosotros"
+                    onClick={(e) => handleScrollToSection(e, 'nosotros')}
+                  >
+                    Nosotros & Trayectoria
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="hover:text-white transition-colors cursor-pointer"
+                    href="/#showroom"
+                    onClick={(e) => handleScrollToSection(e, 'showroom')}
+                  >
+                    Contacto & Showroom
+                  </a>
+                </li>
                 <li><Link className="hover:text-white transition-colors" to="/login">Acceso Vendedores</Link></li>
               </ul>
             </div>
@@ -254,7 +353,7 @@ export default function PublicLayout() {
 
           {/* Legal & Copyright */}
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-            <p>© {new Date().getFullYear()} Apex Motors S.A. CUIT: 30-71489023-9. Todos los derechos reservados.</p>
+            <p>© {new Date().getFullYear()} Apex Motors. Todos los derechos reservados.</p>
             <div className="flex items-center gap-4">
               <span className="hover:text-slate-300 transition-colors cursor-pointer">Términos y Condiciones</span>
               <span className="hover:text-slate-300 transition-colors cursor-pointer">Privacidad de Datos</span>
